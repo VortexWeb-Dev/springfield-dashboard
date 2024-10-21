@@ -1,6 +1,16 @@
 <?php include('includes/header.php'); ?>
 <?php include('includes/sidebar.php'); ?>
 
+
+<?php 
+    include_once "./crest/crest.php";
+    include_once "./crest/settings.php";
+    function getAllDeals() {
+
+    }
+
+?>
+
 <div class="p-10 w-[80%]">
     <h2 class="text-xl font-semibold mb-4">WIP</h2>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
