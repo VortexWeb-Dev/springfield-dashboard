@@ -7,24 +7,24 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="border-b border-white">
-                    <th colspan="5" class="px-6 py-3">
+                    <th colspan="5" class="px-6 py-3 text-center">
                         January 2024
                     </th>
                     <th class="px-6 py-3">
 
                     </th>
-                    <th colspan="5" class="px-6 py-3">
+                    <th colspan="5" class="px-6 py-3 text-center">
                         February 2024
                     </th>
                 </tr>
                 <tr class="border-b border-white">
-                    <th colspan="5" class="px-6 py-3">
+                    <th colspan="5" class="px-6 py-3 text-center">
                         AED 532,987.69
                     </th>
                     <th class="px-6 py-3">
 
                     </th>
-                    <th colspan="5" class="px-6 py-3">
+                    <th colspan="5" class="px-6 py-3 text-center">
                         AED 473,111.14
                     </th>
                 </tr>
