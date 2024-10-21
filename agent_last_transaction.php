@@ -19,7 +19,70 @@
                 </tr>
             </thead>
             <tbody>
-
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        Ahmed Godil
+                    </th>
+                    <td class="px-6 py-4">
+                        Sonia Team
+                    </td>
+                    <td class="px-6 py-4">
+                        Sonia Direct
+                    </td>
+                    <td class="px-6 py-4">
+                        18-Sep-2023
+                    </td>
+                    <td class="px-6 py-4">
+                        3-Jun-2024
+                    </td>
+                    <td class="px-6 py-4">
+                        2 Deals in Maya Residences
+                    </td>
+                    <td class="px-6 py-4">
+                        AED 9,10,000
+                    </td>
+                    <td class="px-6 py-4">
+                        AED 9,000
+                    </td>
+                    <td class="px-6 py-4">
+                        
+                    </td>
+                    <td class="px-6 py-4">
+                        04 months
+                    </td>
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        Aleena Sitwat Bhatti
+                    </th>
+                    <td class="px-6 py-4">
+                        Sonia Team
+                    </td>
+                    <td class="px-6 py-4">
+                        Conpany
+                    </td>
+                    <td class="px-6 py-4">
+                        24-Jan-2024
+                    </td>
+                    <td class="px-6 py-4">
+                        28-Aug--2024
+                    </td>
+                    <td class="px-6 py-4">
+                        DE Address DHE B-5-512
+                    </td>
+                    <td class="px-6 py-4">
+                        AED 9,10,000
+                    </td>
+                    <td class="px-6 py-4">
+                        AED 9,000
+                    </td>
+                    <td class="px-6 py-4">
+                        
+                    </td>
+                    <td class="px-6 py-4">
+                        01 months
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

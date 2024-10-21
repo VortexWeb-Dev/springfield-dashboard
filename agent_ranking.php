@@ -22,7 +22,31 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Add rows here as needed -->
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-6 py-4">Agent 1</td>
+                    <td class="px-6 py-4">10</td>
+                    <td class="px-6 py-4">20</td>
+                    <td class="px-6 py-4">30</td>
+                    <td class="px-6 py-4">40</td>
+                    <td class="px-6 py-4">50</td>
+                    <td class="px-6 py-4">60</td>
+                    <td class="px-6 py-4">70</td>
+                    <td class="px-6 py-4">80</td>
+                    <td class="px-6 py-4">90</td>
+                    <td class="px-6 py-4">100</td>
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-6 py-4">Agent 2</td>
+                    <td class="px-6 py-4">10</td>
+                    <td class="px-6 py-4">20</td>
+                    <td class="px-6 py-4">30</td>
+                    <td class="px-6 py-4">40</td>
+                    <td class="px-6 py-4">50</td>
+                    <td class="px-6 py-4">60</td>
+                    <td class="px-6 py-4">70</td>
+                    <td class="px-6 py-4">80</td>
+                    <td class="px-6 py-4">90</td>
+                    <td class="px-6 py-4">100</td>
             </tbody>
         </table>
     </div>

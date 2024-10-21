@@ -47,19 +47,131 @@
                 <tbody>
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Apple MacBook Pro 17"
+                            dd-mm-yy
                         </th>
+                        <!-- transaction type -->
                         <td class="px-6 py-4">
-                            Silver
+                            Rent
                         </td>
+                        <!-- deal type -->
                         <td class="px-6 py-4">
-                            Laptop
+                            Secondary
                         </td>
+                        <!-- project name -->
                         <td class="px-6 py-4">
-                            $2999
+
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                        <!-- unit no -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- developer name -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- type -->
+                        <td class="px-6 py-4">
+                            Apartment
+                        </td>
+                        <!-- no of br -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- client name -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- agent name -->
+                        <td class="px-6 py-4">
+                            Hassan
+                        </td>
+                        <!-- team -->
+                        <td class="px-6 py-4">
+                            N/A
+                        </td>
+                        <!-- property price -->
+                        <td class="px-6 py-4">
+                            10000
+                        </td>
+                        <!-- gross commission (incl. vat) -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- gross commission -->
+                        <td class="px-6 py-4">
+                            500
+                        </td>
+                        <!-- vat -->
+                        <td class="px-6 py-4">
+                            1
+                        </td>
+                        <!-- agent net commission -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- managers commission -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- sales support commission -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- springfield commission -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- commission slab -->
+                        <td class="px-6 py-4">
+                            5
+                        </td>
+                        <!-- referral -->
+                        <td class="px-6 py-4">
+                            Yes/No
+                        </td>
+                        <!-- referral fee -->
+                        <td class="px-6 py-4">
+                            100 AED
+                        </td>
+                        <!-- lead source -->
+                        <td class="px-6 py-4">
+                            Personal- P
+                        </td>
+                        <!-- invoice status -->
+                        <td class="px-6 py-4">
+                            Invoiced
+                        </td>
+                        <!-- notification -->
+                        <td class="px-6 py-4">
+                            Invoice Submitted
+                        </td>
+                        <!-- payment received -->
+                        <td class="px-6 py-4">
+                            Yes
+                        </td>
+                        <!-- follow-up notification -->
+                        <td class="px-6 py-4">
+                            Followup
+                        </td>
+                        <!-- 1st payment received -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- 2nd payment received -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- 3rd payment received -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- total payment received -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- amount receivable -->
+                        <td class="px-6 py-4">
+
                         </td>
                     </tr>
             </table>
@@ -91,54 +203,57 @@
                 </thead>
                 <tbody>
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <!-- Booking from    -->
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Apple MacBook Pro 17"
+                            Yes/No
                         </th>
+                        <!-- PP copy -->
                         <td class="px-6 py-4">
-                            Silver
+                            Yes/No
                         </td>
+                        <!-- KYC -->
                         <td class="px-6 py-4">
-                            Laptop
+                            Yes/No
                         </td>
+                        <!-- Screening -->
                         <td class="px-6 py-4">
-                            $2999
+                            Yes/No
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Microsoft Surface Pro
-                        </th>
+                        <!-- Client ID -->
                         <td class="px-6 py-4">
-                            White
+                            2024-00001
                         </td>
+                        <!-- Contact Number -->
                         <td class="px-6 py-4">
-                            Laptop PC
+
                         </td>
+                        <!-- Email -->
                         <td class="px-6 py-4">
-                            $1999
+
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                            Magic Mouse 2
-                        </th>
+                        <!-- Client Type -->
                         <td class="px-6 py-4">
-                            Black
+                            Resident
                         </td>
+                        <!-- Passport No/Company Registration No -->
                         <td class="px-6 py-4">
-                            Accessories
+
                         </td>
+                        <!-- Emirates ID (If applicable) -->
                         <td class="px-6 py-4">
-                            $99
+
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                        <!-- Birthday -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- Country -->
+                        <td class="px-6 py-4">
+
+                        </td>
+                        <!-- Nationality -->
+                        <td class="px-6 py-4">
+
                         </td>
                     </tr>
                 </tbody>
