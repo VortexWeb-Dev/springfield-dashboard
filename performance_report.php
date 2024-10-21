@@ -10,17 +10,17 @@
         <!-- Marketing Leads -->
         <div>
             <label class="block font-medium">No. of Marketing Leads Received (Including repeat inquiries)</label>
-            <input type="text" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <input type="text" value="20" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
         </div>
 
         <div>
             <label class="block font-medium">Active Leads</label>
-            <input type="text" value="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <input type="text" value="5" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
         </div>
 
         <div>
             <label class="block font-medium">Unqualified/Reassigned Leads</label>
-            <input type="text" value="15" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <input type="text" value="15" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
         </div>
 
         <!-- Hubspot Lead Update Statistics -->
@@ -29,17 +29,17 @@
 
             <div>
                 <label class="block font-medium">Leads without Update for more than 2 weeks</label>
-                <input type="text" value="2 leads no update for 2 weeks" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="2 leads no update for 2 weeks" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
                 <label class="block font-medium">New Deals Created in Hubspot (July 2024)</label>
-                <input type="text" value="no new deals in the pipeline" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="no new deals in the pipeline" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
                 <label class="block font-medium">No. of Meetings Conducted in Hubspot (July 2024)</label>
-                <input type="text" value="no new meeting logged in Hubspot" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="no new meeting logged in Hubspot" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
         </div>
 
@@ -49,12 +49,12 @@
 
             <div>
                 <label class="block font-medium">No. Live Ads</label>
-                <input type="text" value="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="3" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
                 <label class="block font-medium">No. of Leads Received from PropertyFinder Ads</label>
-                <input type="text" value="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="5" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
         </div>
 
@@ -96,17 +96,17 @@
         <div class="mt-6">
             <div>
                 <label class="block font-medium">Total Earnings Year to Date</label>
-                <input type="text" value="AED 103,890.00" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="AED 103,890.00" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
                 <label class="block font-medium">Total Worth of Properties Sold Year to Date</label>
-                <input type="text" value="AED 6,420,000.00" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="AED 6,420,000.00" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
                 <label class="block font-medium">Average Monthly Earnings</label>
-                <input type="text" value="AED 14,841.43" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="AED 14,841.43" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
         </div>
 
@@ -114,12 +114,12 @@
         <div class="mt-6">
             <div>
                 <label class="block font-medium">Rank for July 2024</label>
-                <input type="text" value="N/A (No Deal in July)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="N/A (No Deal in July)" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
                 <label class="block font-medium">YTD Ranking</label>
-                <input type="text" value="52" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <input type="text" value="52" class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
         </div>
     </form>

@@ -26,30 +26,7 @@
             </tbody>
         </table>
     </div>
-
-    <p class="text-xl font-semibold mb-4 mt-10">Table 2</p>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">Agent</th>
-                    <th scope="col" class="px-6 py-3">January 2024</th>
-                    <th scope="col" class="px-6 py-3">February 2024</th>
-                    <th scope="col" class="px-6 py-3">March 2024</th>
-                    <th scope="col" class="px-6 py-3">April 2024</th>
-                    <th scope="col" class="px-6 py-3">May 2024</th>
-                    <th scope="col" class="px-6 py-3">June 2024</th>
-                    <th scope="col" class="px-6 py-3">July 2024</th>
-                    <th scope="col" class="px-6 py-3">August 2024</th>
-                    <th scope="col" class="px-6 py-3">September 2024</th>
-                    <th scope="col" class="px-6 py-3">Overall</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Add rows here as needed -->
-            </tbody>
-        </table>
-    </div>
+    
 </div>
 
 <?php include('includes/footer.php'); ?>
