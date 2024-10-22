@@ -18,11 +18,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <i class="fas fa-handshake mr-2"></i> Overall Deals
                 </a>
             </li>
-            <li class="text-sm">
+            <!-- <li class="text-sm">
                 <a href="deal_source.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'deal_source.php' ? 'bg-gray-700' : ''; ?>">
                     <i class="fas fa-chart-line mr-2"></i> Deal Source
                 </a>
-            </li>
+            </li> -->
             <li class="text-sm">
                 <a href="agent_last_transaction.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_last_transaction.php' ? 'bg-gray-700' : ''; ?>">
                     <i class="fas fa-clock mr-2"></i> Agent Last Transaction

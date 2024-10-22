@@ -3,10 +3,26 @@ require_once __DIR__ . '/../crest/crest.php';
 
 function getUsers()
 {
-    $result = CRest::call('user.get');
+    $result = CRest::call('user.get', [
+        'select' => ['*', 'UF_*'],
+    ]);
     $users = $result['result'];
 
     return $users;
+}
+
+function get_user_fields()
+{
+    $result = CRest::call('user.fields', ['select' => ['*', 'UF_*']]);
+
+    return $result['result'];
+}
+
+function get_custom_user_fields()
+{
+    $result = CRest::call('user.userfield.list');
+
+    return $result;
 }
 
 function getUser($user_id)

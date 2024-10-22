@@ -7,11 +7,11 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Name of Agent</th>
-                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Team</th>
-                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Commission if Personal Lead</th>
-                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Commission if Company Lead</th>
-                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Special Notes</th>
+                    <th scope="col" class="px-6 py-3">Name of Agent</th>
+                    <th scope="col" class="px-6 py-3">Team</th>
+                    <th scope="col" class="px-6 py-3">Commission if Personal Lead</th>
+                    <th scope="col" class="px-6 py-3">Commission if Company Lead</th>
+                    <th scope="col" class="px-6 py-3">Special Notes</th>
                 </tr>
             </thead>
             <tbody>

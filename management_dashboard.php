@@ -1,21 +1,12 @@
-<?php include('includes/header.php'); ?>
-<?php include('includes/sidebar.php'); ?>
-
-
 <?php
 include_once "./crest/crest.php";
 include_once "./crest/settings.php";
-function getAllDeals()
-{
-    $result = CRest::call('crm.deal.list', [
-        'select' => ['*', 'UF_*'],
-        'filter' => ['CATEGORY_ID' => 0],
-    ]);
-    $deals = $result['result'];
-    return $deals;
-}
+include('includes/header.php');
+include('includes/sidebar.php');
+// get deals
+include_once "./data/fetch_deals.php";
 
-$deals = getAllDeals();
+$deals = get_all_deals();
 
 function get_closed_deals($deals)
 {
@@ -123,10 +114,25 @@ $final_list = [
         'total_payment_received' => 0,
         'account_receivable' => 0,
     ],
+    'total' => [
+        'count_of_closed_deals' => 0,
+        'property_price' => 0,
+        'gross_commission' => 0,
+        'net_commission' => 0,
+        'total_payment_received' => 0,
+        'account_receivable' => 0,
+    ],
 ];
 
 foreach ($deals as $deal) {
-    $month = date('F', strtotime($deal['CLOSEDATE']));
+    $final_list['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+    $final_list['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+    $final_list['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+    $final_list['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+    $final_list['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+    $final_list['total']['account_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+
+    $month = date('F', strtotime($deal['BEGINDATE']));
     $final_list[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
     $final_list[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
     $final_list[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
@@ -135,9 +141,11 @@ foreach ($deals as $deal) {
     $final_list[$month]['account_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
 };
 
-echo "<pre>";
-print_r($deals);
-echo "</pre>";
+$total_deals = array_pop($final_list);
+
+// echo "<pre>";
+// print_r($deals);
+// echo "</pre>";
 
 ?>
 
@@ -200,6 +208,31 @@ echo "</pre>";
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+            <tfoot class="bg-slate-500 text-slate-100">
+                <tr>
+                    <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
+                        Total
+                    </th>
+                    <td class="px-6 py-4">
+                        <?= $total_deals['count_of_closed_deals'] ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <?= number_format($total_deals['property_price'], 2) ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <?= number_format($total_deals['gross_commission'], 2) ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <?= number_format($total_deals['net_commission'], 2) ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <?= number_format($total_deals['total_payment_received'], 2) ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <?= number_format($total_deals['account_receivable'], 2) ?>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 
