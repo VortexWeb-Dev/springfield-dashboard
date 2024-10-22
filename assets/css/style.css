@@ -2,15 +2,17 @@
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    background-color: #f5f5f5; /* Background of the scrollbar track */
+    background-color: var(--background-color); /* Background of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Color of the scrollbar handle */
+    background-color: rgb(83, 83, 99); /* Color of the scrollbar handle */
     border-radius: 8px; /* Roundness of the scrollbar handle */
-    border: 1px solid #f5f5f5; /* Space around the handle */
+    border: 1px solid var(--background-color); /* Space around the handle */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #999; /* Color when hovered */
+    background-color: var(--text-color-hover); /* Color when hovered */
 }
+
+
