@@ -162,25 +162,25 @@ $total_deals = array_pop($final_list);
 
         <!-- cards container -->
         <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-green-100/20 dark:hover:bg-green-200/10">
+            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-green-300/60 dark:hover:bg-green-200/10">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
             </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-gray-700 dark:hover:bg-gray-700">
+            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-red-300/60 dark:hover:bg-red-200/10">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
             </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-gray-700 dark:hover:bg-gray-700">
+            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-blue-300/60 dark:hover:bg-blue-200/10">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
             </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-gray-700 dark:hover:bg-gray-700">
+            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-[#23232E] dark:border-pink-300/60 dark:hover:bg-pink-200/10">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
             </a>
         </div>
         <!-- header -->
-        <div class="w-full p-6 bg-white dark:bg-[#141418] border-b shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+        <div class="w-full p-6 bg-white dark:bg-[#141418] border-l-8 shadow-xl border-gray-200 dark:border-gray-700 rounded-sm">
             <div class="flex items-center justify-between">
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">WIP</h3>
             </div>
@@ -272,19 +272,19 @@ $total_deals = array_pop($final_list);
             </div>
 
             <!-- chart -->
-            <div class="w-full col-span-1 p-6 bg-white dark:bg-[#23232E] border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="w-full col-span-1 p-6 bg-white dark:bg-[#23232E] border-t-8 shadow-xl border-gray-200 dark:border-green-300/60 rounded-xl">
 
             </div>
         </div>
 
-        <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="my-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
             <!-- table container -->
-            <div class="w-full h-[50vh] col-span-1 bg-white dark:bg-[#23232E] border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="w-full h-[50vh] col-span-1 bg-white dark:bg-[#23232E] border-t-8 shadow-xl border-gray-200 dark:border-red-300/60 rounded-xl">
 
             </div>
 
             <!-- chart -->
-            <div class="w-full col-span-2 p-6 bg-white dark:bg-[#23232E] border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="w-full col-span-2 p-6 bg-white dark:bg-[#23232E] border-t-8 shadow-xl border-gray-200 dark:border-blue-300/60 rounded-xl">
 
             </div>
         </div>
