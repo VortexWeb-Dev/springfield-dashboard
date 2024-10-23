@@ -7,6 +7,7 @@ include('includes/sidebar.php');
 
 // include the fetch deals page
 include_once "./data/fetch_deals.php";
+include_once "./data/fetch_users.php";
 
 $fields = get_deal_fileds();
 
@@ -26,11 +27,37 @@ foreach ($deals as $index => $deal) {
     $overall_deals[$index]['Project Name'] = $deal['UF_CRM_1727625779110'] ?? null;
     $overall_deals[$index]['Unit No'] = $deal['UF_CRM_1727625804043'] ?? null;
     $overall_deals[$index]['Developer Name'] = $deal['UF_CRM_1727625822094'] ?? null;
-    $overall_deals[$index]['Property Type'] = $deal['UF_CRM_66E3D8D1A13F7'] ?? null;
-    $overall_deals[$index]['No Of Br'] = $deal['UF_CRM_1727854068559'] ?? null;
+
+    // map property type
+    if (isset($deal['UF_CRM_66E3D8D1A13F7'])) {
+        $propertyType = map_enum($fields, 'UF_CRM_66E3D8D1A13F7', $deal['UF_CRM_66E3D8D1A13F7']);
+        $overall_deals[$index]['Property Type'] = $propertyType ?? null;
+    } else {
+        $overall_deals[$index]['Property Type'] = 'filed_not_defined';
+    }
+
+    // map no of br
+    if (isset($deal['UF_CRM_1727854068559'])) {
+        $noOfBr = map_enum($fields, 'UF_CRM_1727854068559', $deal['UF_CRM_1727854068559']);
+        $overall_deals[$index]['No Of Br'] = $noOfBr ?? null;
+    } else {
+        $overall_deals[$index]['No Of Br'] = 'filed_not_defined';
+    }
+
     $overall_deals[$index]['Client Name'] = $deal['UF_CRM_1727854143005'] ?? null;
-    $overall_deals[$index]['Agent Name'] = $deal['UF_CRM_1727854195911'] ?? null;
-    $overall_deals[$index]['Team'] = $deal['UF_CRM_1727854555607'] ?? null;
+
+    // get agent name by id
+    $agent = getUser($deal['ASSIGNED_BY_ID']);
+    $overall_deals[$index]['Agent Name'] = $agent['NAME'] . ' ' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? null;
+
+    // map the team value
+    if (isset($deal['UF_CRM_1727854555607'])) {
+        $teamName = map_enum($fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
+        $overall_deals[$index]['Team'] = $teamName ?? null;
+    } else {
+        $overall_deals[$index]['Team Name'] = "field_not_defined";
+    }
+
     $overall_deals[$index]['Property Price'] = $deal['OPPORTUNITY'] ?? null;
     $overall_deals[$index]['Gross Commission (Incl. VAT)'] = $deal['UF_CRM_1727628122686'] ?? null;
     $overall_deals[$index]['Gross Commission'] = $deal['UF_CRM_1727871887978'] ?? null;
