@@ -62,7 +62,7 @@ $current_agent_deals = [];
 
 foreach ($filtered_deals as $id => $deal) {
     $current_agent_deals[$id]['id'] = $deal['ID'];
-    $current_agent_deals[$id]['date'] = $deal['BEGINDATE'];
+    $current_agent_deals[$id]['date'] = date('Y-m-d', strtotime($deal['BEGINDATE']));
 
     if (isset($deal['UF_CRM_1727625723908'])) {
         $transactionType = map_enum($deal_fields, 'UF_CRM_1727625723908', $deal['UF_CRM_1727625723908']);
