@@ -2,7 +2,7 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
-<div class="sidebar border-r-2 border-gray-700 bg-gray-800 text-white min-h-screen flex flex-col justify-between w-[20%]">
+<div class="sidebar border-r-2 border-gray-700 bg-gray-800 text-white min-h-screen flex flex-col justify-between w-[15%]">
     <div class="p-6">
         <h1 class="text-2xl font-bold mb-8 text-white text-center hover:text-gray-300">
             <a href="index.php">SpringField</a>
