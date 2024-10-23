@@ -2,8 +2,8 @@
 include_once "./crest/crest.php";
 include_once "./crest/settings.php";
 include('includes/header.php');
-// include('includes/sidebar.php');
-include('includes/sidepanel.php');
+include('includes/sidebar.php');
+// include('includes/sidepanel.php');
 // get deals
 include_once "./data/fetch_deals.php";
 
@@ -150,7 +150,7 @@ $total_deals = array_pop($final_list);
 
 ?>
 
-<div class="lg:ml-[5rem] bg-gray-100 dark:bg-[#141418]">
+<div class="bg-gray-100 dark:bg-[#141418]">
     <div class="px-8 py-5 flex justify-between  bg-gray-100 dark:bg-[#23232E]">
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Springfield Dashboard</h2>
         <div class="flex items-center">
