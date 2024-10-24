@@ -22,7 +22,12 @@ foreach ($deals as $index => $deal) {
     $overall_deals[$index]['Transaction Type'] = $transactionType ?? null;
 
     // debug: deal type not defined in custom fields its named as pipeline instade 
-    $overall_deals[$index]['Deal Type'] = $deal['UF_CRM_1727625752721'] ?? null;
+    if (isset($deal['UF_CRM_1727625752721'])) {
+        $dealType = map_enum($fields, 'UF_CRM_1727625752721', $deal['UF_CRM_1727625752721']);
+        $overall_deals[$index]['Deal Type'] = $dealType ?? null;
+    } else {
+        $overall_deals[$index]['Deal Type'] = "deal_type_not_defined";
+    }
 
     $overall_deals[$index]['Project Name'] = $deal['UF_CRM_1727625779110'] ?? null;
     $overall_deals[$index]['Unit No'] = $deal['UF_CRM_1727625804043'] ?? null;

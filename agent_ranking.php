@@ -1,5 +1,64 @@
-<?php include('includes/header.php'); ?>
-<?php include('includes/sidebar.php'); ?>
+<?php
+include_once "./crest/crest.php";
+include_once "./crest/settings.php";
+include('includes/header.php');
+include('includes/sidebar.php');
+
+// include the fetch deals page
+include_once "./data/fetch_deals.php";
+include_once "./data/fetch_users.php";
+
+// utility functions
+include_once "./utils/index.php";
+
+$ranking = [
+    '2024' => [
+        'Jan 2024' => [
+            'agent_id-1' => [
+                'name' => "Agent 1",
+                'rank' => 1
+            ],
+            'agent_id-2' => [
+                'name' => "Agent 2",
+                'rank' => 2
+            ]
+        ],
+        'Feb 2024' => [
+            'agent_id'
+        ],
+        'Mar 2024' => [
+            'agent_id'
+        ],
+        'Apr 2024' => [
+            'agent_id'
+        ],
+        'May 2024' => [
+            'agent_id'
+        ],
+        'Jun 2024' => [
+            'agent_id'
+        ],
+        'Jul 2024' => [
+            'agent_id'
+        ],
+        'Aug 2024' => [
+            'agent_id'
+        ],
+        'Sep 2024' => [
+            'agent_id'
+        ],
+        'Oct 2024' => [
+            'agent_id'
+        ],
+        'Nov 2024' => [
+            'agent_id'
+        ],
+        'Dec 2024' => [
+            'agent_id'
+        ]
+    ]
+]
+?>
 
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
@@ -23,7 +82,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Agent 1</th>
                         <td class="px-6 py-4">10</td>
                         <td class="px-6 py-4">20</td>

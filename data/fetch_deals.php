@@ -42,9 +42,10 @@ function get_deal_fileds()
     return $fields;
 }
 
-function get_filtered_deals($filter = [], $select = [null])
+function get_filtered_deals($filter = [], $select = [], $order = [])
 {
     $result = CRest::call('crm.deal.list', [
+        'order' => $order,
         'select' => $select ?? ['*', 'UF_*'],
         'filter' => $filter,
     ]);
