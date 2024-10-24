@@ -4,8 +4,8 @@
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
-        <p class="text-xl font-bold dark:text-white mb-4">Table 1</p>
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <p class="text-xl font-bold dark:text-white mb-4">TBD</p>
+        <!-- <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -40,7 +40,7 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 

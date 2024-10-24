@@ -313,6 +313,15 @@ $total_deals = array_pop($final_list);
 </div>
 
 <script>
+    // get the system theme
+    function getSystemTheme() {
+        if (window.matchMedia) {
+            return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+    }
+
+    let current_theme = getSystemTheme();
+
     var options1 = {
         series: [44, 55, 13, 33],
         chart: {
@@ -338,7 +347,7 @@ $total_deals = array_pop($final_list);
             offsetY: 0,
             // height: 230,
             labels: {
-                colors: '#ffffff'
+                colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
             }
         }
     };
@@ -409,14 +418,14 @@ $total_deals = array_pop($final_list);
             categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"],
             labels: {
                 style: {
-                    colors: '#ffffff'
+                    colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
                 }
             }
         },
         yaxis: {
             labels: {
                 style: {
-                    colors: '#ffffff'
+                    colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
                 }
             }
         },
@@ -427,7 +436,7 @@ $total_deals = array_pop($final_list);
         },
         legend: {
             labels: {
-                colors: '#ffffff'
+                colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
             }
         }
     };

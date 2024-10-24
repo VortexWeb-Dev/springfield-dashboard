@@ -47,9 +47,13 @@ foreach ($deals as $index => $deal) {
     $overall_deals[$index]['Client Name'] = $deal['UF_CRM_1727854143005'] ?? null;
 
     // get agent name by id
-    $agent = getUser($deal['ASSIGNED_BY_ID']);
-    $overall_deals[$index]['Agent Name'] = $agent['NAME'] . ' ' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? null;
-
+    if (isset($deal['ASSIGNED_BY_ID'])) {
+        $agent = getUser($deal['ASSIGNED_BY_ID']);
+        // Debug: agent second and last name not showing
+        $overall_deals[$index]['Agent Name'] = $agent['NAME'] ?? '' . ' ' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' ?? null;
+    } else {
+        $overall_deals[$index]['Agent Name'] = "agent_not_found";
+    }
     // map the team value
     if (isset($deal['UF_CRM_1727854555607'])) {
         $teamName = map_enum($fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
@@ -67,13 +71,41 @@ foreach ($deals as $index => $deal) {
     $overall_deals[$index]['Sales Support Commission'] = $deal['UF_CRM_1728534773938'] ?? null;
     $overall_deals[$index]['Springfield Commission'] = $deal['UF_CRM_1727871971926'] ?? null;
     $overall_deals[$index]['Commission Slab (%)'] = $deal['UF_CRM_1727626089404'] ?? null;
-    $overall_deals[$index]['Referral'] = $deal['UF_CRM_1728042953037'] ?? null;
+
+    if (isset($deal['UF_CRM_1727626033205'])) {
+        $has_referral = map_enum($fields, 'UF_CRM_1727626033205', $deal['UF_CRM_1727626033205']);
+        $overall_deals[$index]['Referral'] = $has_referral ?? null;
+    } else {
+        $overall_deals[$index]['Referral'] = "field_not_defined";
+    }
+
     $overall_deals[$index]['Referral Fee'] = $deal['UF_CRM_1727626055823'] ?? null;
-    $overall_deals[$index]['Lead Source'] = $deal['UF_CRM_1727854893657'] ?? null;
-    $overall_deals[$index]['Invoice Status'] = $deal['UF_CRM_1727872815184'] ?? null;
+
+    if (isset($deal['UF_CRM_1727854893657'])) {
+        $leadSource = map_enum($fields, 'UF_CRM_1727854893657', $deal['UF_CRM_1727854893657']);
+        $overall_deals[$index]['Lead Source'] = $leadSource ?? null;
+    } else {
+        $overall_deals[$index]['Lead Source'] = "field_not_defined";
+    }
+
+    if (isset($deal['UF_CRM_1727872815184'])) {
+        $invoiceStatus = map_enum($fields, 'UF_CRM_1727872815184', $deal['UF_CRM_1727872815184']);
+        $overall_deals[$index]['Invoice Status'] = $invoiceStatus ?? null;
+    } else {
+        $overall_deals[$index]['Invoice Status'] = "field_not_defined";
+    }
+
     $overall_deals[$index]['Notification'] = null;
-    $overall_deals[$index]['Payment Received'] = $deal['UF_CRM_1727627289760'] ?? null;
+
+    if (isset($deal['UF_CRM_1727627289760'])) {
+        $paymentReceived = map_enum($fields, 'UF_CRM_1727627289760', $deal['UF_CRM_1727627289760']);
+        $overall_deals[$index]['Payment Received'] = $paymentReceived ?? null;
+    } else {
+        $overall_deals[$index]['Payment Received'] = "field_not_defined";
+    }
+
     $overall_deals[$index]['Follow-up Notification'] = null;
+
     $overall_deals[$index]['1st Payment Received'] = $deal['UF_CRM_1727874909907'] ?? null;
     $overall_deals[$index]['2nd Payment Received'] = $deal['UF_CRM_1727874935109'] ?? null;
     $overall_deals[$index]['3rd Payment Received'] = $deal['UF_CRM_1727874959670'] ?? null;
