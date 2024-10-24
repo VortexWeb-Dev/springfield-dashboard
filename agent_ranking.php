@@ -8,56 +8,121 @@ include('includes/sidebar.php');
 include_once "./data/fetch_deals.php";
 include_once "./data/fetch_users.php";
 
-// utility functions
+// import utility functions
 include_once "./utils/index.php";
 
-$ranking = [
-    '2024' => [
-        'Jan 2024' => [
-            'agent_id-1' => [
-                'name' => "Agent 1",
-                'rank' => 1
-            ],
-            'agent_id-2' => [
-                'name' => "Agent 2",
-                'rank' => 2
-            ]
-        ],
-        'Feb 2024' => [
-            'agent_id'
-        ],
-        'Mar 2024' => [
-            'agent_id'
-        ],
-        'Apr 2024' => [
-            'agent_id'
-        ],
-        'May 2024' => [
-            'agent_id'
-        ],
-        'Jun 2024' => [
-            'agent_id'
-        ],
-        'Jul 2024' => [
-            'agent_id'
-        ],
-        'Aug 2024' => [
-            'agent_id'
-        ],
-        'Sep 2024' => [
-            'agent_id'
-        ],
-        'Oct 2024' => [
-            'agent_id'
-        ],
-        'Nov 2024' => [
-            'agent_id'
-        ],
-        'Dec 2024' => [
-            'agent_id'
-        ]
+
+$rankings = [
+    2024 => [
+        'Jan' => [],
+        'Feb' => [],
+        'Mar' => [],
+        'Apr' => [],
+        'May' => [],
+        'Jun' => [],
+        'Jul' => [],
+        'Aug' => [],
+        'Sep' => [],
+        'Oct' => [],
+        'Nov' => [],
+        'Dec' => []
     ]
-]
+];
+
+$deal_filters = [];
+$deal_selects = ['BEGINDATE', 'ASSIGNED_BY_ID', 'UF_CRM_1727871887978'];
+$deal_orders = ['UF_CRM_1727871887978' => 'DESC', 'BEGINDATE' => 'DESC'];
+// sorted deals
+$sorted_deals = get_filtered_deals($deal_filters, $deal_selects, $deal_orders);
+
+// store the sorted agent details from the deals to the ranking array
+function store_agents($sorted_deals, &$rankings)
+{
+    foreach ($sorted_deals as $deal) {
+        $date = date('Y-m-d', strtotime($deal['BEGINDATE']));
+        $year = date('Y', strtotime($deal['BEGINDATE']));
+        $month = date('M', strtotime($deal['BEGINDATE']));
+
+        $gross_comms = isset($deal['UF_CRM_1727871887978']) ? (int)explode('|', $deal['UF_CRM_1727871887978'])[0] : 0;
+
+        // get agent name
+        $agent = getUser($deal['ASSIGNED_BY_ID']);
+        $agent_full_name = $agent['NAME'] ?? '' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '';
+
+        // if (!isset($rankings[$year][$month]['counter'])) {
+        //     $rankings[$year][$month]['counter'] = 1; // initialise the counter for the first time
+        // }
+
+        // if($rankings[$year][$month][$deal['ASSIGNED_BY_ID']] == $deal['ASSIGNED_BY_ID']){
+
+        // }
+        // $rankings[$year][$month][$deal['ASSIGNED_BY_ID']]['rank'] = $rankings[$year][$month]['counter']++ ?? null;
+
+        $rankings[$year][$month][$deal['ASSIGNED_BY_ID']]['name'] = $agent_full_name ?? null;
+
+        // initialise gross_comms for first time
+        if (!isset($rankings[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
+            $rankings[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] = $gross_comms;
+        } else {
+            $rankings[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] += $gross_comms;
+        }
+    }
+}
+
+store_agents($sorted_deals, $rankings);
+
+
+$agents = getUsers();
+
+// store the remaining agents details from the users
+function store_remaining_agents($agents, &$rankings)
+{
+    foreach ($rankings as $year => $months) {
+        foreach ($months as $month_name => $month_data) {
+            foreach ($agents as $agent) {
+                $agent_id = $agent['ID'] ?? 0;
+                if (!isset($rankings[$year][$month_name][$agent_id])) {
+                    $agent_full_name = $agent['NAME'] ?? '';
+                    $rankings[$year][$month_name][$agent_id]['name'] = $agent_full_name ?? null;
+                    $rankings[$year][$month_name][$agent_id]['gross_comms'] = 0;
+                }
+            }
+        }
+    }
+}
+
+store_remaining_agents($agents, $rankings);
+
+//assign rank to each agent in each month of each year
+function assign_rank(&$rankings)
+{
+    foreach ($rankings as $year => &$months) {
+        foreach ($months as &$agents) {
+            uasort($agents, function($a, $b) {
+                return $b['gross_comms'] <=> $a['gross_comms'];
+            });
+
+            $rank = 1;
+            $previous_gross_comms = null;
+            foreach ($agents as &$agent) {
+                if ($previous_gross_comms !== null && $agent['gross_comms'] == $previous_gross_comms) {
+                    $agent['rank'] = $rank;
+                } else {
+                    $agent['rank'] = $rank;
+                    $previous_gross_comms = $agent['gross_comms'];
+                    $rank++;
+                }
+            }
+        }
+    }
+}
+assign_rank($rankings);
+
+
+echo "<pre>";
+print_r($rankings);
+// print_r($sorted_deals);
+echo "</pre>";
 ?>
 
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">

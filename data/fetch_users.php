@@ -10,6 +10,17 @@ function getUsers()
 
     return $users;
 }
+function get_filtered_users($filter = [], $select = [], $order = [])
+{
+    $result = CRest::call('user.get', [
+        'filter' => $filter,
+        'select' => $select ?? ['*', 'UF_*'],
+        'order' => $order,
+    ]);
+    $users = $result['result'];
+
+    return $users;
+}
 
 function get_user_fields()
 {
