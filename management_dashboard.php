@@ -151,7 +151,7 @@ $total_deals = array_pop($final_list);
 ?>
 
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
-   <?php include('includes/navbar.php'); ?>
+    <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
         <!-- cards container -->
         <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
@@ -167,17 +167,17 @@ $total_deals = array_pop($final_list);
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
             </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-pink-500 hover:shadow-lg dark:bg-gray-800 dark:border-pink-300/60 dark:hover:bg-pink-200/10">
+            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
             </a>
         </div>
         <!-- header -->
-        <div class="w-full p-6 bg-white dark:bg-gray-900 border-l-8 shadow border-gray-200 dark:border-gray-700 rounded-sm">
+        <!-- <div class="w-full p-6 bg-white dark:bg-gray-900 border-l-8 shadow border-gray-200 dark:border-gray-700 rounded-sm">
             <div class="flex items-center justify-between">
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">WIP</h3>
             </div>
-        </div>
+        </div> -->
         <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
             <!-- table container -->
             <div class="w-full h-[65vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
@@ -265,22 +265,174 @@ $total_deals = array_pop($final_list);
             </div>
 
             <!-- chart -->
-            <div class="w-full col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+            <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart</h3>
+                <div id="chart-1" class="">
 
+                </div>
             </div>
         </div>
 
         <div class="my-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <!-- table container -->
-            <div class="w-full h-[50vh] col-span-1 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
-
+            <!-- top properties -->
+            <div class="w-full flex flex-col gap-6 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Properties</h3>
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
+                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-gray-900 dark:text-white">The Peak</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
+                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-gray-900 dark:text-white">The Arch</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
+                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-gray-900 dark:text-white">The Grandeur</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- chart 3 -->
+            <div class="w-full flex flex-col justify-between gap-2 col-span-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart 3</h3>
+                <div id="chart-3">
 
-            <!-- chart -->
-            <div class="w-full col-span-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
-
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    var options1 = {
+        series: [44, 55, 13, 33],
+        chart: {
+            width: 380,
+            type: 'donut',
+        },
+        dataLabels: {
+            enabled: true,
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    show: false
+                }
+            }
+        }],
+        legend: {
+            position: 'top',
+            offsetY: 0,
+            // height: 230,
+            labels: {
+                colors: '#ffffff'
+            }
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart-1"), options1);
+    chart.render();
+
+
+    // function appendData() {
+    //     var arr = chart.w.globals.series.slice()
+    //     arr.push(Math.floor(Math.random() * (100 - 1 + 1)) + 1)
+    //     return arr;
+    // }
+
+    // function removeData() {
+    //     var arr = chart.w.globals.series.slice()
+    //     arr.pop()
+    //     return arr;
+    // }
+
+    // function randomize() {
+    //     return chart.w.globals.series.map(function() {
+    //         return Math.floor(Math.random() * (100 - 1 + 1)) + 1
+    //     })
+    // }
+
+    // function reset() {
+    //     return options.series
+    // }
+
+    // document.querySelector("#randomize").addEventListener("click", function() {
+    //     chart.updateSeries(randomize())
+    // })
+
+    // document.querySelector("#add").addEventListener("click", function() {
+    //     chart.updateSeries(appendData())
+    // })
+
+    // document.querySelector("#remove").addEventListener("click", function() {
+    //     chart.updateSeries(removeData())
+    // })
+
+    // document.querySelector("#reset").addEventListener("click", function() {
+    //     chart.updateSeries(reset())
+    // })
+
+    // chart 2
+    var options2 = {
+        series: [{
+            name: 'series1',
+            data: [31, 40, 28, 51, 42, 109, 100],
+        }, {
+            name: 'series2',
+            data: [11, 32, 45, 32, 34, 52, 41]
+        }],
+        chart: {
+            height: 350,
+            type: 'area'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        xaxis: {
+            type: 'datetime',
+            categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"],
+            labels: {
+                style: {
+                    colors: '#ffffff'
+                }
+            }
+        },
+        yaxis: {
+            labels: {
+                style: {
+                    colors: '#ffffff'
+                }
+            }
+        },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+        },
+        legend: {
+            labels: {
+                colors: '#ffffff'
+            }
+        }
+    };
+    var chart2 = new ApexCharts(document.querySelector("#chart-3"), options2);
+    chart2.render();
+</script>
+
 <?php include('includes/footer.php'); ?>
