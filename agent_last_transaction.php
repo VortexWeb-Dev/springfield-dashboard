@@ -1,13 +1,15 @@
 <?php
 include_once "./crest/crest.php";
 include_once "./crest/settings.php";
-include_once "./utils/index.php";
 include('includes/header.php');
 include('includes/sidebar.php');
 
 // include the fetch deals page
 include_once "./data/fetch_deals.php";
 include_once "./data/fetch_users.php";
+
+// utility functions
+include_once "./utils/index.php";
 
 $users = getUsers();
 $deals = get_all_deals();
@@ -27,7 +29,7 @@ foreach ($users as $user) {
     if (isset($user['UF_USR_1728535335261'])) {
         $hiredBy = map_enum($user_fields, 'UF_USR_1728535335261', $user['UF_USR_1728535335261']);
         $agents[$user['ID']]["hired_by"] = $hiredBy ?? null;
-    }else{
+    } else {
         $agents[$user['ID']]["hired_by"] = 'field_not_defined';
     }
     $agents[$user['ID']]["joining_date"] = date('Y-m-d', strtotime($user['UF_USR_1727158528318'])) ?? null;
@@ -40,7 +42,13 @@ foreach ($deals as $deal) {
         if (strtotime($agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"]) < date('Y-m-d', strtotime($deal['BEGINDATE']))) {
             $agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"] = date('Y-m-d', strtotime($deal['BEGINDATE'])) ?? null;
 
-            $agents[$deal['ASSIGNED_BY_ID']]["team"] = $deal['UF_CRM_1727854555607'] ?? null;
+            if (isset($deal['UF_CRM_1727854555607'])) {
+                $teamName = map_enum($deal_fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
+                $agents[$deal['ASSIGNED_BY_ID']]["team"] = $teamName ?? null;
+            }else{
+                $agents[$deal['ASSIGNED_BY_ID']]["team"] = 'field_not_defined';
+            }
+
             $agents[$deal['ASSIGNED_BY_ID']]["project"] = $deal['UF_CRM_1727625779110'] ?? null;
             $agents[$deal['ASSIGNED_BY_ID']]["amount"] = $deal['OPPORTUNITY'] ?? null;
             $agents[$deal['ASSIGNED_BY_ID']]["gross_comms"] = $deal['UF_CRM_1727628135425'] ?? null;
@@ -78,19 +86,19 @@ echo "</pre>";
     <div class="px-8 py-6">
         <!-- table -->
         <div class="w-full h-[85vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-            <div class="relative h-full overflow-auto shadow-md sm:rounded-lg">
+            <div class="relative w-full h-full overflow-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="p-6">Agent</th>
-                            <th scope="col" class="p-6">Team</th>
-                            <th scope="col" class="p-6">Hired by</th>
-                            <th scope="col" class="p-6">Joining Date</th>
-                            <th scope="col" class="p-6">Last Deal Date</th>
-                            <th scope="col" class="p-6">Project</th>
-                            <th scope="col" class="p-6">Amount</th>
-                            <th scope="col" class="p-6">Gross Comms</th>
-                            <th scope="col" class="p-6">No. of Months without Closing</th>
+                            <th scope="col" class="px-6 py-3">Agent</th>
+                            <th scope="col" class="px-6 py-3">Team</th>
+                            <th scope="col" class="px-6 py-3">Hired by</th>
+                            <th scope="col" class="px-6 py-3 w-[150px]">Joining Date</th>
+                            <th scope="col" class="px-6 py-3 w-[150px]">Last Deal Date</th>
+                            <th scope="col" class="px-6 py-3">Project</th>
+                            <th scope="col" class="px-6 py-3">Amount</th>
+                            <th scope="col" class="px-6 py-3">Gross Comms</th>
+                            <th scope="col" class="px-6 py-3">No. of Months without Closing</th>
                         </tr>
                     </thead>
                     <tbody>

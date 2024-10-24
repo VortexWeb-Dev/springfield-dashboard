@@ -22,7 +22,7 @@ function get_all_deals()
 {
     $result = CRest::call('crm.deal.list', [
         'select' => ['*', 'UF_*'],
-        // 'filter' => ['CATEGORY_ID' => 0],
+        'filter' => ['CATEGORY_ID' => 0],
     ]);
     $deals = $result['result'];
     return $deals;
