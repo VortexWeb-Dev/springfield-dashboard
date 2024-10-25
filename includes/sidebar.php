@@ -38,14 +38,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <i class="fas fa-percentage mr-2"></i> Agent Commission Splits
                 </a>
             </li>
-            <li class="text-sm">
+            <!-- <li class="text-sm">
                 <a href="my_deals_agents.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'my_deals_agents.php' ? 'bg-gray-700' : ''; ?>">
                     <i class="fas fa-briefcase mr-2"></i> My Deals - Agents
                 </a>
-            </li>
+            </li> -->
             <li class="text-sm">
                 <a href="agent_ranking.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_ranking.php' ? 'bg-gray-700' : ''; ?>">
                     <i class="fas fa-trophy mr-2"></i> Agent Ranking
+                </a>
+            </li>
+            <li class="text-sm">
+                <a href="agent_ranking_split.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_ranking_split.php' ? 'bg-gray-700' : ''; ?>">
+                    <i class="fas fa-trophy mr-2"></i> Agent Ranking Split
                 </a>
             </li>
             <!-- <li class="text-sm">
@@ -63,11 +68,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <i class="fas fa-file-invoice mr-2"></i> SOA for Agents
                 </a>
             </li> -->
-            <li class="text-sm">
+            <!-- <li class="text-sm">
                 <a href="monthly_expenses.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'monthly_expenses.php' ? 'bg-gray-700' : ''; ?>">
                     <i class="fas fa-file-invoice-dollar mr-2"></i> Monthly Expenses
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
     <div class="p-6 text-sm text-gray-400 text-center">

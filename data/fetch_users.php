@@ -5,6 +5,7 @@ function getUsers()
 {
     $result = CRest::call('user.get', [
         'select' => ['*', 'UF_*'],
+        // 'filter' => ['UF_DEPARTMENT' => 5] // filter for sales depertment, id: UF_DEPARTMENT = 5
     ]);
     $users = $result['result'];
 
@@ -40,7 +41,6 @@ function getUser($user_id)
 {
     $result = CRest::call('user.get', ['ID' => $user_id]);
     $user = $result['result'][0];
-
     return $user;
 }
 
