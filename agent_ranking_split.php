@@ -181,7 +181,7 @@ echo "</pre>";
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
                                     <?php foreach ($monthwise_ranked_agents[$selected_agent_id]['rankings'] as  $month_name => $month): ?>
-                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600">
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $month_name ?></td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $month['rank'] ?></td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $month['gross_comms'] ?> AED</td>
@@ -215,7 +215,7 @@ echo "</pre>";
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
                                     <?php foreach ($quarterly_ranked_agents[$selected_agent_id]['rankings'] as $quarter_name => $quarter): ?>
-                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600">
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium"><?= $quarter_name ?></td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $quarter['rank'] ?></td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $quarter['gross_comms'] ?> AED</td>
@@ -249,7 +249,7 @@ echo "</pre>";
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
                                     <?php foreach ($yearly_ranked_agents[$selected_agent_id]['rankings'] as $year_name => $year): ?>
-                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600">
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium"><?= $year_name ?></td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $year['rank'] ?></td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $year['gross_comms'] ?> AED</td>
