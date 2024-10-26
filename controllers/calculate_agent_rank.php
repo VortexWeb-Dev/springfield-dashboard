@@ -69,7 +69,7 @@ if (file_exists($cache_file)) {
             $global_ranking[$year]['monthwise_rank'][$month][$deal['ASSIGNED_BY_ID']]['name'] = $agent_full_name ?? null;
 
             // initialise gross_comms for first time
-            if (!isset($global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
+            if (!isset($global_ranking[$year]['monthwise_rank'][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
                 $global_ranking[$year]['monthwise_rank'][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] = $gross_comms;
             } else {
                 $global_ranking[$year]['monthwise_rank'][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] += $gross_comms;
@@ -80,7 +80,7 @@ if (file_exists($cache_file)) {
                 $global_ranking[$year]['quarterly_rank'][$quarter][$deal['ASSIGNED_BY_ID']]['name'] = $agent_full_name ?? null;
             }
 
-            if (!isset($global_ranking[$year][$quarter][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
+            if (!isset($global_ranking[$year]['quarterly_rank'][$quarter][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
                 $global_ranking[$year]['quarterly_rank'][$quarter][$deal['ASSIGNED_BY_ID']]['gross_comms'] = $gross_comms;
             } else {
                 $global_ranking[$year]['quarterly_rank'][$quarter][$deal['ASSIGNED_BY_ID']]['gross_comms'] += $gross_comms;

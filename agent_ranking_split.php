@@ -12,7 +12,7 @@ include_once "./controllers/calculate_agent_rank.php";
 
 //get the filter data from get request
 $selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-$selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : 263;
+$selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : 1;
 
 function getMothwiseFilteredRankings($monthwise_rank_data, $selected_agent_id)
 {
@@ -32,7 +32,7 @@ function getMothwiseFilteredRankings($monthwise_rank_data, $selected_agent_id)
         foreach ($agents as $agent_id => $agent) {
             if ($agent_id == $selected_agent_id) {
                 //set the name only once
-                if(!isset($ranking[$agent_id]['name'])) {
+                if (!isset($ranking[$agent_id]['name'])) {
                     $ranking[$agent_id]['name'] = $agent['name'];
                 }
                 $ranking[$agent_id]['rankings'][$month]['gross_comms'] = $agent['gross_comms'];
@@ -61,7 +61,7 @@ function getQuaterlyFilteredRankings($quarterly_rank_data, $selected_agent_id)
         foreach ($agents as $agent_id => $agent) {
             if ($agent_id == $selected_agent_id) {
                 //set the name only once
-                if(!isset($ranking[$agent_id]['name'])) {
+                if (!isset($ranking[$agent_id]['name'])) {
                     $ranking[$agent_id]['name'] = $agent['name'];
                 }
                 $ranking[$agent_id]['rankings'][$quater]['gross_comms'] = $agent['gross_comms'];
@@ -72,7 +72,7 @@ function getQuaterlyFilteredRankings($quarterly_rank_data, $selected_agent_id)
 
     return $ranking;
 }
-function getyearlyFilteredRankings($global_ranking, $selected_agent_id)
+function getYearlyFilteredRankings($global_ranking, $selected_agent_id)
 {
     $ranking = [
         // 'id' => [
@@ -87,14 +87,14 @@ function getyearlyFilteredRankings($global_ranking, $selected_agent_id)
     ];
 
     foreach ($global_ranking as $year => $year_data) {
-        foreach ($agents as $agent_id => $agent) {
+        foreach ($year_data['yearly_rank'] as $agent_id => $agent) {
             if ($agent_id == $selected_agent_id) {
                 //set the name only once
-                if(!isset($ranking[$agent_id]['name'])) {
+                if (!isset($ranking[$agent_id]['name'])) {
                     $ranking[$agent_id]['name'] = $agent['name'];
                 }
-                $ranking[$agent_id]['rankings'][$month]['gross_comms'] = $agent['gross_comms'];
-                $ranking[$agent_id]['rankings'][$month]['rank'] = $agent['rank'];
+                $ranking[$agent_id]['rankings'][$year]['gross_comms'] = $agent['gross_comms'];
+                $ranking[$agent_id]['rankings'][$year]['rank'] = $agent['rank'];
             }
         }
     }
@@ -102,18 +102,24 @@ function getyearlyFilteredRankings($global_ranking, $selected_agent_id)
     return $ranking;
 }
 
+$monthwise_ranked_agents = [];
+$quarterly_ranked_agents = [];
+$yearly_ranked_agents = [];
 
-if (isset($global_ranking[$selected_year])) {
-    // get the sorted agents for the selected year and month
-    $monthwise_filtered_ranked_agents = getMothwiseFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_agent_id);
-    $quaterly_filtered_ranked_agents = getQuaterlyFilteredRankings($global_ranking[$selected_year]['quaterly_rank'], $selected_agent_id);
-    $quaterly_filtered_ranked_agents = getQuaterlyFilteredRankings($global_ranking, $selected_agent_id);
-} else {
-    $monthwise_filtered_ranked_agents = [];
+if (isset($global_ranking[$selected_year]['monthwise_rank'])) {
+    $monthwise_ranked_agents = getMothwiseFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_agent_id) ?? [];
 }
 
+if (isset($global_ranking[$selected_year]['quarterly_rank'])) {
+    $quarterly_ranked_agents = getQuaterlyFilteredRankings($global_ranking[$selected_year]['quarterly_rank'], $selected_agent_id) ?? [];
+}
+
+$yearly_ranked_agents = getYearlyFilteredRankings($global_ranking, $selected_agent_id) ?? [];
+
 echo "<pre>";
-// print_r($filtered_ranked_agents);
+// print_r($monthwise_ranked_agents);
+// print_r($quarterly_ranked_agents);
+// print_r($yearly_ranked_agents);
 echo "</pre>";
 ?>
 
@@ -135,13 +141,15 @@ echo "</pre>";
                     </div>
                     <div>
                         <label for="agent" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Agent:</label>
-                        <select id="agent" name="agent" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                        <select id="agent_id" name="agent_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                             <?php
-                            $all_agents = getUsers()
+                            $all_agents = getUsers();
+                            $current_agent = getUser($selected_agent_id);
+                            $agent_name = $current_agent['NAME'] ?? '' . ' ' . $current_agent['LAST_NAME'] ?? '' . ' ( ID: ' . $current_agent['ID'] . ')';
                             ?>
 
                             <?php foreach ($all_agents as $agent): ?>
-                                <option value="<?= $agent['ID'] ?>" <?= $agent['ID'] == $selected_agent ? 'selected' : '' ?>><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></option>
+                                <option value="<?= $agent['ID'] ?>" <?= $agent['ID'] == $selected_agent_id ? 'selected' : '' ?>><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -155,120 +163,102 @@ echo "</pre>";
                 <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
                     <h2 class="text-xl font-semibold mb-6 dark:text-white">Monthly Ranking</h2>
                     <div class="mb-2">
-                        <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">Agent Name</label>
+                        <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white"><?= $agent_name ?></label>
                         <input type="text" id="monthly-agent" name="monthly-agent" class="mt-1 block w-full border-b border-gray-400 dark:bg-gray-700">
                     </div>
                     <!-- Add more content for monthly ranking here -->
-                    <div class="overflow-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-700">
-                            <thead class="bg-gray-50 dark:bg-gray-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Month</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sales</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">January</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$50,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">January</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$50,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">January</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$50,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">January</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$50,000</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
+                    <?php if (empty($monthwise_ranked_agents)): ?>
+                        <p class="text-gray-600 dark:text-gray-400">No data available.</p>
+                    <?php else: ?>
+                        <div class="overflow-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Month</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gross Comm</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                                    <?php foreach ($monthwise_ranked_agents[$selected_agent_id]['rankings'] as  $month_name => $month): ?>
+                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $month_name ?></td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $month['rank'] ?></td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $month['gross_comms'] ?> AED</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Quaterly Ranking -->
                 <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
                     <h2 class="text-xl font-semibold mb-6 dark:text-white">Quaterly Ranking</h2>
                     <div class="mb-2">
-                        <label for="quaterly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">Agent Name</label>
+                        <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white"><?= $agent_name ?></label>
                         <input type="text" id="quaterly-agent" name="quaterly-agent" class="mt-1 block w-full border-b border-gray-400 dark:bg-gray-700">
                     </div>
                     <!-- Add more content for quaterly ranking here -->
-                    <div class="overflow-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-700">
-                            <thead class="bg-gray-50 dark:bg-gray-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quarter</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sales</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium">Q1</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">2</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$165,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium">Q2</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">1</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$180,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium">Q3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$155,000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <?php if (empty($quarterly_ranked_agents)): ?>
+                        <p class="text-gray-600 dark:text-gray-400">No data available.</p>
+                    <?php else: ?>
+                        <div class="overflow-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quarter</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gross Comm</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                                    <?php foreach ($quarterly_ranked_agents[$selected_agent_id]['rankings'] as $quarter_name => $quarter): ?>
+                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium"><?= $quarter_name ?></td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $quarter['rank'] ?></td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $quarter['gross_comms'] ?> AED</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Yearly Ranking -->
                 <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
                     <h2 class="text-xl font-semibold mb-6 dark:text-white">Yearly Ranking</h2>
                     <div class="mb-2">
-                        <label for="yearly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">Agent Name</label>
+                        <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white"><?= $agent_name ?></label>
                         <input type="text" id="yearly-agent" name="yearly-agent" class="mt-1 block w-full border-b border-gray-400 dark:bg-gray-700">
                     </div>
                     <!-- Add more content for yearly ranking here -->
-                    <div class="overflow-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-700">
-                            <thead class="bg-gray-50 dark:bg-gray-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Year</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sales</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium">2021</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">3</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$500,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium">2022</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">1</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$650,000</td>
-                                </tr>
-                                <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium">2023</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">2</td>
-                                    <td class="px-6 py-4 text-gray-900 dark:text-gray-200">$600,000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <?php if (empty($yearly_ranked_agents)): ?>
+                        <p class="text-gray-600 dark:text-gray-400">No data available.</p>
+                    <?php else: ?>
+                        <div class="overflow-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Year</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                                    <?php foreach ($yearly_ranked_agents[$selected_agent_id]['rankings'] as $year_name => $year): ?>
+                                        <tr class="whitespace-nowrap text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200 font-medium"><?= $year_name ?></td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $year['rank'] ?></td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-200"><?= $year['gross_comms'] ?> AED</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
