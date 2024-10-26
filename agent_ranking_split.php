@@ -8,176 +8,111 @@ include('includes/sidebar.php');
 include_once "./data/fetch_deals.php";
 include_once "./data/fetch_users.php";
 
-// import utility functions
-include_once "./utils/index.php";
-
-
-$global_ranking = [
-    2024 => [
-        'Jan' => [],
-        'Feb' => [],
-        'Mar' => [],
-        'Apr' => [],
-        'May' => [],
-        'Jun' => [],
-        'Jul' => [],
-        'Aug' => [],
-        'Sep' => [],
-        'Oct' => [],
-        'Nov' => [],
-        'Dec' => []
-    ]
-];
-
-$deal_filters = [];
-$deal_selects = ['BEGINDATE', 'ASSIGNED_BY_ID', 'UF_CRM_1727871887978'];
-$deal_orders = ['UF_CRM_1727871887978' => 'DESC', 'BEGINDATE' => 'DESC'];
-// sorted deals
-$sorted_deals = get_filtered_deals($deal_filters, $deal_selects, $deal_orders);
-
-// store the sorted agent details from the deals to the ranking array
-function store_agents($sorted_deals, &$global_ranking)
-{
-    foreach ($sorted_deals as $deal) {
-        $date = date('Y-m-d', strtotime($deal['BEGINDATE']));
-        $year = date('Y', strtotime($deal['BEGINDATE']));
-        $month = date('M', strtotime($deal['BEGINDATE']));
-
-        $gross_comms = isset($deal['UF_CRM_1727871887978']) ? (int)explode('|', $deal['UF_CRM_1727871887978'])[0] : 0;
-
-        // get agent name
-        $agent = getUser($deal['ASSIGNED_BY_ID']);
-        $agent_full_name = $agent['NAME'] ?? '' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '';
-
-        $global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['name'] = $agent_full_name ?? null;
-
-        // initialise gross_comms for first time
-        if (!isset($global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
-            $global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] = $gross_comms;
-        } else {
-            $global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] += $gross_comms;
-        }
-    }
-}
-
-store_agents($sorted_deals, $global_ranking);
-
-
-$agents = getUsers();
-
-// store the remaining agents details from the users
-function store_remaining_agents($agents, &$global_ranking)
-{
-    foreach ($global_ranking as $year => $months) {
-        foreach ($months as $month_name => $month_data) {
-            foreach ($agents as $id => $agent) {
-                $agent_id = $id ?? 0;
-                if (!isset($global_ranking[$year][$month_name][$agent_id])) {
-                    $agent_full_name = $agent['NAME'] ?? '';
-                    $global_ranking[$year][$month_name][$agent_id]['name'] = $agent_full_name ?? null;
-                    $global_ranking[$year][$month_name][$agent_id]['gross_comms'] = 0;
-                }
-            }
-        }
-    }
-}
-
-store_remaining_agents($agents, $global_ranking);
-
-// put id = 263 as it is missing in the agents list
-foreach ($global_ranking as $year => $months) {
-    foreach ($months as $month_name => $month_data) {
-        $agent_id = 263;
-        $agent = getUser($agent_id);
-        $agent_full_name = $agent['NAME'] ?? '';
-        if (!isset($global_ranking[$year][$month_name][$agent_id])) {
-            $global_ranking[$year][$month_name][$agent_id]['name'] = $agent_full_name ?? null;
-            $global_ranking[$year][$month_name][$agent_id]['gross_comms'] = 0;
-        }
-    }
-}
-
-//assign rank to each agent in each month of each year
-function assign_rank(&$global_ranking)
-{
-    foreach ($global_ranking as $year => &$months) {
-        foreach ($months as &$agents) {
-            uasort($agents, function ($a, $b) {
-                return $b['gross_comms'] <=> $a['gross_comms'];
-            });
-
-            $rank = 1;
-            $previous_gross_comms = null;
-            foreach ($agents as &$agent) {
-                if ($previous_gross_comms !== null && $agent['gross_comms'] == $previous_gross_comms) {
-                    $agent['rank'] = $rank;
-                } else {
-                    $agent['rank'] = $rank;
-                    $previous_gross_comms = $agent['gross_comms'];
-                    $rank++;
-                }
-            }
-        }
-    }
-}
-
-assign_rank($global_ranking);
-
+include_once "./controllers/calculate_agent_rank.php";
 
 //get the filter data from get request
 $selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-$selected_month = isset($_GET['month']) ? $_GET['month'] : date('M');
+$selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : 263;
 
-
-function getFilteredRankings($global_ranking, $selected_year, $selected_month)
+function getMothwiseFilteredRankings($monthwise_rank_data, $selected_agent_id)
 {
-
-    // sorted agents based on year and month
-    $ranking =  [
-        // 'agent_id' =>[
-        //     'jan' => [
-        //         'name' => 'name',
-        //         'gross_comms' => 0,
-        //         'rank' => 0
-        //     ],
-        //     'feb' => [
-        //         'name' => 'name',
-        //         'gross_comms' => 0,
-        //         'rank' => 0
-        //     ],
+    $ranking = [
+        // 'id' => [
+        //     'name' => 'Name',
+        //     'rankings' => [
+        //         'Jan' => [
+        //             'gross_comms' => 0,
+        //             'rank' => 0
+        //         ],
+        //     ]
         // ]
     ];
 
-    // $ids = array_keys($global_ranking[$selected_year][$selected_month]);
-
-    foreach ($global_ranking[$selected_year] as $month => $agents) {
+    foreach ($monthwise_rank_data as $month => $agents) {
         foreach ($agents as $agent_id => $agent) {
-            $ranking[$agent_id][$month]['name'] = $agent['name'];
-            $ranking[$agent_id][$month]['gross_comms'] = $agent['gross_comms'];
-            $ranking[$agent_id][$month]['rank'] = $agent['rank'];
+            if ($agent_id == $selected_agent_id) {
+                //set the name only once
+                if(!isset($ranking[$agent_id]['name'])) {
+                    $ranking[$agent_id]['name'] = $agent['name'];
+                }
+                $ranking[$agent_id]['rankings'][$month]['gross_comms'] = $agent['gross_comms'];
+                $ranking[$agent_id]['rankings'][$month]['rank'] = $agent['rank'];
+            }
         }
     }
 
-    uasort($ranking, function ($a, $b) use ($selected_month) {
-        return $a[$selected_month]['rank'] <=> $b[$selected_month]['rank'];
-    });
+    return $ranking;
+}
+function getQuaterlyFilteredRankings($quarterly_rank_data, $selected_agent_id)
+{
+    $ranking = [
+        // 'id' => [
+        //     'name' => 'Name',
+        //     'rankings' => [
+        //         'Q1' => [
+        //             'gross_comms' => 0,
+        //             'rank' => 0
+        //         ],
+        //     ]
+        // ]
+    ];
+
+    foreach ($quarterly_rank_data as $quater => $agents) {
+        foreach ($agents as $agent_id => $agent) {
+            if ($agent_id == $selected_agent_id) {
+                //set the name only once
+                if(!isset($ranking[$agent_id]['name'])) {
+                    $ranking[$agent_id]['name'] = $agent['name'];
+                }
+                $ranking[$agent_id]['rankings'][$quater]['gross_comms'] = $agent['gross_comms'];
+                $ranking[$agent_id]['rankings'][$quater]['rank'] = $agent['rank'];
+            }
+        }
+    }
+
+    return $ranking;
+}
+function getyearlyFilteredRankings($global_ranking, $selected_agent_id)
+{
+    $ranking = [
+        // 'id' => [
+        //     'name' => 'Name',
+        //     'rankings' => [
+        //         '2024' => [
+        //             'gross_comms' => 0,
+        //             'rank' => 0
+        //         ],
+        //     ]
+        // ]
+    ];
+
+    foreach ($global_ranking as $year => $year_data) {
+        foreach ($agents as $agent_id => $agent) {
+            if ($agent_id == $selected_agent_id) {
+                //set the name only once
+                if(!isset($ranking[$agent_id]['name'])) {
+                    $ranking[$agent_id]['name'] = $agent['name'];
+                }
+                $ranking[$agent_id]['rankings'][$month]['gross_comms'] = $agent['gross_comms'];
+                $ranking[$agent_id]['rankings'][$month]['rank'] = $agent['rank'];
+            }
+        }
+    }
 
     return $ranking;
 }
 
+
 if (isset($global_ranking[$selected_year])) {
     // get the sorted agents for the selected year and month
-    $filtered_ranked_agents = getFilteredRankings($global_ranking, $selected_year, $selected_month);
+    $monthwise_filtered_ranked_agents = getMothwiseFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_agent_id);
+    $quaterly_filtered_ranked_agents = getQuaterlyFilteredRankings($global_ranking[$selected_year]['quaterly_rank'], $selected_agent_id);
+    $quaterly_filtered_ranked_agents = getQuaterlyFilteredRankings($global_ranking, $selected_agent_id);
 } else {
-    $filtered_ranked_agents = [];
+    $monthwise_filtered_ranked_agents = [];
 }
 
-$selected_agent  = $filtered_ranked_agents[0] ?? 1;
-
 echo "<pre>";
-// print_r($agents);
-// print_r($global_ranking);
-// print_r($sorted_deals);
 // print_r($filtered_ranked_agents);
 echo "</pre>";
 ?>
@@ -201,7 +136,11 @@ echo "</pre>";
                     <div>
                         <label for="agent" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Agent:</label>
                         <select id="agent" name="agent" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                            <?php foreach ($agents as $agent): ?>
+                            <?php
+                            $all_agents = getUsers()
+                            ?>
+
+                            <?php foreach ($all_agents as $agent): ?>
                                 <option value="<?= $agent['ID'] ?>" <?= $agent['ID'] == $selected_agent ? 'selected' : '' ?>><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></option>
                             <?php endforeach; ?>
                         </select>

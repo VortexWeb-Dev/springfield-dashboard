@@ -8,148 +8,17 @@ include('includes/sidebar.php');
 include_once "./data/fetch_deals.php";
 include_once "./data/fetch_users.php";
 
-// import utility functions
-include_once "./utils/index.php";
-
-$cache_file = 'cache/global_ranking_cache.json';
-$global_ranking = [];
-
-if (file_exists($cache_file)) {
-    $global_ranking = json_decode(file_get_contents($cache_file), true);
-} else {
-    $global_ranking = [
-        2024 => [
-            'Jan' => [],
-            'Feb' => [],
-            'Mar' => [],
-            'Apr' => [],
-            'May' => [],
-            'Jun' => [],
-            'Jul' => [],
-            'Aug' => [],
-            'Sep' => [],
-            'Oct' => [],
-            'Nov' => [],
-            'Dec' => []
-        ]
-    ];
-
-    $deal_filters = [];
-    $deal_selects = ['BEGINDATE', 'ASSIGNED_BY_ID', 'UF_CRM_1727871887978'];
-    $deal_orders = ['UF_CRM_1727871887978' => 'DESC', 'BEGINDATE' => 'DESC'];
-
-    // sorted deals
-    $sorted_deals = get_filtered_deals($deal_filters, $deal_selects, $deal_orders);
-
-    // store the sorted agent details from the deals to the ranking array
-    function store_agents($sorted_deals, &$global_ranking)
-    {
-        foreach ($sorted_deals as $deal) {
-            $year = date('Y', strtotime($deal['BEGINDATE']));
-            $month = date('M', strtotime($deal['BEGINDATE']));
-
-            $gross_comms = isset($deal['UF_CRM_1727871887978']) ? (int)explode('|', $deal['UF_CRM_1727871887978'])[0] : 0;
-
-            // get agent name
-            $agent = getUser($deal['ASSIGNED_BY_ID']);
-            $agent_full_name = $agent['NAME'] ?? '' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '';
-
-            $global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['name'] = $agent_full_name ?? null;
-
-            // initialise gross_comms for first time
-            if (!isset($global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'])) {
-                $global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] = $gross_comms;
-            } else {
-                $global_ranking[$year][$month][$deal['ASSIGNED_BY_ID']]['gross_comms'] += $gross_comms;
-            }
-        }
-    }
-
-    store_agents($sorted_deals, $global_ranking);
-
-    $agents = getUsers();
-
-    // store the remaining agents details from the users
-    function store_remaining_agents($agents, &$global_ranking)
-    {
-        foreach ($global_ranking as $year => $months) {
-            foreach ($months as $month_name => $month_data) {
-                foreach ($agents as $id => $agent) {
-                    $agent_id = $id ?? 0;
-                    if (!isset($global_ranking[$year][$month_name][$agent_id])) {
-                        $agent_full_name = $agent['NAME'] ?? '';
-                        $global_ranking[$year][$month_name][$agent_id]['name'] = $agent_full_name ?? null;
-                        $global_ranking[$year][$month_name][$agent_id]['gross_comms'] = 0;
-                    }
-                }
-            }
-        }
-    }
-
-    store_remaining_agents($agents, $global_ranking);
-
-    // put id = 263 as it is missing in the agents list
-    foreach ($global_ranking as $year => $months) {
-        foreach ($months as $month_name => $month_data) {
-            $agent_id = 263;
-            $agent = getUser($agent_id);
-            $agent_full_name = $agent['NAME'] ?? '';
-            if (!isset($global_ranking[$year][$month_name][$agent_id])) {
-                $global_ranking[$year][$month_name][$agent_id]['name'] = $agent_full_name ?? null;
-                $global_ranking[$year][$month_name][$agent_id]['gross_comms'] = 0;
-            }
-        }
-    }
-
-    //assign rank to each agent in each month of each year
-    function assign_rank(&$global_ranking)
-    {
-        foreach ($global_ranking as $year => &$months) {
-            foreach ($months as &$agents) {
-                uasort($agents, function ($a, $b) {
-                    return $b['gross_comms'] <=> $a['gross_comms'];
-                });
-
-                $rank = 1;
-                $previous_gross_comms = null;
-                foreach ($agents as &$agent) {
-                    if ($previous_gross_comms !== null && $agent['gross_comms'] == $previous_gross_comms) {
-                        $agent['rank'] = $rank;
-                    } else {
-                        $agent['rank'] = $rank;
-                        $previous_gross_comms = $agent['gross_comms'];
-                        $rank++;
-                    }
-                }
-            }
-        }
-    }
-
-    assign_rank($global_ranking);
-
-    // create directory if not exists
-    $cacheDir = 'cache/';
-    if (!is_dir($cacheDir)) {
-        mkdir($cacheDir, 0777, true);
-    }
-    $cacheFile = $cacheDir . 'global_ranking_cache.json';
-
-    // Cache the global ranking data
-    $bytesWritten = file_put_contents($cacheFile, json_encode($global_ranking));
-    if ($bytesWritten === false) {
-        // handle the error
-    }
-}
+include_once "./controllers/calculate_agent_rank.php";
 
 //get the filter data from get request
 $selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
 $selected_month = isset($_GET['month']) ? $_GET['month'] : date('M');
 
-function getFilteredRankings($global_ranking, $selected_year, $selected_month)
+function getFilteredRankings($monthwise_rank_data, $selected_month)
 {
     $ranking = [];
 
-    foreach ($global_ranking[$selected_year] as $month => $agents) {
+    foreach ($monthwise_rank_data as $month => $agents) {
         foreach ($agents as $agent_id => $agent) {
             $ranking[$agent_id][$month]['name'] = $agent['name'];
             $ranking[$agent_id][$month]['gross_comms'] = $agent['gross_comms'];
@@ -164,20 +33,18 @@ function getFilteredRankings($global_ranking, $selected_year, $selected_month)
     return $ranking;
 }
 
-if (isset($global_ranking[$selected_year])) {
+if (isset($global_ranking[$selected_year]['monthwise_rank'])) {
     // get the sorted agents for the selected year and month
-    $filtered_ranked_agents = getFilteredRankings($global_ranking, $selected_year, $selected_month);
+    $filtered_ranked_agents = getFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_month);
 } else {
     $filtered_ranked_agents = [];
 }
 
 echo "<pre>";
-// print_r($agents);
-// print_r($global_ranking);
-// print_r($sorted_deals);
 // print_r($filtered_ranked_agents);
 echo "</pre>";
 ?>
+
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
@@ -239,7 +106,7 @@ echo "</pre>";
                         <?php else: ?>
                             <?php
                             $total_agents = count($filtered_ranked_agents);
-                            $per_page = 10;
+                            $per_page = 6;
                             $total_pages = ceil($total_agents / $per_page);
                             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                             $start = ($page - 1) * $per_page;
