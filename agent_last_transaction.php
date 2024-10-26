@@ -45,7 +45,7 @@ foreach ($deals as $deal) {
             if (isset($deal['UF_CRM_1727854555607'])) {
                 $teamName = map_enum($deal_fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
                 $agents[$deal['ASSIGNED_BY_ID']]["team"] = $teamName ?? null;
-            }else{
+            } else {
                 $agents[$deal['ASSIGNED_BY_ID']]["team"] = 'field_not_defined';
             }
 
@@ -84,8 +84,10 @@ echo "</pre>";
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
-        <!-- table -->
-        <div class="w-full h-[85vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+        <p class="text-2xl font-bold dark:text-white mb-4">Agent Last Transaction Details</p>
+
+        <div class="p-4">
+            <!-- table -->
             <div class="relative w-full h-full overflow-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -102,7 +104,15 @@ echo "</pre>";
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($agents as $agent) : ?>
+                        <?php
+                        $total_agents = count($agents);
+                        $per_page = 7;
+                        $total_pages = ceil($total_agents / $per_page);
+                        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        $start = ($page - 1) * $per_page;
+                        $paginated_agents = array_slice($agents, $start, $per_page);
+
+                        foreach ($paginated_agents as $agent) : ?>
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     <?= isset($agent['first_name'], $agent['last_name']) ? "{$agent['first_name']} {$agent['last_name']}" : 'Undefined'; ?>
@@ -135,6 +145,25 @@ echo "</pre>";
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- pagination control -->
+            <div class="mt-4 w-full flex justify-center gap-1 py-2">
+                <?php if (!empty($agents)): ?>
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" class="bg-gray-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100">Prev</a>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <?php if ($page == $i): ?>
+                            <button type="button" class="bg-indigo-500 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white" disabled><?= $i ?></button>
+                        <?php else: ?>
+                            <a href="?page=<?= $i ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white"><?= $i ?></a>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+                    <?php if ($page < $total_pages): ?>
+                        <a href="?page=<?= $page + 1 ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>

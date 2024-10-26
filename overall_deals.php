@@ -175,12 +175,12 @@ foreach ($deals as $index => $deal) {
                     </thead>
                     <tbody>
                         <?php
-                       $total_deals = count($overall_deals);
-                       $per_page = 6;
-                       $total_pages = ceil($total_deals / $per_page);
-                       $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                       $start = ($page - 1) * $per_page;
-                       $paginatedDeals = array_slice($overall_deals, $start, $per_page);
+                        $total_deals = count($overall_deals);
+                        $per_page = 6;
+                        $total_pages = ceil($total_deals / $per_page);
+                        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        $start = ($page - 1) * $per_page;
+                        $paginatedDeals = array_slice($overall_deals, $start, $per_page);
 
                         foreach ($paginatedDeals as $deal) :
                         ?>
