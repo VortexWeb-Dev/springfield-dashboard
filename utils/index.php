@@ -36,3 +36,10 @@ function get_quarter($month){
         return 'Q4';
     }
 }
+
+function clearCache($fileName){
+    $filePath = 'cache/' . $fileName;
+    if (file_exists($filePath)) {
+        unlink($filePath);
+    }
+}
