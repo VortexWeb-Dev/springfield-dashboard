@@ -7,6 +7,7 @@ include('includes/sidebar.php');
 // get deals
 include_once "./data/fetch_deals.php";
 
+// import utils 
 include_once "./utils/index.php";
 
 //get the year from get request
@@ -21,33 +22,36 @@ $filter = [
 $deals = get_filtered_deals($filter) ?? [];
 $deal_fields = get_deal_fileds();
 
+// get the develpers name
+include_once "./static/developers.php";
+$developers = getDevelopers();
+
 if (!empty($deals)) {
-    $offplan_deals = 0;
-    $secondary_deals = 0;
 
-    function get_deal_types($deals, $deal_fields, &$offplan_deals, &$secondary_deals)
+    // get deals per deal type
+    function get_deals_per_deal_type($deals, $deal_fields)
     {
-        $deal_types = [];
+        $deal_types = $deal_fields['UF_CRM_1727625752721']['items'] ?? [];
 
-        foreach ($deals as $deal) {
-            $type_id = $deal['UF_CRM_1727625752721'];
-            $dealType = map_enum($deal_fields, 'UF_CRM_1727625752721', $type_id) ?? 'Not Seleted';
+        $deals_per_deal_type = [];
 
-            $deal_types[$dealType]['title'] = $dealType;
-            if (!isset($deal_types[$dealType]['count'])) {
-                $deal_types[$dealType]['count'] = 0;
-            }
-            $deal_types[$dealType]['count']++;
+        foreach ($deal_types as $deal_type) {
+            $type_id = $deal_type['ID'] ?? null;
+            $deal_type_name = map_enum($deal_fields, 'UF_CRM_1727625752721', $type_id) ?? 'Unknown';
+
+            $deals_per_deal_type[$deal_type_name] = array_filter($deals, function ($deal) use ($type_id) {
+                return $deal['UF_CRM_1727625752721'] ==  $type_id;
+            });
         }
 
-        return $deal_types;
+        return $deals_per_deal_type;
     }
 
-    $deal_types = get_deal_types($deals, $deal_fields, $offplan_deals, $secondary_deals);
+    $deals_per_deal_type = get_deals_per_deal_type($deals, $deal_fields);
 
-    echo "<pre>";
-    print_r($deal_types);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($deals_per_deal_type);
+    // echo "</pre>";
 
     function get_closed_deals($deals)
     {
@@ -183,6 +187,69 @@ if (!empty($deals)) {
     };
 
     $total_deals = array_pop($final_list);
+
+    // monthly deals per developer with total monthly and yearly property value
+    function get_monthly_deals_per_developer($deals, &$developers)
+    {
+        $monthlyDealsPerDeveloper = [];
+
+        foreach ($developers as $developer) {
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            foreach ($months as $month) {
+                // get monthwise deals
+                $monthwiseDeals = array_filter($deals, function ($deal) use ($month) {
+                    return date('M', strtotime($deal['BEGINDATE'])) == $month;
+                });
+
+                $monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['deals'] = array_filter($monthwiseDeals, function ($deal) use ($developer) {
+                    return $deal['UF_CRM_1727625822094'] == $developer;
+                });
+
+                $monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['total_monthly_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['deals'], function ($total, $deal) {
+                    return isset($deal['OPPORTUNITY']) ? $total + (int)$deal['OPPORTUNITY'] : $total;
+                });
+            }
+
+            $monthlyDealsPerDeveloper[$developer]['total_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['monthly_deals'], function ($total, $prev) {
+                return isset($prev['total_monthly_property_value']) ? $total + (int)$prev['total_monthly_property_value'] : $total;
+            }, 0);
+        }
+
+        return $monthlyDealsPerDeveloper;
+    }
+
+    $monthly_deals_per_developer = get_monthly_deals_per_developer($deals, $developers);
+
+    // echo "<pre>";
+    // print_r($monthly_deals_per_developer);
+    // echo "</pre>";
+
+
+    // Deals per lead source
+    function get_deals_per_lead_source($deals, $deal_fields)
+    {
+        $lead_sources = $deal_fields['UF_CRM_1727854893657']['items'];
+        echo "<pre>";
+        // print_r($lead_sources);
+        echo "</pre>";
+        $deals_per_lead_source = [];
+        foreach ($lead_sources as $lead_source) {
+            $lead_source_id = $lead_source['ID'];
+            $lead_source_name = map_enum($deal_fields, 'UF_CRM_1727854893657',  $lead_source_id) ?? 'Unknown';
+
+            $deals_per_lead_source[$lead_source_name] = array_filter($deals, function ($deal) use ($lead_source_id) {
+                return $deal['UF_CRM_1727854893657'] ==  $lead_source_id;
+            });
+        }
+
+        return $deals_per_lead_source;
+    }
+
+    $deals_per_lead_source = get_deals_per_lead_source($deals, $deal_fields) ?? [];
+
+    // echo "<pre>";
+    // print_r($deals_per_lead_source);
+    // echo "</pre>";
 }
 // echo "<pre>";
 // print_r($deals);
@@ -232,7 +299,7 @@ if (!empty($deals)) {
                     </a>
                     <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-blue-500 hover:shadow-lg dark:bg-gray-800 dark:border-blue-300/60 dark:hover:bg-blue-200/10">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Gross Commission</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['gross_commission'] ?></p>
+                        <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['gross_commission'] ?> AED</p>
                     </a>
                     <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Net Commission</h5>
@@ -333,10 +400,18 @@ if (!empty($deals)) {
 
                     <!-- chart -->
                     <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart</h3>
-                        <div id="chart-1" class="">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Property Type</h3>
+                        <div id="property-type-chart" class="flex justify-center items-center">
 
                         </div>
+                    </div>
+                </div>
+
+                <!-- bar chart -->
+                <div class="w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
+                    <div id="lead-source-chart" class="flex justify-center items-center">
+
                     </div>
                 </div>
 
@@ -383,85 +458,163 @@ if (!empty($deals)) {
 
 <script>
     // get the system theme
-    function getSystemTheme() {
-        if (window.matchMedia) {
-            return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
+    // function getSystemTheme() {
+    //     if (window.matchMedia) {
+    //         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    //     }
+    // }
+
+
+    function isDarkTheme() {
+        return localStorage.getItem('darkMode') === 'true';
     }
 
-    let current_theme = getSystemTheme();
+    let isdark = isDarkTheme();
 
-    var options1 = {
-        series: [44, 55, 13, 33],
-        chart: {
-            width: 380,
-            type: 'donut',
-        },
-        dataLabels: {
-            enabled: true,
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    show: false
+    var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
+
+    var offplanDeals = dealsPerDealType['Offplan'].length;
+    var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
+
+
+    console.log(dealsPerDealType);
+
+    function display_property_type_chart() {
+        // property type
+        var options = {
+            series: [offplanDeals, secondaryDeals],
+            labels: ["Offplan", "Secondary"],
+            chart: {
+                width: 380,
+                type: 'donut',
+            },
+            dataLabels: {
+                enabled: true,
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        show: false
+                    }
+                }
+            }],
+            legend: {
+                position: 'top',
+                offsetY: 0,
+                // height: 230,
+                labels: {
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
                 }
             }
-        }],
-        legend: {
-            position: 'top',
-            offsetY: 0,
-            // height: 230,
-            labels: {
-                colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
+        };
+
+        var chart = new ApexCharts(document.querySelector("#property-type-chart"), options);
+        chart.render();
+    }
+
+    display_property_type_chart();
+
+
+
+    function display_lead_source_chart() {
+
+        let $deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
+        let categories = [];
+        let net_commission = [];
+        let gross_commission = [];
+
+        for (x in $deals_per_lead_source) {
+            // console.log(x);
+            categories.push(x);
+            if ($deals_per_lead_source[x]['UF_CRM_1727871971926'] == null) {
+                net_commission.push(0);
+            } else {
+                net_commission.push($deals_per_lead_source[x]['UF_CRM_1727871971926']);
+            }
+
+            if ($deals_per_lead_source[x]['UF_CRM_1727871887978'] == null) {
+                gross_commission.push(0);
+            } else {
+                gross_commission.push($deals_per_lead_source[x]['UF_CRM_1727871887978']);
             }
         }
-    };
-
-    var chart = new ApexCharts(document.querySelector("#chart-1"), options1);
-    chart.render();
 
 
-    // function appendData() {
-    //     var arr = chart.w.globals.series.slice()
-    //     arr.push(Math.floor(Math.random() * (100 - 1 + 1)) + 1)
-    //     return arr;
-    // }
 
-    // function removeData() {
-    //     var arr = chart.w.globals.series.slice()
-    //     arr.pop()
-    //     return arr;
-    // }
+        console.log($deals_per_lead_source);
 
-    // function randomize() {
-    //     return chart.w.globals.series.map(function() {
-    //         return Math.floor(Math.random() * (100 - 1 + 1)) + 1
-    //     })
-    // }
 
-    // function reset() {
-    //     return options.series
-    // }
+        var options = {
+            series: [{
+                name: 'Net Commission',
+                data: [...net_commission]
+            }, {
+                name: 'Gross Commission',
+                data: [...gross_commission]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: [...categories],
+                labels: {
+                    style: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: '$ (thousands)',
+                },
+                labels: {
+                    style: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return "$ " + val + " thousands"
+                    }
+                }
+            },
+            legend: {
+                labels: {
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            }
+        };
 
-    // document.querySelector("#randomize").addEventListener("click", function() {
-    //     chart.updateSeries(randomize())
-    // })
+        var chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
+        chart.render();
+    }
 
-    // document.querySelector("#add").addEventListener("click", function() {
-    //     chart.updateSeries(appendData())
-    // })
-
-    // document.querySelector("#remove").addEventListener("click", function() {
-    //     chart.updateSeries(removeData())
-    // })
-
-    // document.querySelector("#reset").addEventListener("click", function() {
-    //     chart.updateSeries(reset())
-    // })
+    display_lead_source_chart();
 
     // chart 2
     var options2 = {
@@ -487,14 +640,14 @@ if (!empty($deals)) {
             categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"],
             labels: {
                 style: {
-                    colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
                 }
             }
         },
         yaxis: {
             labels: {
                 style: {
-                    colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
                 }
             }
         },
@@ -505,7 +658,7 @@ if (!empty($deals)) {
         },
         legend: {
             labels: {
-                colors: `${current_theme == 'dark' ? '#ffffff' : '#000000'}`
+                colors: `${isdark ? '#ffffff' : '#000000'}`
             }
         }
     };
