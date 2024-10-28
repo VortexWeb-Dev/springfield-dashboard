@@ -7,143 +7,153 @@ include('includes/sidebar.php');
 // get deals
 include_once "./data/fetch_deals.php";
 
-$deals = get_all_deals();
+//get the year from get request
+$selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 
-function get_closed_deals($deals)
-{
-    return array_filter($deals, function ($deal) {
-        return $deal['CLOSED'] == 'Y';
-    });
-}
-
-$closed_deals = get_closed_deals($deals);
-
-$final_list = [
-    'January' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'February' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'March' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'April' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'May' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'June' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'July' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'August' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'September' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'October' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'November' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'December' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
-    'total' => [
-        'count_of_closed_deals' => 0,
-        'property_price' => 0,
-        'gross_commission' => 0,
-        'net_commission' => 0,
-        'total_payment_received' => 0,
-        'amount_receivable' => 0,
-    ],
+$filter = [
+    '>=BEGINDATE' => "$selected_year-01-01",
+    '<=BEGINDATE' => "$selected_year-12-31",
 ];
 
-foreach ($deals as $deal) {
-    $final_list['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
-    $final_list['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-    $final_list['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
-    $final_list['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
-    $final_list['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
-    $final_list['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+$deals = get_filtered_deals($filter) ?? [];
 
-    $month = date('F', strtotime($deal['BEGINDATE']));
-    $final_list[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
-    $final_list[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-    $final_list[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
-    $final_list[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
-    $final_list[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
-    $final_list[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
-};
+if (!empty($deals)) {
 
-$total_deals = array_pop($final_list);
+    function get_closed_deals($deals)
+    {
+        return array_filter($deals, function ($deal) {
+            return $deal['CLOSED'] == 'Y';
+        });
+    }
 
+    $closed_deals = get_closed_deals($deals);
+
+    $final_list = [
+        'January' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'February' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'March' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'April' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'May' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'June' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'July' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'August' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'September' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'October' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'November' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'December' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+        'total' => [
+            'count_of_closed_deals' => 0,
+            'property_price' => 0,
+            'gross_commission' => 0,
+            'net_commission' => 0,
+            'total_payment_received' => 0,
+            'amount_receivable' => 0,
+        ],
+    ];
+
+    foreach ($deals as $deal) {
+        $final_list['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+        $final_list['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+        $final_list['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+        $final_list['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+        $final_list['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+        $final_list['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+
+        $month = date('F', strtotime($deal['BEGINDATE']));
+        $final_list[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+        $final_list[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+        $final_list[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+        $final_list[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+        $final_list[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+        $final_list[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+    };
+
+    $total_deals = array_pop($final_list);
+}
 // echo "<pre>";
 // print_r($deals);
 // echo "</pre>";
@@ -153,163 +163,187 @@ $total_deals = array_pop($final_list);
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
-        <!-- cards container -->
-        <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
-            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-green-500 hover:shadow-lg dark:bg-gray-800 dark:border-green-300/60 dark:hover:bg-green-200/10">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-            </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-            </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-blue-500 hover:shadow-lg dark:bg-gray-800 dark:border-blue-300/60 dark:hover:bg-blue-200/10">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-            </a>
-            <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-            </a>
-        </div>
-        <!-- header -->
-        <!-- <div class="w-full p-6 bg-white dark:bg-gray-900 border-l-8 shadow border-gray-200 dark:border-gray-700 rounded-sm">
-            <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">WIP</h3>
-            </div>
-        </div> -->
-        <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <!-- table container -->
-            <div class="w-full h-[65vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-                <div class="relative h-full overflow-auto sm:rounded-lg">
-                    <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Month
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Count of Closed Deals
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Property Price
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Gross Commission
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Net Commission
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Total Payment Received
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Amount Receivable
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($final_list as $month => $details) : ?>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <?= $month ?>
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        <?= $details['count_of_closed_deals'] ?>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <?= number_format($details['property_price'], 2) ?>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <?= number_format($details['gross_commission'], 2) ?>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <?= number_format($details['net_commission'], 2) ?>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <?= number_format($details['total_payment_received'], 2) ?>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <?= number_format($details['amount_receivable'], 2) ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot class="sticky bottom-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
-                                    Total
-                                </th>
-                                <td class="px-6 py-4">
-                                    <?= $total_deals['count_of_closed_deals'] ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?= number_format($total_deals['property_price'], 2) ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?= number_format($total_deals['gross_commission'], 2) ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?= number_format($total_deals['net_commission'], 2) ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?= number_format($total_deals['total_payment_received'], 2) ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?= number_format($total_deals['amount_receivable'], 2) ?>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+        <!-- date picker -->
+        <div class="mb-4">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+                <div class="flex flex-end justify-end gap-2">
+                    <div class="relative max-w-sm">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                            </svg>
+                        </div>
+                        <input id="datepicker-actions" datepicker datepicker-buttons datepicker-autoselect-today type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date" name="year">
+                    </div>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button>
                 </div>
-            </div>
-
-            <!-- chart -->
-            <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart</h3>
-                <div id="chart-1" class="">
-
-                </div>
-            </div>
+            </form>
         </div>
-
-        <div class="my-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <!-- top properties -->
-            <div class="w-full flex flex-col gap-6 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Properties</h3>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
-                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">The Peak</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+        <?php if (empty($final_list)): ?>
+            <div class="h-[65vh] flex justify-center items-center">
+                <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
+            </div>
+        <?php else: ?>
+            <div>
+                <!-- cards container -->
+                <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
+                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-green-500 hover:shadow-lg dark:bg-gray-800 dark:border-green-300/60 dark:hover:bg-green-200/10">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    </a>
+                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    </a>
+                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-blue-500 hover:shadow-lg dark:bg-gray-800 dark:border-blue-300/60 dark:hover:bg-blue-200/10">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    </a>
+                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    </a>
+                </div>
+                <!-- header -->
+                <!-- <div class="w-full p-6 bg-white dark:bg-gray-900 border-l-8 shadow border-gray-200 dark:border-gray-700 rounded-sm">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">WIP</h3>
+                </div>
+            </div> -->
+                <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- table container -->
+                    <div class="w-full h-[65vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+                        <div class="relative h-full overflow-auto sm:rounded-lg">
+                            <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Month
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Count of Closed Deals
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Property Price
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Gross Commission
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Net Commission
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Total Payment Received
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Amount Receivable
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($final_list as $month => $details) : ?>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <?= $month ?>
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                <?= $details['count_of_closed_deals'] ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['property_price'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['gross_commission'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['net_commission'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['total_payment_received'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['amount_receivable'], 2) ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot class="sticky bottom-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
+                                            Total
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            <?= $total_deals['count_of_closed_deals'] ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($total_deals['property_price'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($total_deals['gross_commission'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($total_deals['net_commission'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($total_deals['total_payment_received'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($total_deals['amount_receivable'], 2) ?>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
-                    <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
-                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">The Arch</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
-                        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">The Grandeur</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+
+                    <!-- chart -->
+                    <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart</h3>
+                        <div id="chart-1" class="">
+
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- chart 3 -->
-            <div class="w-full flex flex-col justify-between gap-2 col-span-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart 3</h3>
-                <div id="chart-3">
 
+                <div class="my-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- top properties -->
+                    <div class="w-full flex flex-col gap-6 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Properties</h3>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
+                                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white">The Peak</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
+                                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white">The Arch</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
+                                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white">The Grandeur</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- chart 3 -->
+                    <div class="w-full flex flex-col justify-between gap-2 col-span-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart 3</h3>
+                        <div id="chart-3">
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
+<?php endif ?>
 </div>
 
 <script>

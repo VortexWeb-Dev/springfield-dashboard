@@ -155,7 +155,7 @@ echo "</pre>";
                     <?php endif; ?>
                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <?php if ($page == $i): ?>
-                            <button type="button" class="bg-indigo-500 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white" disabled><?= $i ?></button>
+                            <button type="button" class="bg-indigo-500 rounded-md px-2 py-1 text-indigo-100 text-xs font-medium hover:bg-indigo-600 dark:hover:bg-indigo-600" disabled><?= $i ?></button>
                         <?php else: ?>
                             <a href="?page=<?= $i ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white"><?= $i ?></a>
                         <?php endif; ?>
