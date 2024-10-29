@@ -636,7 +636,7 @@ if (!empty($deals)) {
                 </div>
 
                 <!-- Deals per lead source -->
-                <div class="w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
                     <div id="lead-source-chart" class="flex justify-center items-center">
 
@@ -644,7 +644,7 @@ if (!empty($deals)) {
                 </div>
 
                 <!-- Extras -->
-                <div class="my-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <!-- top properties -->
                     <div class="w-full flex flex-col gap-6 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Properties</h3>
@@ -681,114 +681,247 @@ if (!empty($deals)) {
                     </div>
                 </div>
             </div>
+
+        <?php endif ?>
     </div>
-<?php endif ?>
-</div>
 
-<script>
-    // get the system theme
-    // function getSystemTheme() {
-    //     if (window.matchMedia) {
-    //         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    //     }
-    // }
+    <script>
+        // get the system theme
+        // function getSystemTheme() {
+        //     if (window.matchMedia) {
+        //         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        //     }
+        // }
 
 
-    function isDarkTheme() {
-        return localStorage.getItem('darkMode') === 'true';
-    }
+        function isDarkTheme() {
+            return localStorage.getItem('darkMode') === 'true';
+        }
 
-    let isdark = isDarkTheme();
+        let isdark = isDarkTheme();
 
 
 
-    // console.log(dealsPerDealType);
+        // console.log(dealsPerDealType);
 
-    function display_property_type_chart() {
-        var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
+        function display_property_type_chart() {
+            var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
 
-        var offplanDeals = dealsPerDealType['Offplan'].length;
-        var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
+            var offplanDeals = dealsPerDealType['Offplan'].length;
+            var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
 
-        // property type
-        var options = {
-            series: [offplanDeals, secondaryDeals],
-            labels: ["Offplan", "Secondary"],
-            chart: {
-                width: 380,
-                type: 'donut',
-            },
-            dataLabels: {
-                enabled: true,
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        width: 200
-                    },
-                    legend: {
-                        show: false
+            // property type
+            var options = {
+                series: [offplanDeals, secondaryDeals],
+                labels: ["Offplan", "Secondary"],
+                chart: {
+                    width: 380,
+                    type: 'donut',
+                },
+                dataLabels: {
+                    enabled: true,
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            show: false
+                        }
+                    }
+                }],
+                legend: {
+                    position: 'top',
+                    offsetY: 0,
+                    // height: 230,
+                    labels: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
                     }
                 }
-            }],
-            legend: {
-                position: 'top',
-                offsetY: 0,
-                // height: 230,
-                labels: {
-                    colors: `${isdark ? '#ffffff' : '#000000'}`
-                }
-            }
-        };
+            };
 
-        var chart = new ApexCharts(document.querySelector("#property-type-chart"), options);
-        chart.render();
-    }
+            var chart = new ApexCharts(document.querySelector("#property-type-chart"), options);
+            chart.render();
+        }
 
-    display_property_type_chart();
+        display_property_type_chart();
 
-    function display_developer_property_value_chart() {
-        let developersData = <?php echo json_encode($monthly_deals_per_developer); ?>;
+        function display_developer_property_value_chart() {
+            let developersData = <?php echo json_encode($monthly_deals_per_developer); ?>;
 
-        let developers = Object.keys(developersData);
-        let property_values = [];
-        developersData.forEach(developer => {
-            psroperty_values.push(developer['total_property_value']);
-        })
+            let developers = Object.keys(developersData);
+            let property_values = [];
+            developersData.forEach(developer => {
+                psroperty_values.push(developer['total_property_value']);
+            })
 
-        let options = {
-            series: [5, 5, 6],
-            labels: ['a', 'b', 'c'],
-            chart: {
-                width: 600,
-                type: 'donut',
-            },
-            plotOptions: {
-                pie: {
-                    startAngle: -90,
-                    endAngle: 270
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: 'gradient',
-            },
-            legend: {
-                formatter: function(val, opts) {
-                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+            let options = {
+                series: [5, 5, 6],
+                labels: ['a', 'b', 'c'],
+                chart: {
+                    width: 600,
+                    type: 'donut',
                 },
-                labels: {
-                    colors: `${isdark ? '#ffffff' : '#000000'}`
+                plotOptions: {
+                    pie: {
+                        startAngle: -90,
+                        endAngle: 270
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                fill: {
+                    type: 'gradient',
+                },
+                legend: {
+                    formatter: function(val, opts) {
+                        return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                    },
+                    labels: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                },
+                title: {
+                    // text: 'Developers VS Property Value',
+                    style: {
+                        color: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                colors: `${isdark ? '#ffffff' : '#000000'}`
+                            }
+                        }
+                    }
+                }]
+            };
+
+            let chart = new ApexCharts(document.querySelector("#developer-property-value-chart"), options);
+            chart.render();
+        }
+
+        display_developer_property_value_chart();
+
+        function display_lead_source_chart() {
+
+            let deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
+            let categories = [];
+            let net_commission = {};
+            let gross_commission = {};
+
+            for (x in deals_per_lead_source) {
+                // console.log(deals_per_lead_source[x]);
+                categories.push(x);
+
+                // initialise_commission_array for all types of leads
+                if (net_commission[x] == null) {
+                    net_commission[x] = 0;
                 }
-            },
-            title: {
-                // text: 'Developers VS Property Value',
-                style: {
-                    color: `${isdark ? '#ffffff' : '#000000'}`
+
+                if (gross_commission[x] == null) {
+                    gross_commission[x] = 0;
                 }
+
+                deals_per_lead_source[x].forEach(deal => {
+                    if (deal['UF_CRM_1727871971926'] != null) {
+                        net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
+                    }
+
+                    if (deal['UF_CRM_1727871887978'] != null) {
+                        gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
+                    }
+                });
+            }
+
+            let net_commission_values = Object.values(net_commission);
+            let gross_commission_values = Object.values(gross_commission);
+
+            let options = {
+                series: [{
+                    name: 'Net Commission',
+                    data: [...net_commission_values]
+                }, {
+                    name: 'Gross Commission',
+                    data: [...gross_commission_values]
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: [...categories],
+                    labels: {
+                        style: {
+                            colors: `${isdark ? '#ffffff' : '#000000'}`
+                        }
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'AED',
+                        style: {
+                            color: `${isdark ? '#ffffff' : '#000000'}`
+                        }
+                    },
+                    labels: {
+                        style: {
+                            colors: `${isdark ? '#ffffff' : '#000000'}`
+                        }
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val + " AED"
+                        }
+                    }
+                },
+                legend: {
+                    labels: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                }
+            };
+
+            let chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
+            chart.render();
+        }
+
+        display_lead_source_chart();
+
+        // chart 2
+        var options = {
+            series: [44, 55, 41, 17, 15],
+            chart: {
+                type: 'donut',
             },
             responsive: [{
                 breakpoint: 480,
@@ -797,169 +930,14 @@ if (!empty($deals)) {
                         width: 200
                     },
                     legend: {
-                        position: 'bottom',
-                        labels: {
-                            colors: `${isdark ? '#ffffff' : '#000000'}`
-                        }
+                        position: 'bottom'
                     }
                 }
             }]
         };
 
-        let chart = new ApexCharts(document.querySelector("#developer-property-value-chart"), options);
-        chart.render();
-    }
-
-    display_developer_property_value_chart();
-
-    function display_lead_source_chart() {
-
-        let deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
-        let categories = [];
-        let net_commission = {};
-        let gross_commission = {};
-
-        for (x in deals_per_lead_source) {
-            // console.log(deals_per_lead_source[x]);
-            categories.push(x);
-
-            // initialise_commission_array for all types of leads
-            if (net_commission[x] == null) {
-                net_commission[x] = 0;
-            }
-
-            if (gross_commission[x] == null) {
-                gross_commission[x] = 0;
-            }
-
-            deals_per_lead_source[x].forEach(deal => {
-                if (deal['UF_CRM_1727871971926'] != null) {
-                    net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
-                }
-
-                if (deal['UF_CRM_1727871887978'] != null) {
-                    gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
-                }
-            });
-        }
-
-        let net_commission_values = Object.values(net_commission);
-        let gross_commission_values = Object.values(gross_commission);
-
-        let options = {
-            series: [{
-                name: 'Net Commission',
-                data: [...net_commission_values]
-            }, {
-                name: 'Gross Commission',
-                data: [...gross_commission_values]
-            }],
-            chart: {
-                type: 'bar',
-                height: 350
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: [...categories],
-                labels: {
-                    style: {
-                        colors: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                }
-            },
-            yaxis: {
-                title: {
-                    text: 'AED',
-                    style: {
-                        color: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                },
-                labels: {
-                    style: {
-                        colors: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                }
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return val + " AED"
-                    }
-                }
-            },
-            legend: {
-                labels: {
-                    colors: `${isdark ? '#ffffff' : '#000000'}`
-                }
-            }
-        };
-
-        let chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
-        chart.render();
-    }
-
-    display_lead_source_chart();
-
-    // chart 2
-   
-    var options = {
-          series: [{
-          name: "STOCK ABC",
-          data: series.monthDataSeries1.prices
-        }],
-          chart: {
-          type: 'area',
-          height: 350,
-          zoom: {
-            enabled: false
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'straight'
-        },
-        
-        title: {
-          text: 'Fundamental Analysis of Stocks',
-          align: 'left'
-        },
-        subtitle: {
-          text: 'Price Movements',
-          align: 'left'
-        },
-        labels: series.monthDataSeries1.dates,
-        xaxis: {
-          type: 'datetime',
-        },
-        yaxis: {
-          opposite: true
-        },
-        legend: {
-          horizontalAlign: 'left'
-        }
-        };
-
         var chart = new ApexCharts(document.querySelector("#chart-3"), options);
         chart.render();
-</script>
+    </script>
 
-<?php include('includes/footer.php'); ?>
+    <?php include('includes/footer.php'); ?>
