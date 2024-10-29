@@ -330,12 +330,8 @@ if (!empty($deals)) {
                         <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['net_commission'] ?></p>
                     </a>
                 </div>
-                <!-- header -->
-                <!-- <div class="w-full p-6 bg-white dark:bg-gray-900 border-l-8 shadow border-gray-200 dark:border-gray-700 rounded-sm">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">WIP</h3>
-                </div>
-            </div> -->
+
+                <!-- main deals table and property type chart -->
                 <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <!-- table container -->
                     <div class="w-full h-[65vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
@@ -604,11 +600,43 @@ if (!empty($deals)) {
                                                 <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
                                                     <th scope="col" class="px-6 py-3"><?= $month ?></th>
                                                 <?php endforeach; ?> -->
-                                                <th scope="col" class="px-6 py-3">Total Property value</th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    <?php
+                                                    $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
+                                                    $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
+                                                    // decreasing order
+                                                    if ($selected_developer_sort_order == 'desc') {
+                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                            return $b['total_property_value'] <=> $a['total_property_value'];
+                                                        });
+                                                    }
+                                                    // increasing order
+                                                    else if ($selected_developer_sort_order == 'asc') {
+                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                            return $a['total_property_value'] <=> $b['total_property_value'];
+                                                        });
+                                                    }
+                                                    ?>
+                                                    <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get" class="flex items-center gap-2">
+                                                        <input type="hidden" name="developer_sort_order" value="<?= $selected_developer_sort_order == 'asc' ? 'desc' : 'asc' ?>">
+                                                        <input type="hidden" name="year" value="<?= $_GET['year'] ?? date('d/m/Y') ?>">
+                                                        <input type="hidden" name="developer_name" value="<?= $developer_name ?? '' ?>">
+                                                        <p>Total Property value</p>
+                                                        <button type="submit" class="">
+                                                            <?php
+                                                            if ($selected_developer_sort_order == 'asc') {
+                                                                echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
+                                                            } else {
+                                                                echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                            }
+                                                            ?>
+                                                        </button>
+                                                    </form>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($developers as $index => $dev) : ?>
+                                            <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
                                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                         <?= $dev ?>
@@ -644,284 +672,48 @@ if (!empty($deals)) {
                 </div>
 
                 <!-- Extras -->
-                <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <!-- top properties -->
-                    <div class="w-full flex flex-col gap-6 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Properties</h3>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
-                                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-gray-900 dark:text-white">The Peak</span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
-                                </div>
-                            </div>
-                            <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
-                                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-gray-900 dark:text-white">The Arch</span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
-                                </div>
-                            </div>
-                            <div class="flex flex-row items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2">
-                                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full"></div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-gray-900 dark:text-white">The Grandeur</span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">Hong Kong</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- chart 3 -->
-                    <div class="w-full flex flex-col justify-between gap-2 col-span-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Chart 3</h3>
-                        <div id="chart-3">
+                <!-- <div id="developer-property-value-chart" class="col-span-2 flex justify-center items-center">
 
-                        </div>
-                    </div>
-                </div>
+                </div> -->
             </div>
 
-        <?php endif ?>
+        <?php endif; ?>
     </div>
+</div>
 
-    <script>
-        // get the system theme
-        // function getSystemTheme() {
-        //     if (window.matchMedia) {
-        //         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        //     }
-        // }
-
-
-        function isDarkTheme() {
-            return localStorage.getItem('darkMode') === 'true';
-        }
-
-        let isdark = isDarkTheme();
+<script>
+    // get the system theme
+    // function getSystemTheme() {
+    //     if (window.matchMedia) {
+    //         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    //     }
+    // }
 
 
+    function isDarkTheme() {
+        return localStorage.getItem('darkMode') === 'true';
+    }
 
-        // console.log(dealsPerDealType);
+    let isdark = isDarkTheme();
 
-        function display_property_type_chart() {
-            var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
+    // console.log(dealsPerDealType);
 
-            var offplanDeals = dealsPerDealType['Offplan'].length;
-            var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
+    function display_property_type_chart() {
+        var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
 
-            // property type
-            var options = {
-                series: [offplanDeals, secondaryDeals],
-                labels: ["Offplan", "Secondary"],
-                chart: {
-                    width: 380,
-                    type: 'donut',
-                },
-                dataLabels: {
-                    enabled: true,
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            show: false
-                        }
-                    }
-                }],
-                legend: {
-                    position: 'top',
-                    offsetY: 0,
-                    // height: 230,
-                    labels: {
-                        colors: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                }
-            };
+        var offplanDeals = dealsPerDealType['Offplan'].length;
+        var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
 
-            var chart = new ApexCharts(document.querySelector("#property-type-chart"), options);
-            chart.render();
-        }
-
-        display_property_type_chart();
-
-        function display_developer_property_value_chart() {
-            let developersData = <?php echo json_encode($monthly_deals_per_developer); ?>;
-
-            let developers = Object.keys(developersData);
-            let property_values = [];
-            developersData.forEach(developer => {
-                psroperty_values.push(developer['total_property_value']);
-            })
-
-            let options = {
-                series: [5, 5, 6],
-                labels: ['a', 'b', 'c'],
-                chart: {
-                    width: 600,
-                    type: 'donut',
-                },
-                plotOptions: {
-                    pie: {
-                        startAngle: -90,
-                        endAngle: 270
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                fill: {
-                    type: 'gradient',
-                },
-                legend: {
-                    formatter: function(val, opts) {
-                        return val + " - " + opts.w.globals.series[opts.seriesIndex]
-                    },
-                    labels: {
-                        colors: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                },
-                title: {
-                    // text: 'Developers VS Property Value',
-                    style: {
-                        color: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                colors: `${isdark ? '#ffffff' : '#000000'}`
-                            }
-                        }
-                    }
-                }]
-            };
-
-            let chart = new ApexCharts(document.querySelector("#developer-property-value-chart"), options);
-            chart.render();
-        }
-
-        display_developer_property_value_chart();
-
-        function display_lead_source_chart() {
-
-            let deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
-            let categories = [];
-            let net_commission = {};
-            let gross_commission = {};
-
-            for (x in deals_per_lead_source) {
-                // console.log(deals_per_lead_source[x]);
-                categories.push(x);
-
-                // initialise_commission_array for all types of leads
-                if (net_commission[x] == null) {
-                    net_commission[x] = 0;
-                }
-
-                if (gross_commission[x] == null) {
-                    gross_commission[x] = 0;
-                }
-
-                deals_per_lead_source[x].forEach(deal => {
-                    if (deal['UF_CRM_1727871971926'] != null) {
-                        net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
-                    }
-
-                    if (deal['UF_CRM_1727871887978'] != null) {
-                        gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
-                    }
-                });
-            }
-
-            let net_commission_values = Object.values(net_commission);
-            let gross_commission_values = Object.values(gross_commission);
-
-            let options = {
-                series: [{
-                    name: 'Net Commission',
-                    data: [...net_commission_values]
-                }, {
-                    name: 'Gross Commission',
-                    data: [...gross_commission_values]
-                }],
-                chart: {
-                    type: 'bar',
-                    height: 350
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '55%',
-                        endingShape: 'rounded'
-                    },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ['transparent']
-                },
-                xaxis: {
-                    categories: [...categories],
-                    labels: {
-                        style: {
-                            colors: `${isdark ? '#ffffff' : '#000000'}`
-                        }
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'AED',
-                        style: {
-                            color: `${isdark ? '#ffffff' : '#000000'}`
-                        }
-                    },
-                    labels: {
-                        style: {
-                            colors: `${isdark ? '#ffffff' : '#000000'}`
-                        }
-                    }
-                },
-                fill: {
-                    opacity: 1
-                },
-                tooltip: {
-                    y: {
-                        formatter: function(val) {
-                            return val + " AED"
-                        }
-                    }
-                },
-                legend: {
-                    labels: {
-                        colors: `${isdark ? '#ffffff' : '#000000'}`
-                    }
-                }
-            };
-
-            let chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
-            chart.render();
-        }
-
-        display_lead_source_chart();
-
-        // chart 2
+        // property type
         var options = {
-            series: [44, 55, 41, 17, 15],
+            series: [offplanDeals, secondaryDeals],
+            labels: ["Offplan", "Secondary"],
             chart: {
+                width: 380,
                 type: 'donut',
+            },
+            dataLabels: {
+                enabled: true,
             },
             responsive: [{
                 breakpoint: 480,
@@ -930,14 +722,202 @@ if (!empty($deals)) {
                         width: 200
                     },
                     legend: {
-                        position: 'bottom'
+                        show: false
+                    }
+                }
+            }],
+            legend: {
+                position: 'top',
+                offsetY: 0,
+                // height: 230,
+                labels: {
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#property-type-chart"), options);
+        chart.render();
+    }
+
+    display_property_type_chart();
+
+    function display_developer_property_value_chart() {
+        let developersData = <?php echo json_encode($sorted_monthly_deals_per_developer); ?>;
+
+        let developers = [];
+        let property_values = [];
+        for (developer in developersData) {
+            // console.log(developer);
+            developers.push(developer)
+            property_values.push(developersData[developer]['total_property_value']);
+        }
+
+        // console.log(developers);
+        console.log(property_values);
+
+
+        let options = {
+            // series: [...developers.slice(0, 5)],
+            // labels: [...property_values.slice(0, 5)],
+            series: [2000, 2000, 2000, 2000, 2000],
+            labels: ["Developer 1", "Developer 2", "Developer 3", "Developer 4", "Developer 5"],
+            chart: {
+                width: 600,
+                type: 'donut',
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                type: 'gradient',
+            },
+            legend: {
+                formatter: function(val, opts) {
+                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                },
+                labels: {
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            },
+            title: {
+                // text: 'Developers VS Property Value',
+                style: {
+                    color: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            },
+            responsive: [{
+                breakpoint: 670,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            colors: `${isdark ? '#ffffff' : '#000000'}`
+                        }
                     }
                 }
             }]
         };
 
-        var chart = new ApexCharts(document.querySelector("#chart-3"), options);
+        let chart = new ApexCharts(document.querySelector("#developer-property-value-chart"), options);
         chart.render();
-    </script>
+    }
 
-    <?php include('includes/footer.php'); ?>
+    display_developer_property_value_chart();
+
+    function display_lead_source_chart() {
+
+        let deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
+        let categories = [];
+        let net_commission = {};
+        let gross_commission = {};
+
+        for (x in deals_per_lead_source) {
+            // console.log(deals_per_lead_source[x]);
+            categories.push(x);
+
+            // initialise_commission_array for all types of leads
+            if (net_commission[x] == null) {
+                net_commission[x] = 0;
+            }
+
+            if (gross_commission[x] == null) {
+                gross_commission[x] = 0;
+            }
+
+            deals_per_lead_source[x].forEach(deal => {
+                if (deal['UF_CRM_1727871971926'] != null) {
+                    net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
+                }
+
+                if (deal['UF_CRM_1727871887978'] != null) {
+                    gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
+                }
+            });
+        }
+
+        let net_commission_values = Object.values(net_commission);
+        let gross_commission_values = Object.values(gross_commission);
+
+        let options = {
+            series: [{
+                name: 'Net Commission',
+                data: [...net_commission_values]
+            }, {
+                name: 'Gross Commission',
+                data: [...gross_commission_values]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: [...categories],
+                labels: {
+                    style: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'AED',
+                    style: {
+                        color: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                },
+                labels: {
+                    style: {
+                        colors: `${isdark ? '#ffffff' : '#000000'}`
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " AED"
+                    }
+                }
+            },
+            legend: {
+                labels: {
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            }
+        };
+
+        let chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
+        chart.render();
+    }
+
+    display_lead_source_chart();
+</script>
+
+<?php include('includes/footer.php'); ?>
