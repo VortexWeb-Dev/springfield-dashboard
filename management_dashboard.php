@@ -62,7 +62,7 @@ if (!empty($deals)) {
 
     $closed_deals = get_closed_deals($deals);
 
-    $final_list = [
+    $final_deals = [
         'January' => [
             'count_of_closed_deals' => 0,
             'property_price' => 0,
@@ -169,24 +169,25 @@ if (!empty($deals)) {
         ],
     ];
 
-    foreach ($closed_deals as $deal) {
-        $final_list['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
-        $final_list['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-        $final_list['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
-        $final_list['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
-        $final_list['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
-        $final_list['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+    foreach ($deals as $deal) {
+        $final_deals['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+        $final_deals['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+        $final_deals['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+        $final_deals['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+        $final_deals['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+        $final_deals['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
 
         $month = date('F', strtotime($deal['BEGINDATE']));
-        $final_list[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
-        $final_list[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-        $final_list[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
-        $final_list[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
-        $final_list[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
-        $final_list[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+        $final_deals[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+        $final_deals[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+        $final_deals[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+        $final_deals[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+        $final_deals[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+        $final_deals[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
     };
 
-    $total_deals = array_pop($final_list);
+    $total_deals = array_pop($final_deals);
+
 
     // monthly deals per developer with total monthly and yearly property value
     function get_monthly_deals_per_developer($deals, &$developers)
@@ -281,7 +282,7 @@ if (!empty($deals)) {
                 </div>
             </form>
         </div>
-        <?php if (empty($final_list)): ?>
+        <?php if (empty($final_deals)): ?>
             <div class="h-[65vh] flex justify-center items-center">
                 <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
             </div>
@@ -343,7 +344,7 @@ if (!empty($deals)) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($final_list as $month => $details) : ?>
+                                    <?php foreach ($final_deals as $month => $details) : ?>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 <?= $month ?>
@@ -477,7 +478,7 @@ if (!empty($deals)) {
     var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
 
 
-    console.log(dealsPerDealType);
+    // console.log(dealsPerDealType);
 
     function display_property_type_chart() {
         // property type
@@ -522,39 +523,45 @@ if (!empty($deals)) {
 
     function display_lead_source_chart() {
 
-        let $deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
+        let deals_per_lead_source = <?php echo json_encode($deals_per_lead_source); ?>;
         let categories = [];
-        let net_commission = [];
-        let gross_commission = [];
+        let net_commission = {};
+        let gross_commission = {};
 
-        for (x in $deals_per_lead_source) {
-            // console.log(x);
+        for (x in deals_per_lead_source) {
+            // console.log(deals_per_lead_source[x]);
             categories.push(x);
-            if ($deals_per_lead_source[x]['UF_CRM_1727871971926'] == null) {
-                net_commission.push(0);
-            } else {
-                net_commission.push($deals_per_lead_source[x]['UF_CRM_1727871971926']);
+
+            // initialise_commission_array for all types of leads
+            if (net_commission[x] == null) {
+                net_commission[x] = 0;
             }
 
-            if ($deals_per_lead_source[x]['UF_CRM_1727871887978'] == null) {
-                gross_commission.push(0);
-            } else {
-                gross_commission.push($deals_per_lead_source[x]['UF_CRM_1727871887978']);
+            if (gross_commission[x] == null) {
+                gross_commission[x] = 0;
             }
+
+            deals_per_lead_source[x].forEach(deal => {
+                if (deal['UF_CRM_1727871971926'] != null) {
+                    net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
+                }
+
+                if (deal['UF_CRM_1727871887978'] != null) {
+                    gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
+                }
+            });
         }
 
-
-
-        console.log($deals_per_lead_source);
-
+        let net_commission_values = Object.values(net_commission);
+        let gross_commission_values = Object.values(gross_commission);
 
         var options = {
             series: [{
                 name: 'Net Commission',
-                data: [...net_commission]
+                data: [...net_commission_values]
             }, {
                 name: 'Gross Commission',
-                data: [...gross_commission]
+                data: [...gross_commission_values]
             }],
             chart: {
                 type: 'bar',
