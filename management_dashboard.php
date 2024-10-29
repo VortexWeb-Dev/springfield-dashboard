@@ -12,6 +12,11 @@ include_once "./utils/index.php";
 
 //get the year from get request
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
+$developer_name = isset($_GET['developer_name']) ? $_GET['developer_name'] : null;
+
+// echo "<pre>";
+// print_r($_GET);
+// echo "</pre>";
 
 $filter = [
     'CATEGORY_ID' => 0,
@@ -21,6 +26,14 @@ $filter = [
 
 $deals = get_filtered_deals($filter) ?? [];
 $deal_fields = get_deal_fileds();
+
+$developerwise_deals = $deals;
+
+if (!empty($developer_name)) {
+    $developerwise_deals = array_filter($deals, function ($deal) use ($developer_name) {
+        return $deal['UF_CRM_1727625822094'] == $developer_name;
+    });
+}
 
 // get the develpers name
 include_once "./static/developers.php";
@@ -62,131 +75,141 @@ if (!empty($deals)) {
 
     $closed_deals = get_closed_deals($deals);
 
-    $final_deals = [
-        'January' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'February' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'March' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'April' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'May' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'June' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'July' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'August' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'September' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'October' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'November' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'December' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-        'total' => [
-            'count_of_closed_deals' => 0,
-            'property_price' => 0,
-            'gross_commission' => 0,
-            'net_commission' => 0,
-            'total_payment_received' => 0,
-            'amount_receivable' => 0,
-        ],
-    ];
+    function get_formatted_deals(&$deals)
+    {
 
-    foreach ($deals as $deal) {
-        $final_deals['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
-        $final_deals['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-        $final_deals['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
-        $final_deals['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
-        $final_deals['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
-        $final_deals['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+        $final_deals = [
+            'January' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'February' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'March' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'April' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'May' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'June' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'July' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'August' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'September' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'October' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'November' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'December' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+            'total' => [
+                'count_of_closed_deals' => 0,
+                'property_price' => 0,
+                'gross_commission' => 0,
+                'net_commission' => 0,
+                'total_payment_received' => 0,
+                'amount_receivable' => 0,
+            ],
+        ];
 
-        $month = date('F', strtotime($deal['BEGINDATE']));
-        $final_deals[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
-        $final_deals[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-        $final_deals[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
-        $final_deals[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
-        $final_deals[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
-        $final_deals[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
-    };
+        foreach ($deals as $deal) {
+            $final_deals['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+            $final_deals['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+            $final_deals['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+            $final_deals['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+            $final_deals['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+            $final_deals['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+
+            $month = date('F', strtotime($deal['BEGINDATE']));
+            $final_deals[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+            $final_deals[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
+            $final_deals[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
+            $final_deals[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
+            $final_deals[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
+            $final_deals[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
+        };
+
+        return $final_deals;
+    }
+
+    $final_deals = get_formatted_deals($deals);
+    $developerwise_final_deals = get_formatted_deals($developerwise_deals);
 
     $total_deals = array_pop($final_deals);
+    $developerwise_total_deals = array_pop($developerwise_final_deals);
 
 
     // monthly deals per developer with total monthly and yearly property value
@@ -408,7 +431,211 @@ if (!empty($deals)) {
                     </div>
                 </div>
 
-                <!-- bar chart -->
+                <!-- monthly deals per developer -->
+                <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <!-- table -->
+                    <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Developers</h3>
+                        <div id="" class="flex justify-center items-center">
+
+                        </div>
+                    </div>
+                    <!-- Developer's table -->
+                    <div class="w-full h-[70vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+
+                        <!-- select developer filter -->
+                        <div class="flex p-2 justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Developer: </span>
+                                <p class="text-gray-600 dark:text-gray-400 font-semibold text-lg bg-gray-200 dark:bg-gray-700 rounded px-2"><?= $developer_name ?? 'All Developers' ?></p>
+                            </div>
+                            <!-- buttons div -->
+                            <div>
+                                <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                                    Select Developers
+                                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                                    </svg>
+                                </button>
+                                <a href="management_dashboard.php?year=<?= $_GET['year'] ?? date('m/d/Y') ?>" id="clearFilterButton" class="<?= $developer_name ? '' : 'hidden' ?> text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" type="button">
+                                    Clear Filter
+                                </a>
+                            </div>
+                            <!-- Dropdown menu -->
+                            <div id="dropdownSearch" class="z-10 hidden bg-white rounded-lg shadow w-60 dark:bg-gray-700">
+                                <div class="p-3">
+                                    <label for="input-group-search" class="sr-only">Search</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="input-group-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Developrs">
+                                    </div>
+                                </div>
+                                <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+                                    <?php foreach ($developers as $index => $developer): ?>
+                                        <li id="<?= $developer ?>">
+                                            <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
+                                                <div class="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <input type="text" name="developer_name" value="<?= $developer ?>" hidden>
+                                                    <input type="text" name="year" value="<?= $_GET['year'] ?? date('m/d/Y') ?>" hidden>
+                                                    <button type="submit" class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $developer ?></button>
+                                                </div>
+                                            </form>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                        <script>
+                            document.getElementById('input-group-search').addEventListener('input', function() {
+                                var input = this.value.toLowerCase();
+                                let developers = <?= json_encode($developers) ?>;
+
+                                // Loop through options and hide those that don't match the search query
+                                developers.forEach(function(developer) {
+                                    var option = document.getElementById(developer);
+                                    var optionText = developer.toLowerCase();
+                                    option.style.display = optionText.includes(input) ? 'block' : 'none';
+                                });
+                            });
+                        </script>
+
+                        <div class="relative h-[85%] overflow-auto sm:rounded-lg">
+                            <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Month
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Count of Closed Deals
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Property Price
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Gross Commission
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Net Commission
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Total Payment Received
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Amount Receivable
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($developerwise_final_deals as $month => $details) : ?>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <?= $month ?>
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                <?= $details['count_of_closed_deals'] ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['property_price'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['gross_commission'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['net_commission'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['total_payment_received'], 2) ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?= number_format($details['amount_receivable'], 2) ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot class="sticky bottom-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
+                                            Total
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            <?= $developerwise_total_deals['count_of_closed_deals'] ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($developerwise_total_deals['property_price'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($developerwise_total_deals['gross_commission'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($developerwise_total_deals['net_commission'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($developerwise_total_deals['total_payment_received'], 2) ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <?= number_format($developerwise_total_deals['amount_receivable'], 2) ?>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- developer/property value -->
+                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
+                    <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <!-- table -->
+                        <div id="" class="col-span-1 flex justify-center items-center">
+                            <div class="w-full h-[70vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+                                <div class="relative h-full overflow-auto sm:rounded-lg">
+                                    <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Developer
+                                                </th>
+                                                <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
+                                                    <th scope="col" class="px-6 py-3"><?= $month ?></th>
+                                                <?php endforeach; ?> -->
+                                                <th scope="col" class="px-6 py-3">Total Property value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($developers as $index => $dev) : ?>
+                                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                        <?= $dev ?>
+                                                    </th>
+                                                    <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
+                                                        <td class="px-6 py-4">
+                                                            <?= number_format($monthly_deals_per_developer[$dev]['monthly_deals'][$month]['total_monthly_property_value'], 2) ?>
+                                                        </td>
+                                                    <?php endforeach; ?> -->
+                                                    <td class="px-6 py-4">
+                                                        <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- chart -->
+                        <div id="developer-property-value-chart" class="col-span-2 flex justify-center items-center">
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deals per lead source -->
                 <div class="w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
                     <div id="lead-source-chart" class="flex justify-center items-center">
@@ -416,6 +643,7 @@ if (!empty($deals)) {
                     </div>
                 </div>
 
+                <!-- Extras -->
                 <div class="my-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <!-- top properties -->
                     <div class="w-full flex flex-col gap-6 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
@@ -472,15 +700,16 @@ if (!empty($deals)) {
 
     let isdark = isDarkTheme();
 
-    var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
-
-    var offplanDeals = dealsPerDealType['Offplan'].length;
-    var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
 
 
     // console.log(dealsPerDealType);
 
     function display_property_type_chart() {
+        var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
+
+        var offplanDeals = dealsPerDealType['Offplan'].length;
+        var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
+
         // property type
         var options = {
             series: [offplanDeals, secondaryDeals],
@@ -519,7 +748,69 @@ if (!empty($deals)) {
 
     display_property_type_chart();
 
+    function display_developer_property_value_chart() {
+        let developersData = <?php echo json_encode($monthly_deals_per_developer); ?>;
 
+        let developers = Object.keys(developersData);
+        let property_values = [];
+        developersData.forEach(developer => {
+            psroperty_values.push(developer['total_property_value']);
+        })
+
+        let options = {
+            series: [5, 5, 6],
+            labels: ['a', 'b', 'c'],
+            chart: {
+                width: 600,
+                type: 'donut',
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                type: 'gradient',
+            },
+            legend: {
+                formatter: function(val, opts) {
+                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                },
+                labels: {
+                    colors: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            },
+            title: {
+                // text: 'Developers VS Property Value',
+                style: {
+                    color: `${isdark ? '#ffffff' : '#000000'}`
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            colors: `${isdark ? '#ffffff' : '#000000'}`
+                        }
+                    }
+                }
+            }]
+        };
+
+        let chart = new ApexCharts(document.querySelector("#developer-property-value-chart"), options);
+        chart.render();
+    }
+
+    display_developer_property_value_chart();
 
     function display_lead_source_chart() {
 
@@ -555,7 +846,7 @@ if (!empty($deals)) {
         let net_commission_values = Object.values(net_commission);
         let gross_commission_values = Object.values(gross_commission);
 
-        var options = {
+        let options = {
             series: [{
                 name: 'Net Commission',
                 data: [...net_commission_values]
@@ -592,7 +883,10 @@ if (!empty($deals)) {
             },
             yaxis: {
                 title: {
-                    text: '$ (thousands)',
+                    text: 'AED',
+                    style: {
+                        color: `${isdark ? '#ffffff' : '#000000'}`
+                    }
                 },
                 labels: {
                     style: {
@@ -606,7 +900,7 @@ if (!empty($deals)) {
             tooltip: {
                 y: {
                     formatter: function(val) {
-                        return "$ " + val + " thousands"
+                        return val + " AED"
                     }
                 }
             },
@@ -617,60 +911,55 @@ if (!empty($deals)) {
             }
         };
 
-        var chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
+        let chart = new ApexCharts(document.querySelector("#lead-source-chart"), options);
         chart.render();
     }
 
     display_lead_source_chart();
 
     // chart 2
-    var options2 = {
-        series: [{
-            name: 'series1',
-            data: [31, 40, 28, 51, 42, 109, 100],
-        }, {
-            name: 'series2',
-            data: [11, 32, 45, 32, 34, 52, 41]
+   
+    var options = {
+          series: [{
+          name: "STOCK ABC",
+          data: series.monthDataSeries1.prices
         }],
-        chart: {
-            height: 350,
-            type: 'area'
+          chart: {
+          type: 'area',
+          height: 350,
+          zoom: {
+            enabled: false
+          }
         },
         dataLabels: {
-            enabled: false
+          enabled: false
         },
         stroke: {
-            curve: 'smooth'
+          curve: 'straight'
         },
+        
+        title: {
+          text: 'Fundamental Analysis of Stocks',
+          align: 'left'
+        },
+        subtitle: {
+          text: 'Price Movements',
+          align: 'left'
+        },
+        labels: series.monthDataSeries1.dates,
         xaxis: {
-            type: 'datetime',
-            categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"],
-            labels: {
-                style: {
-                    colors: `${isdark ? '#ffffff' : '#000000'}`
-                }
-            }
+          type: 'datetime',
         },
         yaxis: {
-            labels: {
-                style: {
-                    colors: `${isdark ? '#ffffff' : '#000000'}`
-                }
-            }
-        },
-        tooltip: {
-            x: {
-                format: 'dd/MM/yy HH:mm'
-            },
+          opposite: true
         },
         legend: {
-            labels: {
-                colors: `${isdark ? '#ffffff' : '#000000'}`
-            }
+          horizontalAlign: 'left'
         }
-    };
-    var chart2 = new ApexCharts(document.querySelector("#chart-3"), options2);
-    chart2.render();
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart-3"), options);
+        chart.render();
 </script>
 
 <?php include('includes/footer.php'); ?>
