@@ -585,10 +585,49 @@ if (!empty($deals)) {
 
                 <!-- developer/property value -->
                 <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
-                    <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="flex flex-col lg:flex-row lg:justify-between px-2 py-4">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
+                        <!-- developer search box -->
+                        <div id="developer-search-box" class="max-w-lg w-full lg:w-[20rem]">
+                            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                    </svg>
+                                </div>
+                                <input type="search" id="developer-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required />
+                                <button type="button" id="clear-search" class="hidden absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        let clearSearch = document.getElementById('clear-search');
+                        let developer_search = document.getElementById('developer-search'); // Get the developer-search
+
+                        if (developer_search.value.length > 0) {
+                            clearSearch.style.display = 'inline-block';
+                        }
+
+                        document.getElementById('developer-search').addEventListener('input', function() {
+                            var input = this.value.toLowerCase();
+                            let developers = <?= json_encode($developers) ?>;
+
+                            // Loop through options and hide those that don't match the search query
+                            developers.forEach(function(developer) {
+                                var option = document.getElementById(`developer-${developer}`);
+                                var optionText = developer.toLowerCase();
+                                option.style.display = optionText.includes(input) ? 'block' : 'none';
+                            });
+                        });
+                    </script>
+                    <div class="my-4 grid grid-cols-1 lg:grid-cols-5 gap-4">
                         <!-- table -->
-                        <div id="" class="col-span-1 flex justify-center items-center">
+                        <div id="" class="col-span-2 flex justify-center items-center">
                             <div class="w-full h-[70vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
                                 <div class="relative h-full overflow-auto sm:rounded-lg">
                                     <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -635,9 +674,9 @@ if (!empty($deals)) {
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="">
                                             <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
-                                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <tr id="developer-<?= $dev ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                         <?= $dev ?>
                                                     </th>
@@ -657,7 +696,7 @@ if (!empty($deals)) {
                             </div>
                         </div>
                         <!-- chart -->
-                        <div id="developer-property-value-chart" class="col-span-2 flex justify-center items-center">
+                        <div id="developer-property-value-chart" class="col-span-3 flex justify-center items-center">
 
                         </div>
                     </div>
@@ -758,10 +797,8 @@ if (!empty($deals)) {
 
 
         let options = {
-            // series: [...developers.slice(0, 5)],
-            // labels: [...property_values.slice(0, 5)],
-            series: [2000, 2000, 2000, 2000, 2000],
-            labels: ["Developer 1", "Developer 2", "Developer 3", "Developer 4", "Developer 5"],
+            series: [...property_values.slice(0, 5)],
+            labels: [...developers.slice(0, 5)],
             chart: {
                 width: 600,
                 type: 'donut',
@@ -782,6 +819,8 @@ if (!empty($deals)) {
                 formatter: function(val, opts) {
                     return val + " - " + opts.w.globals.series[opts.seriesIndex]
                 },
+                // position: 'top',
+                offsetY: 0,
                 labels: {
                     colors: `${isdark ? '#ffffff' : '#000000'}`
                 }
@@ -796,10 +835,11 @@ if (!empty($deals)) {
                 breakpoint: 670,
                 options: {
                     chart: {
-                        width: 200
+                        width: 300
                     },
                     legend: {
                         position: 'bottom',
+                        offsetY: 0,
                         labels: {
                             colors: `${isdark ? '#ffffff' : '#000000'}`
                         }
