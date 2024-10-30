@@ -76,16 +76,16 @@ echo "</pre>";
                         <tr>
                             <th scope="col" class="px-6 py-3">Agent Name</th>
                             <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month): ?>
-                                <th scope="col" class="px-4 py-3 w-[150px]">
+                                <th scope="col" class="px-4 py-3 w-[150px] <?= $month == $selected_month ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
                                     <form action="" method="get" class="">
                                         <input type="hidden" name="month" value="<?= $month ?>">
                                         <input type="hidden" name="year" value="<?= $selected_year ?>">
                                         <div class="w-full flex gap-1 justify-between items-center">
                                             <p class=""><?= $month ?></p>
-                                            <button type="submit" class="">
+                                            <button type="submit" class="" <?=$month == $selected_month ? 'disabled' : ''?>>
                                                 <?php
                                                 if (isset($selected_month) && $month == $selected_month) {
-                                                    echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
+                                                    echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
                                                 } else {
                                                     echo '<i class="fa-solid fa-sort"></i>';
                                                 }

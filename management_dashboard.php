@@ -334,128 +334,29 @@ if (!empty($deals)) {
                 <!-- main deals table and property type chart -->
                 <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <!-- table container -->
-                    <div class="w-full h-[65vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-                        <div class="relative h-full overflow-auto sm:rounded-lg">
-                            <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Month
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Count of Closed Deals
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Property Price
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Gross Commission
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Net Commission
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Total Payment Received
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Amount Receivable
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($final_deals as $month => $details) : ?>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                <?= $month ?>
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                <?= $details['count_of_closed_deals'] ?>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <?= number_format($details['property_price'], 2) ?>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <?= number_format($details['gross_commission'], 2) ?>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <?= number_format($details['net_commission'], 2) ?>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <?= number_format($details['total_payment_received'], 2) ?>
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <?= number_format($details['amount_receivable'], 2) ?>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                                <tfoot class="sticky bottom-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
-                                            Total
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            <?= $total_deals['count_of_closed_deals'] ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($total_deals['property_price'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($total_deals['gross_commission'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($total_deals['net_commission'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($total_deals['total_payment_received'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($total_deals['amount_receivable'], 2) ?>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- chart -->
-                    <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Property Type</h3>
-                        <div id="property-type-chart" class="flex justify-center items-center">
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- monthly deals per developer -->
-                <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <!-- table -->
-                    <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Top Developers</h3>
-                        <div id="" class="flex justify-center items-center">
-
-                        </div>
-                    </div>
-                    <!-- Developer's table -->
                     <div class="w-full h-[70vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-
                         <!-- select developer filter -->
                         <div class="flex p-2 justify-between items-center">
                             <div class="flex items-center gap-2">
                                 <span class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Developer: </span>
-                                <p class="text-gray-600 dark:text-gray-400 font-semibold text-lg bg-gray-200 dark:bg-gray-700 rounded px-2"><?= $developer_name ?? 'All Developers' ?></p>
+                                <p class="text-gray-600 dark:text-gray-400 font-semibold text-lg bg-gray-200 dark:bg-gray-700 rounded px-2"><?= isset($_GET['developer_name']) ? ($_GET['developer_name'] == '' ? 'All Developers' : $_GET['developer_name']) : 'All Developers' ?></p>
                             </div>
                             <!-- buttons div -->
-                            <div>
-                                <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                            <div class="flex items-center gap-2">
+                                <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" class="white-gary-800 dark:text-white border border-blue-800 hover:bg-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                                     Select Developers
                                     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                                     </svg>
                                 </button>
                                 <a href="management_dashboard.php?year=<?= $_GET['year'] ?? date('m/d/Y') ?>" id="clearFilterButton" class="<?= $developer_name ? '' : 'hidden' ?> text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" type="button">
-                                    Clear Filter
+                                    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    <!-- <img src="./assets//images//clear-filter-icon.png" alt="clear filter" class="w-4 h-4 text-white"> -->
+                                    <p class="ml-2">Clear</p> 
                                 </a>
+
                             </div>
                             <!-- Dropdown menu -->
                             <div id="dropdownSearch" class="z-10 hidden bg-white rounded-lg shadow w-60 dark:bg-gray-700">
@@ -581,10 +482,18 @@ if (!empty($deals)) {
                             </table>
                         </div>
                     </div>
+
+                    <!-- chart -->
+                    <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Property Type</h3>
+                        <div id="property-type-chart" class="flex justify-center items-center">
+
+                        </div>
+                    </div>
                 </div>
 
                 <!-- developer/property value -->
-                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
                     <div class="flex flex-col lg:flex-row lg:justify-between px-2 py-4">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
                         <!-- developer search box -->
@@ -703,7 +612,7 @@ if (!empty($deals)) {
                 </div>
 
                 <!-- Deals per lead source -->
-                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
                     <div id="lead-source-chart" class="flex justify-center items-center">
 
@@ -800,7 +709,7 @@ if (!empty($deals)) {
             series: [...property_values.slice(0, 5)],
             labels: [...developers.slice(0, 5)],
             chart: {
-                width: 600,
+                width: 500,
                 type: 'donut',
             },
             plotOptions: {
