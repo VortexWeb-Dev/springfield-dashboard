@@ -75,7 +75,7 @@ foreach ($deals as $deal) {
                         <?php if (isset($team['members']) && !empty($team['members'])): ?>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                                 <?php foreach ($team['members'] as $member): ?>
-                                    <div class="team-member flex flex-col space-y-1" data-member-name="<?php echo $member['name']; ?>">
+                                    <div class="team-member flex flex-col space-y-1  border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-600 p-4" data-member-name="<?php echo $member['name']; ?>">
                                         <span class="font-medium dark:text-gray-300"><?php echo $member['name']; ?></span>
                                         <span class="text-sm text-gray-600 dark:text-gray-400">Member ID: <?php echo $member['member_id']; ?></span>
                                     </div>
