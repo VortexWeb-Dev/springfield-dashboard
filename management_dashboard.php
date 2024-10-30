@@ -286,7 +286,7 @@ if (!empty($deals)) {
     <div class="px-8 py-6">
         <!-- date picker -->
         <?php include('./includes/datepicker.php'); ?>
-        
+
         <?php if (empty($final_deals)): ?>
             <div class="h-[65vh] flex justify-center items-center">
                 <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
@@ -336,7 +336,7 @@ if (!empty($deals)) {
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
                                     <!-- <img src="./assets//images//clear-filter-icon.png" alt="clear filter" class="w-4 h-4 text-white"> -->
-                                    <p class="ml-2">Clear</p> 
+                                    <p class="ml-2">Clear</p>
                                 </a>
 
                             </div>
@@ -355,12 +355,12 @@ if (!empty($deals)) {
                                 </div>
                                 <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
                                     <?php foreach ($developers as $index => $developer): ?>
-                                        <li id="<?= $developer ?>">
+                                        <li id="<?= $developer ?>" class="mb-1 <?= isset($_GET['developer_name']) && $developer == $_GET['developer_name'] ? 'bg-gray-100 dark:bg-gray-600' : '' ?>">
                                             <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
                                                 <div class="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <input type="text" name="developer_name" value="<?= $developer ?>" hidden>
                                                     <input type="text" name="year" value="<?= $_GET['year'] ?? date('m/d/Y') ?>" hidden>
-                                                    <button type="submit" class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $developer ?></button>
+                                                    <button type="submit" <?= isset($_GET['developer_name']) && $developer == $_GET['developer_name'] ? 'disabled' : '' ?> class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $developer ?></button>
                                                 </div>
                                             </form>
                                         </li>

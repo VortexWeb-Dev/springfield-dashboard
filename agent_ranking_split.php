@@ -13,7 +13,9 @@ include_once "./controllers/calculate_agent_rank.php";
 $global_ranking = calculateAgentRank();
 
 //get the filter data from get request
-$selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+// $selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+$selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
+
 $selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : 1;
 
 function getMothwiseFilteredRankings($monthwise_rank_data, $selected_agent_id)
@@ -128,96 +130,72 @@ echo "</pre>";
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
-        <p class="text-2xl font-bold dark:text-white mb-4">Agent Ranking Split</p>
+        <?php include('./includes/datepicker.php'); ?>
+
         <div class="max-w-7xl mx-auto">
             <!-- agent filter -->
-            <form action="" method="get">
-                <div class="flex justify-end gap-2 items-center mb-4">
-                    <div class="flex gap-2">
-                        <!-- <label for="year" class="inline-block text-sm font-medium text-gray-700 dark:text-gray-300">Select Year:</label> -->
-                        <select id="year" name="year" class="block w-full pl-6 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                            <?php for ($i = 2020; $i <= date('Y'); $i++): ?>
-                                <option value="<?= $i ?>" <?= $i == $selected_year ? 'selected' : '' ?>><?= $i ?></option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-                    <!-- <div>
-                        <label for="agent" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Agent:</label>
-                        <select id="agent_id" name="agent_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                            <?php
-                            $all_agents = getUsers();
-                            $current_agent = getUser($selected_agent_id);
-                            $agent_name = $current_agent['NAME'] ?? '' . ' ' . $current_agent['LAST_NAME'] ?? '' . ' ( ID: ' . $current_agent['ID'] . ')';
-                            ?>
 
-                            <?php foreach ($all_agents as $agent): ?>
-                                <option value="<?= $agent['ID'] ?>" <?= $agent['ID'] == $selected_agent_id ? 'selected' : '' ?>><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div> -->
-
-
-                    <div class="flex p-2 justify-between items-center">
-                        <!-- buttons div -->
-                        <div class="flex items-center gap-2">
-                            <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" class="white-gary-800 dark:text-white border border-blue-800 hover:bg-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                                Select Agents
-                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- Dropdown menu -->
-                        <div id="dropdownSearch" class="z-10 hidden bg-white rounded-lg shadow w-60 dark:bg-gray-700">
-                            <div class="p-3">
-                                <label for="input-group-search" class="sr-only">Search</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                        </svg>
-                                    </div>
-                                    <input type="text" id="input-group-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Developrs">
-                                </div>
-                            </div>
-                            <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
-                                <?php
-                                $all_agents = getUsers();
-                                $current_agent = getUser($selected_agent_id);
-                                $agent_name = $current_agent['NAME'] ?? '' . ' ' . $current_agent['LAST_NAME'] ?? '' . ' ( ID: ' . $current_agent['ID'] . ')';
-                                ?>
-
-                                <?php foreach ($all_agents as $agent): ?>
-                                    <li id="<?= $agwnt['ID'] ?>">
-                                        <div class="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input type="text" id="agent_id" name="agent_id" value="<?= $agent['ID'] ?>" hidden>
-                                            <button type="submit" class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></button>
-                                        </div>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    </div>
-                    <script>
-                        document.getElementById('input-group-search').addEventListener('input', function() {
-                            var input = this.value.toLowerCase();
-                            let agents = <?= json_encode($all_agents) ?>;
-                            console.log(agents);
-                            
-                            // Loop through options and hide those that don't match the search query
-                            // agents.forEach(function(developer) {
-                            //     var option = document.getElementById(developer);
-                            //     var optionText = developer.toLowerCase();
-                            //     option.style.display = optionText.includes(input) ? 'block' : 'none';
-                            // });
-                        });
-                    </script>
-
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Apply
+            <div class="flex p-2 justify-between items-center">
+                <!-- buttons div -->
+                <div class="flex items-center gap-2">
+                    <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="bottom" class="white-gary-800 dark:text-white border border-blue-800 hover:bg-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                        Select Agents
+                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                        </svg>
                     </button>
                 </div>
-            </form>
+                <!-- Dropdown menu -->
+                <div id="dropdownSearch" class="z-10 hidden bg-white rounded-lg shadow w-60 dark:bg-gray-700">
+                    <div class="p-3">
+                        <label for="input-group-search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                </svg>
+                            </div>
+                            <input type="text" id="input-group-search" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Developrs">
+                        </div>
+                    </div>
+                    <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+                        <?php
+                        $all_agents = getUsers();
+                        $current_agent = getUser($selected_agent_id);
+                        $agent_name = $current_agent['NAME'] ?? '' . ' ' . $current_agent['LAST_NAME'] ?? '' . ' ( ID: ' . $current_agent['ID'] . ')';
+                        ?>
+
+                        <?php foreach ($all_agents as $agent): ?>
+                            <li id="<?= $agent['ID'] ?>" class="mb-1 <?=isset($_GET['agent_id']) && $agent['ID'] == $_GET['agent_id'] ? 'bg-gray-600 text-white' : 'text-gray-900'?>">
+                                <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
+                                    <div class="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        <input type="text" name="year" value="<?= $_GET['year'] ?? date('m/d/Y') ?>" hidden>
+                                        <input type="text" id="agent_id" name="agent_id" value="<?= $agent['ID'] ?>" hidden>
+                                        <button type="submit" <?=isset($_GET['agent_id']) && $agent['ID'] == $_GET['agent_id'] ? 'disabled' : ''?> class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></button>
+                                    </div>
+                                </form>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+
+            <script>
+                document.getElementById('input-group-search').addEventListener('input', function() {
+                    var input = this.value.toLowerCase();
+                    let agents = <?= json_encode($all_agents) ?>;
+                    console.log(agents);
+
+                    // Loop through options and hide those that don't match the search query
+                    agents.forEach(function(agent) {
+                        let agentName = `${agent['NAME'] ?? ''} ${agent['SECOND_NAME'] ?? ''} ${agent['LAST_NAME'] ?? ''}`;
+                        var option = document.getElementById(agent['ID']);
+                        var optionText = agentName.toLowerCase();
+                        option.style.display = optionText.includes(input) ? 'block' : 'none';
+                    });
+                });
+            </script>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Monthly Ranking -->
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
