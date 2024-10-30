@@ -13,7 +13,9 @@ include_once "./controllers/calculate_agent_rank.php";
 $global_ranking = calculateAgentRank();
 
 //get the filter data from get request
-$selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+// $selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+$selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
+
 $selected_month = isset($_GET['month']) ? $_GET['month'] : date('M');
 
 function getFilteredRankings($monthwise_rank_data, $selected_month)
@@ -50,10 +52,11 @@ echo "</pre>";
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
-        <p class="text-2xl font-bold dark:text-white mb-4">Agent Ranking</p>
+        <?php include('./includes/datepicker.php'); ?>
 
         <div class="p-4">
-            <form action="" method="get">
+            <!-- old date picker -->
+            <!-- <form action="" method="get">
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Year:</label>
@@ -67,7 +70,7 @@ echo "</pre>";
                         Apply
                     </button>
                 </div>
-            </form>
+            </form> -->
 
             <!-- table container -->
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -79,10 +82,10 @@ echo "</pre>";
                                 <th scope="col" class="px-4 py-3 w-[150px] <?= $month == $selected_month ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
                                     <form action="" method="get" class="">
                                         <input type="hidden" name="month" value="<?= $month ?>">
-                                        <input type="hidden" name="year" value="<?= $selected_year ?>">
+                                        <input type="hidden" name="year" value="<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>">
                                         <div class="w-full flex gap-1 justify-between items-center">
                                             <p class=""><?= $month ?></p>
-                                            <button type="submit" class="" <?=$month == $selected_month ? 'disabled' : ''?>>
+                                            <button type="submit" class="" <?= $month == $selected_month ? 'disabled' : '' ?>>
                                                 <?php
                                                 if (isset($selected_month) && $month == $selected_month) {
                                                     echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
@@ -141,17 +144,17 @@ echo "</pre>";
             <div class="mt-4 w-full flex justify-center gap-1 py-2">
                 <?php if (!empty($filtered_ranked_agents)): ?>
                     <?php if ($page > 1): ?>
-                        <a href="?page=<?= $page - 1 ?>" class="bg-gray-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100">Prev</a>
+                        <a href="?page=<?= $page - 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-gray-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100">Prev</a>
                     <?php endif; ?>
                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <?php if ($page == $i): ?>
                             <button type="button" class="bg-indigo-500 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white" disabled><?= $i ?></button>
                         <?php else: ?>
-                            <a href="?page=<?= $i ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white"><?= $i ?></a>
+                            <a href="?page=<?= $i ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white"><?= $i ?></a>
                         <?php endif; ?>
                     <?php endfor; ?>
                     <?php if ($page < $total_pages): ?>
-                        <a href="?page=<?= $page + 1 ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
+                        <a href="?page=<?= $page + 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </div>

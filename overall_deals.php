@@ -141,33 +141,13 @@ if (!empty($deals)) {
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
         <!-- date picker -->
-        <div class="mb-4">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
-                <div class="flex justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold dark:text-white">Financial Year : <?= $selected_year ?></h1>
-                    </div>
-                    <div class="flex flex-end justify-end gap-2">
-                        <div class="relative max-w-sm">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                </svg>
-                            </div>
-                            <input id="datepicker-actions" datepicker datepicker-buttons datepicker-autoselect-today type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date" name="year">
-                        </div>
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+        <?php include('./includes/datepicker.php'); ?>
+
         <?php if (empty($deals)): ?>
             <div class="h-[65vh] flex justify-center items-center">
                 <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
             </div>
         <?php else: ?>
-            <h2 class="text-xl dark:text-white font-semibold mb-4">Overall Deals</h2>
-
             <div class="p-4">
                 <!-- Overall deals -->
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -357,17 +337,17 @@ if (!empty($deals)) {
                 <div class="mt-4 w-full flex justify-center gap-1 py-2">
                     <?php if (!empty($overall_deals)): ?>
                         <?php if ($page > 1): ?>
-                            <a href="?page=<?= $page - 1 ?>" class="bg-indigo-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100 dark:hover:bg-gray-600">Prev</a>
+                            <a href="?page=<?= $page - 1 ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100 dark:hover:bg-gray-600">Prev</a>
                         <?php endif; ?>
                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                             <?php if ($page == $i): ?>
                                 <button type="button" class="bg-indigo-500 rounded-md px-2 py-1 text-indigo-100 text-xs font-medium hover:bg-indigo-600 dark:hover:bg-indigo-600" disabled><?= $i ?></button>
                             <?php else: ?>
-                                <a href="?page=<?= $i ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600"><?= $i ?></a>
+                                <a href="?page=<?= $i ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600"><?= $i ?></a>
                             <?php endif; ?>
                         <?php endfor; ?>
                         <?php if ($page < $total_pages): ?>
-                            <a href="?page=<?= $page + 1 ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
+                            <a href="?page=<?= $page + 1 ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
