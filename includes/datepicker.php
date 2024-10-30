@@ -1,5 +1,5 @@
 <div class="mb-4">
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+    <form id="myForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
         <div class="flex justify-between">
             <div>
                 <h1 class="text-2xl font-bold dark:text-white">Financial Year : <?= $selected_year ?></h1>
@@ -18,3 +18,16 @@
         </div>
     </form>
 </div>
+
+<?php include_once('./includes/loader.php') ?>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#loader').hide(); // Hide the loader initially
+
+        $('#myForm').submit(function() {
+            $('#loader').show(); // Show the loader on form submit
+        });
+    });
+</script>

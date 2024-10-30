@@ -34,8 +34,8 @@ foreach ($deals as $deal) {
         $agent = getUser($deal['ASSIGNED_BY_ID']);
         $agentId = $agent['ID'] ?? null;
         $agentfullName = $agent['NAME'] ?? '' . ' ' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '';
-        $teams[$teamLeaderId]['members']['member_id'] = $agentId ?? null;
-        $teams[$teamLeaderId]['members']['name'] = $agentfullName ?? null;
+        $member = ['member_id' => $agentId ?? null, 'name' => $agentfullName ?? null];
+        $teams[$teamLeaderId]['members'][] = $member;
     }
 }
 
@@ -68,18 +68,21 @@ foreach ($deals as $deal) {
             <div id="teamStructure" class="space-y-8">
                 <?php foreach ($teams as $team): ?>
                     <div class="team-leader bg-white dark:bg-gray-800 rounded-lg shadow-md p-6" data-leader-id="<?php echo $team['team_leader_id']; ?>" data-leader-name="<?php echo $team['team_leader']; ?>">
-                        <h2 class="text-xl font-semibold mb-4 dark:text-white"><?php echo $team['team_leader']; ?></h2>
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-2xl font-semibold dark:text-white"><?php echo $team['team_leader']; ?></h2>
+                            <span class="text-gray-600 dark:text-gray-400">Team Leader ID: <?php echo $team['team_leader_id']; ?></span>
+                        </div>
                         <?php if (isset($team['members']) && !empty($team['members'])): ?>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                                 <?php foreach ($team['members'] as $member): ?>
                                     <div class="team-member flex flex-col space-y-1" data-member-name="<?php echo $member['name']; ?>">
-                                        <span class="font-medium"><?php echo $member['name']; ?></span>
+                                        <span class="font-medium dark:text-gray-300"><?php echo $member['name']; ?></span>
                                         <span class="text-sm text-gray-600 dark:text-gray-400">Member ID: <?php echo $member['member_id']; ?></span>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                         <?php else: ?>
-                            <p class="text-gray-600 dark:text-gray-400">No team members assigned.</p>
+                            <p class="text-gray-600 dark:text-gray-400 mt-4">No team members assigned.</p>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

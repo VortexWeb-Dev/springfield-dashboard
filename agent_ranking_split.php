@@ -13,10 +13,12 @@ include_once "./controllers/calculate_agent_rank.php";
 $global_ranking = calculateAgentRank();
 
 //get the filter data from get request
-// $selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 
 $selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : 1;
+
+$current_agent = getUser($selected_agent_id);
+$current_agent_name = $current_agent['NAME'] ?? '' . ' ' . $current_agent['LAST_NAME'] ?? '' . ' ( ID: ' . $current_agent['ID'] . ')';
 
 function getMothwiseFilteredRankings($monthwise_rank_data, $selected_agent_id)
 {
@@ -129,9 +131,11 @@ echo "</pre>";
 
 <div class="w-[85%] bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
+
     <div class="px-8 py-6">
         <?php include('./includes/datepicker.php'); ?>
 
+        <h1 class="text-xl text-center font-bold mb-4 dark:text-gray-200"><?= $current_agent_name ?>'s Rankings</h1>
         <div class="max-w-7xl mx-auto">
             <!-- agent filter -->
 
@@ -166,12 +170,12 @@ echo "</pre>";
                         ?>
 
                         <?php foreach ($all_agents as $agent): ?>
-                            <li id="<?= $agent['ID'] ?>" class="mb-1 <?=isset($_GET['agent_id']) && $agent['ID'] == $_GET['agent_id'] ? 'bg-gray-600 text-white' : 'text-gray-900'?>">
+                            <li id="<?= $agent['ID'] ?>" class="mb-1 <?= isset($_GET['agent_id']) && $agent['ID'] == $_GET['agent_id'] ? 'bg-gray-600 text-white' : 'text-gray-900' ?>">
                                 <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
                                     <div class="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <input type="text" name="year" value="<?= $_GET['year'] ?? date('m/d/Y') ?>" hidden>
                                         <input type="text" id="agent_id" name="agent_id" value="<?= $agent['ID'] ?>" hidden>
-                                        <button type="submit" <?=isset($_GET['agent_id']) && $agent['ID'] == $_GET['agent_id'] ? 'disabled' : ''?> class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></button>
+                                        <button type="submit" <?= isset($_GET['agent_id']) && $agent['ID'] == $_GET['agent_id'] ? 'disabled' : '' ?> class="w-full text-start py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"><?= $agent['NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '' . ' ( ID: ' . $agent['ID'] . ')' ?></button>
                                     </div>
                                 </form>
                             </li>
