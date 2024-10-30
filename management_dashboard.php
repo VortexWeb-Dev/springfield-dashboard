@@ -684,7 +684,7 @@ if (!empty($deals)) {
         }
 
         // console.log(developers);
-        console.log(property_values);
+        // console.log(property_values);
 
 
         let options = {
@@ -765,19 +765,35 @@ if (!empty($deals)) {
                 gross_commission[x] = 0;
             }
 
-            deals_per_lead_source[x].forEach(deal => {
-                if (deal['UF_CRM_1727871971926'] != null) {
-                    net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
-                }
+            if (Array.isArray(deals_per_lead_source[x]) && deals_per_lead_source[x].length > 0) {
+                deals_per_lead_source[x].forEach(deal => {
+                    if (deal['UF_CRM_1727871971926'] != null) {
+                        net_commission[x] += parseFloat(deal['UF_CRM_1727871971926'].split('|')[0]);
+                    }
 
-                if (deal['UF_CRM_1727871887978'] != null) {
-                    gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
+                    if (deal['UF_CRM_1727871887978'] != null) {
+                        gross_commission[x] += parseFloat(deal['UF_CRM_1727871887978'].split('|')[0]);
+                    }
+                });
+            } else {
+                for (deal in deals_per_lead_source[x]) {
+                    if (deals_per_lead_source[x][deal]['UF_CRM_1727871971926'] != null) {
+                        net_commission[x] += parseFloat(deals_per_lead_source[x][deal]['UF_CRM_1727871971926'].split('|')[0]);
+                    }
+
+                    if (deals_per_lead_source[x][deal]['UF_CRM_1727871887978'] != null) {
+                        gross_commission[x] += parseFloat(deals_per_lead_source[x][deal]['UF_CRM_1727871887978'].split('|')[0]);
+                    }
                 }
-            });
+            }
         }
 
         let net_commission_values = Object.values(net_commission);
         let gross_commission_values = Object.values(gross_commission);
+
+        console.log(deals_per_lead_source);
+
+        console.log(net_commission_values, gross_commission_values);
 
         let options = {
             series: [{
