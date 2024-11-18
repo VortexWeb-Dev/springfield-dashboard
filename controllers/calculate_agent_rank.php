@@ -74,7 +74,10 @@ function calculateAgentRank()
 
                     // get agent name
                     $agent = getUser($responsible_agent_id);
-                    $agent_full_name = $agent['NAME'] ?? '' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '';
+                    $agent_firstName = $agent['NAME'] ?? '';
+                    $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                    $agent_lastName = $agent['LAST_NAME'] ?? '';
+                    $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
 
                     $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['name'] = $agent_full_name ?? null;
 
@@ -124,7 +127,10 @@ function calculateAgentRank()
                             foreach ($agents as $id => $agent) {
                                 $agent_id = $id ?? 0;
                                 if (!isset($global_ranking[$year][$rank_type][$month][$agent_id])) {
-                                    $agent_full_name = $agent['NAME'] ?? '';
+                                    $agent_firstName = $agent['NAME'] ?? '';
+                                    $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                                    $agent_lastName = $agent['LAST_NAME'] ?? '';
+                                    $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
                                     $global_ranking[$year][$rank_type][$month][$agent_id]['name'] = $agent_full_name ?? null;
                                     $global_ranking[$year][$rank_type][$month][$agent_id]['gross_comms'] = 0;
                                 }
@@ -135,7 +141,10 @@ function calculateAgentRank()
                             foreach ($agents as $id => $agent) {
                                 $agent_id = $id ?? 0;
                                 if (!isset($global_ranking[$year][$rank_type][$quarter][$agent_id])) {
-                                    $agent_full_name = $agent['NAME'] ?? '';
+                                    $agent_firstName = $agent['NAME'] ?? '';
+                                    $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                                    $agent_lastName = $agent['LAST_NAME'] ?? '';
+                                    $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
                                     $global_ranking[$year][$rank_type][$quarter][$agent_id]['name'] = $agent_full_name ?? null;
                                     $global_ranking[$year][$rank_type][$quarter][$agent_id]['gross_comms'] = 0;
                                 }
@@ -145,7 +154,10 @@ function calculateAgentRank()
                         foreach ($agents as $id => $agent) {
                             $agent_id = $id ?? 0;
                             if (!isset($global_ranking[$year][$rank_type][$agent_id])) {
-                                $agent_full_name = $agent['NAME'] ?? '';
+                                $agent_firstName = $agent['NAME'] ?? '';
+                                $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                                $agent_lastName = $agent['LAST_NAME'] ?? '';
+                                $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
                                 $global_ranking[$year][$rank_type][$agent_id]['name'] = $agent_full_name ?? null;
                                 $global_ranking[$year][$rank_type][$agent_id]['gross_comms'] = 0;
                             }
@@ -164,7 +176,10 @@ function calculateAgentRank()
                     foreach ($rank_data as $month => &$agents_data) {
                         $agent_id = 263;
                         $agent = getUser($agent_id);
-                        $agent_full_name = $agent['NAME'] ?? '';
+                        $agent_firstName = $agent['NAME'] ?? '';
+                        $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                        $agent_lastName = $agent['LAST_NAME'] ?? '';
+                        $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
                         if (!isset($global_ranking[$year][$rank_type][$month][$agent_id])) {
                             $global_ranking[$year][$rank_type][$month][$agent_id]['name'] = $agent_full_name ?? null;
                             $global_ranking[$year][$rank_type][$month][$agent_id]['gross_comms'] = 0;
@@ -174,7 +189,10 @@ function calculateAgentRank()
                     foreach ($rank_data as $quarter => &$agents_data) {
                         $agent_id = 263;
                         $agent = getUser($agent_id);
-                        $agent_full_name = $agent['NAME'] ?? '';
+                        $agent_firstName = $agent['NAME'] ?? '';
+                        $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                        $agent_lastName = $agent['LAST_NAME'] ?? '';
+                        $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
                         if (!isset($global_ranking[$year][$rank_type][$quarter][$agent_id])) {
                             $global_ranking[$year][$rank_type][$quarter][$agent_id]['name'] = $agent_full_name ?? null;
                             $global_ranking[$year][$rank_type][$quarter][$agent_id]['gross_comms'] = 0;
@@ -183,7 +201,10 @@ function calculateAgentRank()
                 } else if ($rank_type == 'yearly_rank') {
                     $agent_id = 263;
                     $agent = getUser($agent_id);
-                    $agent_full_name = $agent['NAME'] ?? '';
+                    $agent_firstName = $agent['NAME'] ?? '';
+                    $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                    $agent_lastName = $agent['LAST_NAME'] ?? '';
+                    $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
                     if (!isset($global_ranking[$year][$rank_type][$agent_id])) {
                         $global_ranking[$year][$rank_type][$agent_id]['name'] = $agent_full_name ?? null;
                         $global_ranking[$year][$rank_type][$agent_id]['gross_comms'] = 0;
@@ -205,7 +226,7 @@ function calculateAgentRank()
                     $previous_gross_comms = null;
                     foreach ($agents as &$agent) {
                         if ($previous_gross_comms !== null && $agent['gross_comms'] == $previous_gross_comms) {
-                            $agent['rank'] = $rank;
+                            $agent['rank'] = $rank - 1;
                         } else {
                             $agent['rank'] = $rank;
                             $previous_gross_comms = $agent['gross_comms'];

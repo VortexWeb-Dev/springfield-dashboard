@@ -1,6 +1,6 @@
 <div class="mb-4">
     <form id="myForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
-        <div class="flex justify-between">
+        <div class="flex justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-bold dark:text-white">Financial Year : <?= $selected_year ?></h1>
             </div>
