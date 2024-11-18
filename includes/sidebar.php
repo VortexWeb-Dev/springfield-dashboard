@@ -3,9 +3,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <div class="sidebar border-r-2 border-gray-700 bg-gray-800 text-white min-h-screen flex flex-col justify-between w-[15%]">
-    <div class="p-6">
-        <h1 class="text-2xl font-bold mb-8 text-white text-center hover:text-gray-300">
-            <a href="index.php">Springfield</a>
+    <div class="py-6">
+        <h1 class="text-2xl font-semibold mb-8 text-gray-300 text-center hover:text-gray-300">
+            <a href="index.php">Dashboard</a>
         </h1>
         <ul class="flex flex-col gap-2">
             <li class="text-sm">
