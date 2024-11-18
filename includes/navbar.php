@@ -25,7 +25,7 @@
 </nav> -->
 
 <div class="px-8 py-5 flex justify-between bg-white shadow-md dark:bg-gray-800">
-    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Springfield Dashboard</h2>
+    <h2 class="text-3xl font-bold text-gray-900 dark:text-white"></h2>
     <!-- <div class="flex items-center">
         <a href="overall_deals.php" class="px-4 py-2 mr-4 bg-gray-300 rounded-md dark:bg-gray-700">View Overall Deals</a>
     </div> -->
