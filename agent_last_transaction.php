@@ -127,7 +127,7 @@ echo "</pre>";
                     <h1 class="text-lg ms-2 font-semibold text-gray-800 dark:text-gray-400">Last Transaction Of : <?= $selected_agent_fullname ?></h1>
                     <div class="py-2 flex gap-2">
                         <!-- search bar -->
-                        <?php include('./includes/agent_searchbox.php'); ?>
+                        <?php include('./includes/select_agents.php'); ?>
                         <!-- clear filter button -->
                         <div class="flex justify-center items-center">
                             <a href="agent_last_transaction.php?year=<?= $_GET['year'] ?? date('m/d/Y') ?>" id="clearFilterButton" class="<?= $selected_agent_id ? '' : 'hidden' ?> text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-3 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800" type="button">

@@ -139,7 +139,7 @@ echo "</pre>";
         <div class="max-w-7xl mx-auto">
             <!-- agent searchbox -->
             <div class="pb-4">
-                <?php include('includes/agent_searchbox.php'); ?>
+                <?php include('includes/select_agents.php'); ?>
             </div>
             <!-- main content -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
