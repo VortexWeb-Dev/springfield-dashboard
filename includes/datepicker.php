@@ -33,13 +33,12 @@
 
 <?php include_once('./includes/loader.php') ?>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#loader').hide(); // Hide the loader initially
+    // $(document).ready(function() {
+    //     $('#loader').hide(); // Hide the loader initially
 
-        $('#myForm').submit(function() {
-            $('#loader').show(); // Show the loader on form submit
-        });
-    });
+    //     $('#myForm').submit(function() {
+    //         $('#loader').show(); // Show the loader on form submit
+    //     });
+    // });
 </script>
