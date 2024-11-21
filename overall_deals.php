@@ -3,7 +3,6 @@ include_once "./crest/crest.php";
 include_once "./crest/settings.php";
 include_once "./utils/index.php";
 include('includes/header.php');
-include('includes/sidebar.php');
 
 // include the fetch deals page
 include_once "./data/fetch_deals.php";
@@ -145,202 +144,205 @@ if (!empty($deals)) {
 ?>
 
 
-<div class="w-[85%] bg-gray-100 dark:bg-gray-900">
-    <?php include('includes/navbar.php'); ?>
-    <div class="px-8 py-6">
-        <!-- date picker -->
-        <?php include('./includes/datepicker.php'); ?>
+<div class="flex w-full h-screen">
+    <?php include('includes/sidebar.php'); ?>
+    <div class="main-content-area flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900">
+        <?php include('includes/navbar.php'); ?>
+        <div class="px-8 py-6">
+            <!-- date picker -->
+            <?php include('./includes/datepicker.php'); ?>
 
-        <?php if (empty($deals)): ?>
-            <div class="h-[65vh] flex justify-center items-center">
-                <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
-            </div>
-        <?php else: ?>
-            <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
-                    <!-- Overall deals -->
-                    <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
-                        <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">Date</th>
-                                    <th scope="col" class="px-6 py-3">Transaction Type</th>
-                                    <th scope="col" class="px-6 py-3">Deal Type</th>
-                                    <th scope="col" class="px-6 py-3">Project Name</th>
-                                    <th scope="col" class="px-6 py-3">Unit No</th>
-                                    <th scope="col" class="px-6 py-3">Developer Name</th>
-                                    <th scope="col" class="px-6 py-3">Property Type</th>
-                                    <th scope="col" class="px-6 py-3">No Of Br</th>
-                                    <th scope="col" class="px-6 py-3">Client Name</th>
-                                    <th scope="col" class="px-6 py-3">Agent Name</th>
-                                    <th scope="col" class="px-6 py-3">Team</th>
-                                    <th scope="col" class="px-6 py-3">Property Price</th>
-                                    <th scope="col" class="px-6 py-3">Gross Commission (Incl. VAT)</th>
-                                    <th scope="col" class="px-6 py-3">Gross Commission</th>
-                                    <th scope="col" class="px-6 py-3">VAT</th>
-                                    <th scope="col" class="px-6 py-3">Agent Net Commission</th>
-                                    <th scope="col" class="px-6 py-3">Managers Commission</th>
-                                    <th scope="col" class="px-6 py-3">Sales Support Commission</th>
-                                    <th scope="col" class="px-6 py-3">Springfield Commission</th>
-                                    <th scope="col" class="px-6 py-3">Commission Slab (%)</th>
-                                    <th scope="col" class="px-6 py-3">Referral</th>
-                                    <th scope="col" class="px-6 py-3">Referral Fee</th>
-                                    <th scope="col" class="px-6 py-3">Lead Source</th>
-                                    <th scope="col" class="px-6 py-3">Invoice Status</th>
-                                    <th scope="col" class="px-6 py-3">Notification</th>
-                                    <th scope="col" class="px-6 py-3">Payment Received</th>
-                                    <th scope="col" class="px-6 py-3">Follow-up Notification</th>
-                                    <th scope="col" class="px-6 py-3">1st Payment Received</th>
-                                    <th scope="col" class="px-6 py-3">2nd Payment Received</th>
-                                    <th scope="col" class="px-6 py-3">3rd Payment Received</th>
-                                    <th scope="col" class="px-6 py-3">Total Payment Received</th>
-                                    <th scope="col" class="px-6 py-3">Amount Receivable</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($overall_deals as $deal) :
-                                ?>
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            <?php echo $deal['Date'] ?? "--"; ?>
-                                        </th>
-                                        <!-- transaction type -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Transaction Type'] ?? "--"; ?>
-                                        </td>
-                                        <!-- deal type -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Deal Type'] ?? "--"; ?>
-                                        </td>
-                                        <!-- project name -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Project Name'] ?? "--"; ?>
-                                        </td>
-                                        <!-- unit no -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Unit No'] ?? "--"; ?>
-                                        </td>
-                                        <!-- developer name -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Developer Name'] ?? "--"; ?>
-                                        </td>
-                                        <!-- type -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Property Type'] ?? "--"; ?>
-                                        </td>
-                                        <!-- no of br -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['No Of Br'] ?? "--"; ?>
-                                        </td>
-                                        <!-- client name -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Client Name'] ?? "--"; ?>
-                                        </td>
-                                        <!-- agent name -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Agent Name'] ?? "--"; ?>
-                                        </td>
-                                        <!-- team -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Team'] ?? "--"; ?>
-                                        </td>
-                                        <!-- property price -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Property Price'] ?? "--"; ?>
-                                        </td>
-                                        <!-- gross commission (incl. vat) -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Gross Commission (Incl. VAT)'] ?? "--"; ?>
-                                        </td>
-                                        <!-- gross commission -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Gross Commission'] ?? "--"; ?>
-                                        </td>
-                                        <!-- vat -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['VAT'] ?? "--"; ?>
-                                        </td>
-                                        <!-- agent net commission -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Agent Net Commission'] ?? "--"; ?>
-                                        </td>
-                                        <!-- managers commission -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Managers Commission'] ?? "--"; ?>
-                                        </td>
-                                        <!-- sales support commission -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Sales Support Commission'] ?? "--"; ?>
-                                        </td>
-                                        <!-- springfield commission -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Springfield Commission'] ?? "--"; ?>
-                                        </td>
-                                        <!-- commission slab -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Commission Slab (%)'] ?? "--"; ?>
-                                        </td>
-                                        <!-- referral -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Referral'] ?? "--"; ?>
-                                        </td>
-                                        <!-- referral fee -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Referral Fee'] ?? "--"; ?>
-                                        </td>
-                                        <!-- lead source -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Lead Source'] ?? "--"; ?>
-                                        </td>
-                                        <!-- invoice status -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Invoice Status'] ?? "--"; ?>
-                                        </td>
-                                        <!-- notification -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Notification'] ?? "--"; ?>
-                                        </td>
-                                        <!-- payment received -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Payment Received'] ?? "--"; ?>
-                                        </td>
-                                        <!-- follow-up notification -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Follow-up Notification'] ?? "--"; ?>
-                                        </td>
-                                        <!-- 1st payment received -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['1st Payment Received'] ?? "--"; ?>
-                                        </td>
-                                        <!-- 2nd payment received -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['2nd Payment Received'] ?? "--"; ?>
-                                        </td>
-                                        <!-- 3rd payment received -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['3rd Payment Received'] ?? "--"; ?>
-                                        </td>
-                                        <!-- total payment received -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Total Payment Received'] ?? "--"; ?>
-                                        </td>
-                                        <!-- amount receivable -->
-                                        <td class="px-6 py-4">
-                                            <?php echo $deal['Amount Receivable'] ?? "--"; ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- pagination control -->
-                    <?php if (!empty($overall_deals)): ?>
-                        <?php include('includes/pagination_control.php'); ?>
-                    <?php endif; ?>
+            <?php if (empty($deals)): ?>
+                <div class="h-[65vh] flex justify-center items-center">
+                    <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
                 </div>
-            </div>
-        <?php endif; ?>
+            <?php else: ?>
+                <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
+                        <!-- Overall deals -->
+                        <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
+                            <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Date</th>
+                                        <th scope="col" class="px-6 py-3">Transaction Type</th>
+                                        <th scope="col" class="px-6 py-3">Deal Type</th>
+                                        <th scope="col" class="px-6 py-3">Project Name</th>
+                                        <th scope="col" class="px-6 py-3">Unit No</th>
+                                        <th scope="col" class="px-6 py-3">Developer Name</th>
+                                        <th scope="col" class="px-6 py-3">Property Type</th>
+                                        <th scope="col" class="px-6 py-3">No Of Br</th>
+                                        <th scope="col" class="px-6 py-3">Client Name</th>
+                                        <th scope="col" class="px-6 py-3">Agent Name</th>
+                                        <th scope="col" class="px-6 py-3">Team</th>
+                                        <th scope="col" class="px-6 py-3">Property Price</th>
+                                        <th scope="col" class="px-6 py-3">Gross Commission (Incl. VAT)</th>
+                                        <th scope="col" class="px-6 py-3">Gross Commission</th>
+                                        <th scope="col" class="px-6 py-3">VAT</th>
+                                        <th scope="col" class="px-6 py-3">Agent Net Commission</th>
+                                        <th scope="col" class="px-6 py-3">Managers Commission</th>
+                                        <th scope="col" class="px-6 py-3">Sales Support Commission</th>
+                                        <th scope="col" class="px-6 py-3">Springfield Commission</th>
+                                        <th scope="col" class="px-6 py-3">Commission Slab (%)</th>
+                                        <th scope="col" class="px-6 py-3">Referral</th>
+                                        <th scope="col" class="px-6 py-3">Referral Fee</th>
+                                        <th scope="col" class="px-6 py-3">Lead Source</th>
+                                        <th scope="col" class="px-6 py-3">Invoice Status</th>
+                                        <th scope="col" class="px-6 py-3">Notification</th>
+                                        <th scope="col" class="px-6 py-3">Payment Received</th>
+                                        <th scope="col" class="px-6 py-3">Follow-up Notification</th>
+                                        <th scope="col" class="px-6 py-3">1st Payment Received</th>
+                                        <th scope="col" class="px-6 py-3">2nd Payment Received</th>
+                                        <th scope="col" class="px-6 py-3">3rd Payment Received</th>
+                                        <th scope="col" class="px-6 py-3">Total Payment Received</th>
+                                        <th scope="col" class="px-6 py-3">Amount Receivable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($overall_deals as $deal) :
+                                    ?>
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <?php echo $deal['Date'] ?? "--"; ?>
+                                            </th>
+                                            <!-- transaction type -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Transaction Type'] ?? "--"; ?>
+                                            </td>
+                                            <!-- deal type -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Deal Type'] ?? "--"; ?>
+                                            </td>
+                                            <!-- project name -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Project Name'] ?? "--"; ?>
+                                            </td>
+                                            <!-- unit no -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Unit No'] ?? "--"; ?>
+                                            </td>
+                                            <!-- developer name -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Developer Name'] ?? "--"; ?>
+                                            </td>
+                                            <!-- type -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Property Type'] ?? "--"; ?>
+                                            </td>
+                                            <!-- no of br -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['No Of Br'] ?? "--"; ?>
+                                            </td>
+                                            <!-- client name -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Client Name'] ?? "--"; ?>
+                                            </td>
+                                            <!-- agent name -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Agent Name'] ?? "--"; ?>
+                                            </td>
+                                            <!-- team -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Team'] ?? "--"; ?>
+                                            </td>
+                                            <!-- property price -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Property Price'] ?? "--"; ?>
+                                            </td>
+                                            <!-- gross commission (incl. vat) -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Gross Commission (Incl. VAT)'] ?? "--"; ?>
+                                            </td>
+                                            <!-- gross commission -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Gross Commission'] ?? "--"; ?>
+                                            </td>
+                                            <!-- vat -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['VAT'] ?? "--"; ?>
+                                            </td>
+                                            <!-- agent net commission -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Agent Net Commission'] ?? "--"; ?>
+                                            </td>
+                                            <!-- managers commission -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Managers Commission'] ?? "--"; ?>
+                                            </td>
+                                            <!-- sales support commission -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Sales Support Commission'] ?? "--"; ?>
+                                            </td>
+                                            <!-- springfield commission -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Springfield Commission'] ?? "--"; ?>
+                                            </td>
+                                            <!-- commission slab -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Commission Slab (%)'] ?? "--"; ?>
+                                            </td>
+                                            <!-- referral -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Referral'] ?? "--"; ?>
+                                            </td>
+                                            <!-- referral fee -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Referral Fee'] ?? "--"; ?>
+                                            </td>
+                                            <!-- lead source -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Lead Source'] ?? "--"; ?>
+                                            </td>
+                                            <!-- invoice status -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Invoice Status'] ?? "--"; ?>
+                                            </td>
+                                            <!-- notification -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Notification'] ?? "--"; ?>
+                                            </td>
+                                            <!-- payment received -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Payment Received'] ?? "--"; ?>
+                                            </td>
+                                            <!-- follow-up notification -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Follow-up Notification'] ?? "--"; ?>
+                                            </td>
+                                            <!-- 1st payment received -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['1st Payment Received'] ?? "--"; ?>
+                                            </td>
+                                            <!-- 2nd payment received -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['2nd Payment Received'] ?? "--"; ?>
+                                            </td>
+                                            <!-- 3rd payment received -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['3rd Payment Received'] ?? "--"; ?>
+                                            </td>
+                                            <!-- total payment received -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Total Payment Received'] ?? "--"; ?>
+                                            </td>
+                                            <!-- amount receivable -->
+                                            <td class="px-6 py-4">
+                                                <?php echo $deal['Amount Receivable'] ?? "--"; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- pagination control -->
+                        <?php if (!empty($overall_deals)): ?>
+                            <?php include('includes/pagination_control.php'); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 

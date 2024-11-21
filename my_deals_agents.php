@@ -172,7 +172,7 @@ echo "</pre>";
 
 ?>
 
-<div class="w-[85%] bg-gray-100 dark:bg-gray-900">
+<div class="main-content-area bg-gray-100 dark:bg-gray-900">
     <?php include('includes/navbar.php'); ?>
     <div class="px-8 py-6">
         <p class="text-2xl font-bold dark:text-white mb-4">Deals Completion Progress</p>

@@ -137,35 +137,6 @@ unset($_SESSION['message']);
             padding-left: 220px; /* Leave space for the sidebar */
         }
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 100%;
-            background-color: #20c997;
-            color: #fff;
-            padding: 20px;
-        }
-
-        .sidebar h3 {
-            color: #fff;
-        }
-
-        .sidebar a {
-            display: block;
-            color: #fff;
-            padding: 10px;
-            text-decoration: none;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #495057;
-        }
-
         h2 {
             color: #343a40;
             text-align: center;

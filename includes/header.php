@@ -48,4 +48,4 @@
     </script>
 </head>
 
-<body class="flex m-0">
+<body class="m-0 p-0 overflow-hidden">

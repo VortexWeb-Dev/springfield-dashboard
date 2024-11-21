@@ -1,8 +1,8 @@
-<div class="mb-4">
+<div class="py-3 mb-4 sticky top-0 z-50">
     <form id="myForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
         <div class="flex justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-bold dark:text-white">Financial Year : <?= $selected_year ?></h1>
+            <div class="flex items-center">
+                <h1 class="text-xl font-bold dark:text-gray-100">Financial Year : <?= $selected_year ?></h1>
             </div>
             <div class="flex flex-end justify-end gap-2">
                 <!-- <div class="relative max-w-sm">
@@ -15,7 +15,7 @@
                 </div>
                 <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button> -->
 
-                <div>
+                <div class="border border-gray-300 dark:border-gray-700 rounded-md">
                     <!-- <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Year:</label> -->
                     <select id="year" name="year" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                         <?php for ($i = 2020; $i <= date('Y'); $i++): ?>

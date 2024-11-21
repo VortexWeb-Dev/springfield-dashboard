@@ -2,85 +2,168 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 
 $sidebar_items = [
-    
-]
+    [
+        'title' => 'Management Dashboard',
+        'icon' => 'tachometer-alt',
+        'link' => 'management_dashboard.php',
+        'current_page' => $current_page === 'management_dashboard.php',
+    ],
+    [
+        'title' => 'Overall Deals',
+        'icon' => 'handshake',
+        'link' => 'overall_deals.php',
+        'current_page' => $current_page === 'overall_deals.php',
+    ],
+    /*
+    [
+        'title' => 'Deal Source',
+        'icon' => 'chart-line',
+        'link' => 'deal_source.php',
+        'current_page' => $current_page === 'deal_source.php',
+    ],
+    */
+    [
+        'title' => 'Agent Last Transaction',
+        'icon' => 'clock',
+        'link' => 'agent_last_transaction.php',
+        'current_page' => $current_page === 'agent_last_transaction.php',
+    ],
+    [
+        'title' => 'Team',
+        'icon' => 'users',
+        'link' => 'team.php',
+        'current_page' => $current_page === 'team.php',
+    ],
+    [
+        'title' => 'Agent Commission Splits',
+        'icon' => 'percentage',
+        'link' => 'agent_commission_splits.php',
+        'current_page' => $current_page === 'agent_commission_splits.php',
+    ],
+    /*
+    [
+        'title' => 'My Deals - Agents',
+        'icon' => 'briefcase',
+        'link' => 'my_deals_agents.php',
+        'current_page' => $current_page === 'my_deals_agents.php',
+    ],
+    */
+    [
+        'title' => 'Agent Ranking',
+        'icon' => 'trophy',
+        'link' => 'agent_ranking.php',
+        'current_page' => $current_page === 'agent_ranking.php',
+    ],
+    [
+        'title' => 'Agent Ranking Split',
+        'icon' => 'trophy',
+        'link' => 'agent_ranking_split.php',
+        'current_page' => $current_page === 'agent_ranking_split.php',
+    ],
+    /*
+    [
+        'title' => 'Commission Receiving',
+        'icon' => 'money-bill-wave',
+        'link' => 'commission_receiving.php',
+        'current_page' => $current_page === 'commission_receiving.php',
+    ],
+    [
+        'title' => 'Performance Report',
+        'icon' => 'chart-bar',
+        'link' => 'performance_report.php',
+        'current_page' => $current_page === 'performance_report.php',
+    ],
+    [
+        'title' => 'SOA for Agents',
+        'icon' => 'file-invoice',
+        'link' => 'soa_agents.php',
+        'current_page' => $current_page === 'soa_agents.php',
+    ],
+    [
+        'title' => 'Monthly Expenses',
+        'icon' => 'file-invoice-dollar',
+        'link' => 'monthly_expenses.php',
+        'current_page' => $current_page === 'monthly_expenses.php',
+    ],
+    */
+];
 
 ?>
 
-<div class="sidebar border-r-2 border-gray-700 bg-gray-800 text-white min-h-screen flex flex-col justify-between w-[15%]">
-    <div class="py-6">
-        <h1 class="text-2xl font-semibold mb-8 text-gray-300 text-center hover:text-gray-300">
+
+<div class="sidebar border-r-2 border-gray-700 bg-gray-800 text-white flex flex-col gap-4 w-[15rem] transition-all duration-300">
+    <div class="p-6 flex justify-between items-center">
+        <h1 id="sidebar-header" class="text-2xl font-semibold text-gray-300 text-center hover:text-gray-300">
             <a href="index.php">Dashboard</a>
         </h1>
-        <ul class="flex flex-col gap-2">
-            <li class="text-sm">
-                <a href="management_dashboard.php" class="block py-2 px-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'management_dashboard.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-tachometer-alt mr-2"></i> Management Dashboard
-                </a>
-            </li>
-            <li class="text-sm">
-                <a href="overall_deals.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'overall_deals.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-handshake mr-2"></i> Overall Deals
-                </a>
-            </li>
-            <!-- <li class="text-sm">
-                <a href="deal_source.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'deal_source.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-chart-line mr-2"></i> Deal Source
-                </a>
-            </li> -->
-            <li class="text-sm">
-                <a href="agent_last_transaction.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_last_transaction.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-clock mr-2"></i> Agent Last Transaction
-                </a>
-            </li>
-            <li class="text-sm">
-                <a href="team.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'team.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-users mr-2"></i> Team
-                </a>
-            </li>
-            <li class="text-sm">
-                <a href="agent_commission_splits.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_commission_splits.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-percentage mr-2"></i> Agent Commission Splits
-                </a>
-            </li>
-            <!-- <li class="text-sm">
-                <a href="my_deals_agents.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'my_deals_agents.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-briefcase mr-2"></i> My Deals - Agents
-                </a>
-            </li> -->
-            <li class="text-sm">
-                <a href="agent_ranking.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_ranking.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-trophy mr-2"></i> Agent Ranking
-                </a>
-            </li>
-            <li class="text-sm">
-                <a href="agent_ranking_split.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'agent_ranking_split.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-trophy mr-2"></i> Agent Ranking Split
-                </a>
-            </li>
-            <!-- <li class="text-sm">
-                <a href="commission_receiving.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'commission_receiving.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-money-bill-wave mr-2"></i> Commission Receiving
-                </a>
-            </li> -->
-            <!-- <li class="text-sm">
-                <a href="performance_report.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'performance_report.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-chart-bar mr-2"></i> Performance Report
-                </a>
-            </li> -->
-            <!-- <li class="text-sm">
-                <a href="soa_agents.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'soa_agents.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-file-invoice mr-2"></i> SOA for Agents
-                </a>
-            </li> -->
-            <!-- <li class="text-sm">
-                <a href="monthly_expenses.php" class="block p-2 rounded transition duration-200 hover:bg-gray-700 <?php echo $current_page === 'monthly_expenses.php' ? 'bg-gray-700' : ''; ?>">
-                    <i class="fas fa-file-invoice-dollar mr-2"></i> Monthly Expenses
-                </a>
-            </li> -->
+        <button id="toggle-sidebar" class="text-gray-400 hover:text-gray-300 transition duration-200">
+            <i class="fas fa-angle-double-left"></i>
+        </button>
+    </div>
+    <div id="sidebar-content" class="pb-6 transition-all duration-300">
+        <ul class="flex flex-col gap-1">
+            <?php foreach ($sidebar_items as $item): ?>
+                <li class="text-sm">
+                    <a href="<?php echo $item['link'] ?>" class="block py-4 px-6 transition duration-200 hover:bg-gray-700 <?php echo $item['current_page'] ? 'bg-gray-700' : ''; ?>">
+                        <span class="flex items-center">
+                            <i class="fas fa-<?php echo $item['icon'] ?>"></i>
+                            <span class="sidebar-list-item ms-2"><?php echo $item['title'] ?></span>
+                        </span>
+                    </a>
+                </li>
+            <?php endforeach; ?>
         </ul>
     </div>
-    <div class="p-6 text-sm text-gray-400 text-center">
-        © <?= date('Y') ?> SpringField.
-    </div>
 </div>
+
+<script>
+    const sidebarCollapsedKey = 'sidebarCollapsed';
+
+    function checkSidebarCollapsed() {
+        return localStorage.getItem('sidebarCollapsed') === 'true';
+    }
+
+    const isSidebarCollapsed = checkSidebarCollapsed();
+
+
+    if (isSidebarCollapsed) {
+        document.getElementById('sidebar-header').classList.add('hidden');
+        document.querySelectorAll('.sidebar-list-item').forEach(function(el) {
+            el.classList.add('hidden');
+        });
+        document.getElementById('toggle-sidebar').classList.add('rotate-180');
+        document.querySelector('.sidebar').classList.add('w-[4rem]');
+        // document.querySelectorAll('.main-content-area').forEach(function(el) {
+        //     el.style.width = '96%';
+        // });
+
+    }
+
+    document.getElementById('toggle-sidebar').addEventListener('click', function() {
+        const isCollapsed = document.getElementById('sidebar-header').classList.toggle('hidden');
+
+        localStorage.setItem(sidebarCollapsedKey, isCollapsed);
+        document.querySelectorAll('.sidebar-list-item').forEach(function(el) {
+            el.classList.toggle('hidden');
+        });
+        document.getElementById('toggle-sidebar').classList.toggle('rotate-180');
+        document.querySelector('.sidebar').classList.toggle('w-[4rem]');
+        // document.querySelectorAll('.main-content-area').forEach(function(el) {
+        //     el.style.width = checkSidebarCollapsed() ? '96%' : '85%';
+        // });
+    });
+</script>
+
+<style>
+    #sidebar-content {
+        transition: all 0.3s ease;
+    }
+
+    #toggle-sidebar {
+        transition: all 0.3s ease;
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+</style>

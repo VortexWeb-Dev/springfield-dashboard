@@ -2,8 +2,7 @@
 include_once "./crest/crest.php";
 include_once "./crest/settings.php";
 include('includes/header.php');
-include('includes/sidebar.php');
-// include('includes/sidepanel.php');
+
 // get deals
 include_once "./data/fetch_deals.php";
 
@@ -281,277 +280,279 @@ if (!empty($deals)) {
 
 ?>
 
-<div class="w-[85%] bg-gray-100 dark:bg-gray-900">
-    <?php include('includes/navbar.php'); ?>
-    <div class="px-8 py-6">
-        <!-- date picker -->
-        <?php include('./includes/datepicker.php'); ?>
+<div class="flex w-full h-screen">
+    <?php include('includes/sidebar.php'); ?>
+    <div class="main-content-area overflow-y-auto flex-1 bg-gray-100 dark:bg-gray-900"> <?php include('includes/navbar.php'); ?>
+        <div class="px-8 py-6">
+            <!-- date picker -->
+            <?php include('./includes/datepicker.php'); ?>
 
-        <?php if (empty($final_deals)): ?>
-            <div class="h-[65vh] flex justify-center items-center">
-                <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
-            </div>
-        <?php else: ?>
-            <div>
-                <!-- cards container -->
-                <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
-                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-green-500 hover:shadow-lg dark:bg-gray-800 dark:border-green-300/60 dark:hover:bg-green-200/10">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Deals</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($deals) ?></p>
-                    </a>
-                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Closed Deals</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($closed_deals) ?></p>
-                    </a>
-                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-blue-500 hover:shadow-lg dark:bg-gray-800 dark:border-blue-300/60 dark:hover:bg-blue-200/10">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Gross Commission</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['gross_commission'] ?> AED</p>
-                    </a>
-                    <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Net Commission</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['net_commission'] ?></p>
-                    </a>
+            <?php if (empty($final_deals)): ?>
+                <div class="h-[65vh] flex justify-center items-center">
+                    <h1 class="text-2xl font-bold mb-6 dark:text-white">No data available</h1>
                 </div>
+            <?php else: ?>
+                <div>
+                    <!-- cards container -->
+                    <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
+                        <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-green-500 hover:shadow-lg dark:bg-gray-800 dark:border-green-300/60 dark:hover:bg-green-200/10">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Deals</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($deals) ?></p>
+                        </a>
+                        <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Closed Deals</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($closed_deals) ?></p>
+                        </a>
+                        <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-blue-500 hover:shadow-lg dark:bg-gray-800 dark:border-blue-300/60 dark:hover:bg-blue-200/10">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Gross Commission</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['gross_commission'] ?> AED</p>
+                        </a>
+                        <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Net Commission</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['net_commission'] ?></p>
+                        </a>
+                    </div>
 
-                <!-- main deals table and property type chart -->
-                <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <!-- table container -->
-                    <div class="w-full h-[70vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-                        <!-- select developer filter -->
-                        <div class="flex p-2 justify-between items-center">
-                            <div class="flex items-center gap-2">
-                                <span class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Developer: </span>
-                                <p class="text-gray-600 dark:text-gray-400 font-semibold text-lg bg-gray-200 dark:bg-gray-700 rounded px-2"><?= isset($_GET['developer_name']) ? ($_GET['developer_name'] == '' ? 'All Developers' : $_GET['developer_name']) : 'All Developers' ?></p>
+                    <!-- main deals table and property type chart -->
+                    <div class="my-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <!-- table container -->
+                        <div class="h-[30rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+                            <!-- select developer filter -->
+                            <div class="flex p-2 justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Developer: </span>
+                                    <p class="text-gray-600 dark:text-gray-400 font-semibold text-lg bg-gray-200 dark:bg-gray-700 rounded px-2"><?= isset($_GET['developer_name']) ? ($_GET['developer_name'] == '' ? 'All Developers' : $_GET['developer_name']) : 'All Developers' ?></p>
+                                </div>
+                                <?php include './includes/select_developers.php'; ?>
                             </div>
-                            <?php include './includes/select_developers.php'; ?>
-                        </div>
 
-                        <div class="relative h-[85%] overflow-auto sm:rounded-lg">
-                            <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Month
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Count of Closed Deals
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Property Price
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Gross Commission
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Net Commission
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Total Payment Received
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Amount Receivable
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($developerwise_final_deals as $month => $details) : ?>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                <?= $month ?>
+                            <div class="relative h-[85%] overflow-auto sm:rounded-lg">
+                                <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                Month
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Count of Closed Deals
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Property Price
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Gross Commission
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Net Commission
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Total Payment Received
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Amount Receivable
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($developerwise_final_deals as $month => $details) : ?>
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    <?= $month ?>
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    <?= $details['count_of_closed_deals'] ?>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <?= number_format($details['property_price'], 2) ?>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <?= number_format($details['gross_commission'], 2) ?>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <?= number_format($details['net_commission'], 2) ?>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <?= number_format($details['total_payment_received'], 2) ?>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <?= number_format($details['amount_receivable'], 2) ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                    <tfoot class="sticky bottom-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
+                                                Total
                                             </th>
                                             <td class="px-6 py-4">
-                                                <?= $details['count_of_closed_deals'] ?>
+                                                <?= $developerwise_total_deals['count_of_closed_deals'] ?>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <?= number_format($details['property_price'], 2) ?>
+                                                <?= number_format($developerwise_total_deals['property_price'], 2) ?>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <?= number_format($details['gross_commission'], 2) ?>
+                                                <?= number_format($developerwise_total_deals['gross_commission'], 2) ?>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <?= number_format($details['net_commission'], 2) ?>
+                                                <?= number_format($developerwise_total_deals['net_commission'], 2) ?>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <?= number_format($details['total_payment_received'], 2) ?>
+                                                <?= number_format($developerwise_total_deals['total_payment_received'], 2) ?>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <?= number_format($details['amount_receivable'], 2) ?>
+                                                <?= number_format($developerwise_total_deals['amount_receivable'], 2) ?>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                                <tfoot class="sticky bottom-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="row" class="px-6 py-4 font-medium font-bold whitespace-nowrap">
-                                            Total
-                                        </th>
-                                        <td class="px-6 py-4">
-                                            <?= $developerwise_total_deals['count_of_closed_deals'] ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($developerwise_total_deals['property_price'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($developerwise_total_deals['gross_commission'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($developerwise_total_deals['net_commission'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($developerwise_total_deals['total_payment_received'], 2) ?>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <?= number_format($developerwise_total_deals['amount_receivable'], 2) ?>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- chart -->
-                    <div class="w-full flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Property Type</h3>
-                        <div id="property-type-chart" class="flex justify-center items-center">
+                        <!-- chart -->
+                        <div class="flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Property Type</h3>
+                            <div id="property-type-chart" class="flex justify-center items-center">
 
-                        </div>
-                    </div>
-                </div>
-
-                <!-- developer/property value -->
-                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
-                    <div class="flex flex-col lg:flex-row lg:justify-between px-2 py-4">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
-                        <!-- developer search box -->
-                        <div id="developer-search-box" class="max-w-lg w-full lg:w-[20rem]">
-                            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                    </svg>
-                                </div>
-                                <input type="search" id="developer-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Developers..." required />
-                                <button type="button" id="clear-search" class="hidden absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
                             </div>
                         </div>
                     </div>
-                    <script>
-                        let clearSearch = document.getElementById('clear-search');
-                        let developer_search = document.getElementById('developer-search'); // Get the developer-search
 
-                        if (developer_search.value.length > 0) {
-                            clearSearch.style.display = 'inline-block';
-                        }
+                    <!-- developer/property value -->
+                    <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
+                        <div class="flex flex-col lg:flex-row lg:justify-between px-2 py-4">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
+                            <!-- developer search box -->
+                            <div id="developer-search-box" class="max-w-lg w-full lg:w-[20rem]">
+                                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                        </svg>
+                                    </div>
+                                    <input type="search" id="developer-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Developers..." required />
+                                    <button type="button" id="clear-search" class="hidden absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            let clearSearch = document.getElementById('clear-search');
+                            let developer_search = document.getElementById('developer-search'); // Get the developer-search
 
-                        document.getElementById('developer-search').addEventListener('input', function() {
-                            var input = this.value.toLowerCase();
-                            let developers = <?= json_encode($developers) ?>;
+                            if (developer_search.value.length > 0) {
+                                clearSearch.style.display = 'inline-block';
+                            }
 
-                            // Loop through options and hide those that don't match the search query
-                            developers.forEach(function(developer) {
-                                var option = document.getElementById(`developer-${developer}`);
-                                var optionText = developer.toLowerCase();
-                                option.style.display = optionText.includes(input) ? 'block' : 'none';
+                            document.getElementById('developer-search').addEventListener('input', function() {
+                                var input = this.value.toLowerCase();
+                                let developers = <?= json_encode($developers) ?>;
+
+                                // Loop through options and hide those that don't match the search query
+                                developers.forEach(function(developer) {
+                                    var option = document.getElementById(`developer-${developer}`);
+                                    var optionText = developer.toLowerCase();
+                                    option.style.display = optionText.includes(input) ? 'block' : 'none';
+                                });
                             });
-                        });
-                    </script>
-                    <div class="my-4 grid grid-cols-1 lg:grid-cols-5 gap-4">
-                        <!-- table -->
-                        <div id="" class="col-span-2 flex justify-center items-center">
-                            <div class="w-full h-[70vh] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-                                <div class="relative h-full overflow-auto sm:rounded-lg">
-                                    <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                        <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Developer
-                                                </th>
-                                                <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
-                                                    <th scope="col" class="px-6 py-3"><?= $month ?></th>
-                                                <?php endforeach; ?> -->
-                                                <th scope="col" class="px-6 py-3">
-                                                    <?php
-                                                    $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
-                                                    $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
-                                                    // decreasing order
-                                                    if ($selected_developer_sort_order == 'desc') {
-                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
-                                                            return $b['total_property_value'] <=> $a['total_property_value'];
-                                                        });
-                                                    }
-                                                    // increasing order
-                                                    else if ($selected_developer_sort_order == 'asc') {
-                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
-                                                            return $a['total_property_value'] <=> $b['total_property_value'];
-                                                        });
-                                                    }
-                                                    ?>
-                                                    <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get" class="flex items-center gap-2">
-                                                        <input type="hidden" name="developer_sort_order" value="<?= $selected_developer_sort_order == 'asc' ? 'desc' : 'asc' ?>">
-                                                        <input type="hidden" name="year" value="<?= $_GET['year'] ?? date('d/m/Y') ?>">
-                                                        <input type="hidden" name="developer_name" value="<?= $developer_name ?? '' ?>">
-                                                        <p>Total Property value</p>
-                                                        <button type="submit" class="">
-                                                            <?php
-                                                            if ($selected_developer_sort_order == 'asc') {
-                                                                echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
-                                                            } else {
-                                                                echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
-                                                            }
-                                                            ?>
-                                                        </button>
-                                                    </form>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="">
-                                            <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
-                                                <tr id="developer-<?= $dev ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                        <?= $dev ?>
+                        </script>
+                        <div class="my-4 grid grid-cols-1 lg:grid-cols-5 gap-4">
+                            <!-- table -->
+                            <div id="" class="col-span-2 flex justify-center items-center">
+                                <div class="w-full h-[35rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+                                    <div class="relative h-full overflow-auto sm:rounded-lg">
+                                        <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                            <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-3">
+                                                        Developer
                                                     </th>
                                                     <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
+                                                    <th scope="col" class="px-6 py-3"><?= $month ?></th>
+                                                <?php endforeach; ?> -->
+                                                    <th scope="col" class="px-6 py-3">
+                                                        <?php
+                                                        $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
+                                                        $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
+                                                        // decreasing order
+                                                        if ($selected_developer_sort_order == 'desc') {
+                                                            uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                                return $b['total_property_value'] <=> $a['total_property_value'];
+                                                            });
+                                                        }
+                                                        // increasing order
+                                                        else if ($selected_developer_sort_order == 'asc') {
+                                                            uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                                return $a['total_property_value'] <=> $b['total_property_value'];
+                                                            });
+                                                        }
+                                                        ?>
+                                                        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get" class="flex items-center gap-2">
+                                                            <input type="hidden" name="developer_sort_order" value="<?= $selected_developer_sort_order == 'asc' ? 'desc' : 'asc' ?>">
+                                                            <input type="hidden" name="year" value="<?= $_GET['year'] ?? date('d/m/Y') ?>">
+                                                            <input type="hidden" name="developer_name" value="<?= $developer_name ?? '' ?>">
+                                                            <p>Total Property value</p>
+                                                            <button type="submit" class="">
+                                                                <?php
+                                                                if ($selected_developer_sort_order == 'asc') {
+                                                                    echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
+                                                                } else {
+                                                                    echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                                }
+                                                                ?>
+                                                            </button>
+                                                        </form>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="">
+                                                <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
+                                                    <tr id="developer-<?= $dev ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            <?= $dev ?>
+                                                        </th>
+                                                        <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
                                                         <td class="px-6 py-4">
                                                             <?= number_format($monthly_deals_per_developer[$dev]['monthly_deals'][$month]['total_monthly_property_value'], 2) ?>
                                                         </td>
                                                     <?php endforeach; ?> -->
-                                                    <td class="px-6 py-4">
-                                                        <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                                        <td class="px-6 py-4">
+                                                            <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- chart -->
+                            <div id="developer-property-value-chart" class="col-span-3 flex justify-center items-center">
+
+                            </div>
                         </div>
-                        <!-- chart -->
-                        <div id="developer-property-value-chart" class="col-span-3 flex justify-center items-center">
+                    </div>
+
+                    <!-- Deals per lead source -->
+                    <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
+                        <div id="lead-source-chart" class="flex justify-center items-center">
 
                         </div>
                     </div>
-                </div>
 
-                <!-- Deals per lead source -->
-                <div class="my-4 w-full flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
-                    <div id="lead-source-chart" class="flex justify-center items-center">
-
-                    </div>
-                </div>
-
-                <!-- Extras -->
-                <!-- <div id="developer-property-value-chart" class="col-span-2 flex justify-center items-center">
+                    <!-- Extras -->
+                    <!-- <div id="developer-property-value-chart" class="col-span-2 flex justify-center items-center">
 
                 </div> -->
-            </div>
+                </div>
 
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 

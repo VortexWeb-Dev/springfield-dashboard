@@ -2,7 +2,6 @@
 include_once "./crest/crest.php";
 include_once "./crest/settings.php";
 include('includes/header.php');
-include('includes/sidebar.php');
 
 // include the fetch deals page
 include_once "./data/fetch_deals.php";
@@ -48,14 +47,17 @@ echo "<pre>";
 echo "</pre>";
 ?>
 
-<div class="w-[85%] bg-gray-100 dark:bg-gray-900">
-    <?php include('includes/navbar.php'); ?>
-    <div class="px-8 py-6">
-        <?php include('./includes/datepicker.php'); ?>
+<div class="flex w-full h-screen">
+    <?php include('includes/sidebar.php'); ?>
 
-        <div class="p-4">
-            <!-- old date picker -->
-            <!-- <form action="" method="get">
+    <div class="main-content-area flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900">
+        <?php include('includes/navbar.php'); ?>
+        <div class="px-8 py-6">
+            <?php include('./includes/datepicker.php'); ?>
+
+            <div class="">
+                <!-- old date picker -->
+                <!-- <form action="" method="get">
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <label for="year" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Year:</label>
@@ -70,92 +72,93 @@ echo "</pre>";
                     </button>
                 </div>
             </form> -->
-            <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
-                    <!-- table container -->
-                    <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
-                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">Agent Name</th>
-                                    <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month): ?>
-                                        <th scope="col" class="px-4 py-3 w-[150px] <?= $month == $selected_month ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
-                                            <form action="" method="get" class="">
-                                                <input type="hidden" name="month" value="<?= $month ?>">
-                                                <input type="hidden" name="year" value="<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>">
-                                                <div class="w-full flex gap-1 justify-between items-center">
-                                                    <p class=""><?= $month ?></p>
-                                                    <button type="submit" class="" <?= $month == $selected_month ? 'disabled' : '' ?>>
-                                                        <?php
-                                                        if (isset($selected_month) && $month == $selected_month) {
-                                                            echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
-                                                        } else {
-                                                            echo '<i class="fa-solid fa-sort"></i>';
-                                                        }
-                                                        ?>
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </th>
-                                    <?php endforeach; ?>
-                                    <th scope="col" class="px-6 py-3">Total gross Comm</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (empty($filtered_ranked_agents)): ?>
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <td colspan="13" class="px-6 py-4 text-center">Data unavailable</td>
-                                        <td colspan="13" class="px-6 py-4 text-center"></td>
+                <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
+                        <!-- table container -->
+                        <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Agent Name</th>
+                                        <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month): ?>
+                                            <th scope="col" class="px-4 py-3 w-[150px] <?= $month == $selected_month ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
+                                                <form action="" method="get" class="">
+                                                    <input type="hidden" name="month" value="<?= $month ?>">
+                                                    <input type="hidden" name="year" value="<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>">
+                                                    <div class="w-full flex gap-1 justify-between items-center">
+                                                        <p class=""><?= $month ?></p>
+                                                        <button type="submit" class="" <?= $month == $selected_month ? 'disabled' : '' ?>>
+                                                            <?php
+                                                            if (isset($selected_month) && $month == $selected_month) {
+                                                                echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                            } else {
+                                                                echo '<i class="fa-solid fa-sort"></i>';
+                                                            }
+                                                            ?>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </th>
+                                        <?php endforeach; ?>
+                                        <th scope="col" class="px-6 py-3">Total gross Comm</th>
                                     </tr>
-                                <?php else: ?>
-                                    <?php
-                                    $total_agents = count($filtered_ranked_agents);
-                                    $per_page = 6;
-                                    $total_pages = ceil($total_agents / $per_page);
-                                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                                    $start = ($page - 1) * $per_page;
-                                    $filtered_ranked_agents = array_slice($filtered_ranked_agents, $start, $per_page);
-
-                                    foreach ($filtered_ranked_agents as $agent): ?>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($filtered_ranked_agents)): ?>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><?= $agent['Jan']['name'] ?? '' ?></th>
-                                            <?php foreach ($agent as $month => $data): ?>
-                                                <?php if (in_array($month, ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])): ?>
-                                                    <td class="px-6 py-4">
-                                                        <div class="flex flex-col gap-2 flex-nowrap">
-                                                            <div class="bg-indigo-500/40 w-[7rem] border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium">Rank: <?= $data['rank'] ?? '' ?></div>
-                                                            <div class="bg-green-500/40 border border-green-800 rounded-md px-2 py-1 text-gray-800 dark:text-green-100 text-xs font-medium">GC: <?= number_format($data['gross_comms'] ?? 0, 2) ?> AED</div>
-                                                        </div>
-                                                    </td>
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
-                                            <td class="px-6 py-4">
-                                                <p class="w-[7rem]"><?= array_sum(array_column($agent, 'gross_comms')) ?? '' ?> AED</p>
-                                            </td>
+                                            <td colspan="13" class="px-6 py-4 text-center">Data unavailable</td>
+                                            <td colspan="13" class="px-6 py-4 text-center"></td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                    <?php else: ?>
+                                        <?php
+                                        $total_agents = count($filtered_ranked_agents);
+                                        $per_page = 6;
+                                        $total_pages = ceil($total_agents / $per_page);
+                                        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                        $start = ($page - 1) * $per_page;
+                                        $filtered_ranked_agents = array_slice($filtered_ranked_agents, $start, $per_page);
 
-                    </div>
-                    <!-- pagination control -->
-                    <div class="mt-4 w-full flex justify-center gap-1 py-2">
-                        <?php if (!empty($filtered_ranked_agents)): ?>
-                            <?php if ($page > 1): ?>
-                                <a href="?page=<?= $page - 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-gray-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100">Prev</a>
-                            <?php endif; ?>
-                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <?php if ($page == $i): ?>
-                                    <button type="button" class="bg-indigo-500 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white" disabled><?= $i ?></button>
-                                <?php else: ?>
-                                    <a href="?page=<?= $i ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white"><?= $i ?></a>
+                                        foreach ($filtered_ranked_agents as $agent): ?>
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><?= $agent['Jan']['name'] ?? '' ?></th>
+                                                <?php foreach ($agent as $month => $data): ?>
+                                                    <?php if (in_array($month, ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])): ?>
+                                                        <td class="px-6 py-4">
+                                                            <div class="flex flex-col gap-2 flex-nowrap">
+                                                                <div class="bg-indigo-500/40 w-[7rem] border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium">Rank: <?= $data['rank'] ?? '' ?></div>
+                                                                <div class="bg-green-500/40 border border-green-800 rounded-md px-2 py-1 text-gray-800 dark:text-green-100 text-xs font-medium">GC: <?= number_format($data['gross_comms'] ?? 0, 2) ?> AED</div>
+                                                            </div>
+                                                        </td>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                                <td class="px-6 py-4">
+                                                    <p class="w-[7rem]"><?= array_sum(array_column($agent, 'gross_comms')) ?? '' ?> AED</p>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- pagination control -->
+                        <div class="mt-4 w-full flex justify-center gap-1 py-2">
+                            <?php if (!empty($filtered_ranked_agents)): ?>
+                                <?php if ($page > 1): ?>
+                                    <a href="?page=<?= $page - 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-gray-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100">Prev</a>
                                 <?php endif; ?>
-                            <?php endfor; ?>
-                            <?php if ($page < $total_pages): ?>
-                                <a href="?page=<?= $page + 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
+                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <?php if ($page == $i): ?>
+                                        <button type="button" class="bg-indigo-500 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white" disabled><?= $i ?></button>
+                                    <?php else: ?>
+                                        <a href="?page=<?= $i ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white"><?= $i ?></a>
+                                    <?php endif; ?>
+                                <?php endfor; ?>
+                                <?php if ($page < $total_pages): ?>
+                                    <a href="?page=<?= $page + 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
+                                <?php endif; ?>
                             <?php endif; ?>
-                        <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>
