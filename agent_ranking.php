@@ -16,7 +16,9 @@ $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y
 
 $selected_month = isset($_GET['month']) ? $_GET['month'] : date('M');
 
-function getFilteredRankings($monthwise_rank_data, $selected_month)
+$agent_name = isset($_GET['agent_name']) ? $_GET['agent_name'] : '';
+
+function getFilteredRankings($monthwise_rank_data, $selected_month, $agent_name)
 {
     $ranking = [];
 
@@ -32,12 +34,23 @@ function getFilteredRankings($monthwise_rank_data, $selected_month)
         return $a[$selected_month]['rank'] <=> $b[$selected_month]['rank'];
     });
 
+    //filter on the basis of search input
+    return array_filter($ranking, function ($agent) use ($agent_name) {
+        if (empty($agent_name)) {
+            return true; 
+        }
+        
+        // Get first month's data since name is same across all months
+        $first_month_data = reset($agent);
+        return stripos($first_month_data['name'], $agent_name) !== false;
+    });
+
     return $ranking;
 }
 
 if (isset($global_ranking[$selected_year]['monthwise_rank'])) {
     // get the sorted agents for the selected year and month
-    $filtered_ranked_agents = getFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_month);
+    $filtered_ranked_agents = getFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_month, $agent_name);
 } else {
     $filtered_ranked_agents = [];
 }
@@ -73,6 +86,77 @@ echo "</pre>";
                 </div>
             </form> -->
                 <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <!-- search box -->
+                    <div class="flex items-center justify-start space-x-4 mb-4 w-full">
+                        <form action="" method="get" id="searchForm">
+                            <div class="relative">
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    name="agent_name"
+                                    value="<?= isset($_GET['agent_name']) ? $_GET['agent_name'] : '' ?>"
+                                    placeholder="Search agents..."
+                                    class="pl-10 pr-8 py-2 rounded-lg border border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <?php if (isset($_GET['agent_name']) && $_GET['agent_name'] !== ''): ?>
+                                    <button type="button" onclick="clearSearch()" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                <?php endif; ?>
+                                <?php if (isset($_GET['year'])): ?>
+                                    <input type="hidden" name="year" value="<?= $_GET['year'] ?>">
+                                <?php endif; ?>
+                                <?php if (isset($_GET['month'])): ?>
+                                    <input type="hidden" name="month" value="<?= $_GET['month'] ?>">
+                                <?php endif; ?>
+                            </div>
+                        </form>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                let searchBox = document.getElementById('searchInput');
+                                let timeout;
+
+                                if (!searchBox) {
+                                    console.error('Search input element not found');
+                                    return;
+                                }
+
+                                console.log('Search input initialized');
+
+                                searchBox.addEventListener('input', function(e) {
+                                    let inputValue = e.target.value.trim();
+                                    console.log('Input value:', inputValue);
+
+                                    // Clear any existing timeout
+                                    clearTimeout(timeout);
+
+                                    // Set a new timeout
+                                    timeout = setTimeout(() => {
+                                        // if (inputValue) {
+                                        console.log('Submitting form with value:', inputValue);
+                                        // Submit the form when input value exists
+                                        e.target.closest('form').submit();
+                                        // }
+                                    }, 1000); // Wait 500ms after user stops typing
+                                });
+                            });
+
+                            function clearSearch() {
+                                document.getElementById('searchInput').value = '';
+                                // Preserve other GET parameters
+                                let currentUrl = new URL(window.location.href);
+                                currentUrl.searchParams.delete('agent_name');
+                                window.location.href = currentUrl.toString();
+                            }
+                        </script>
+                    </div>
                     <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
                         <!-- table container -->
                         <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
@@ -116,7 +200,7 @@ echo "</pre>";
                                         $total_pages = ceil($total_agents / $per_page);
                                         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                                         $start = ($page - 1) * $per_page;
-                                        $filtered_ranked_agents = array_slice($filtered_ranked_agents, $start, $per_page);
+                                        // $filtered_ranked_agents = array_slice($filtered_ranked_agents, $start, $per_page);
 
                                         foreach ($filtered_ranked_agents as $agent): ?>
                                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -142,7 +226,7 @@ echo "</pre>";
 
                         </div>
                         <!-- pagination control -->
-                        <div class="mt-4 w-full flex justify-center gap-1 py-2">
+                        <!-- <div class="mt-4 w-full flex justify-center gap-1 py-2">
                             <?php if (!empty($filtered_ranked_agents)): ?>
                                 <?php if ($page > 1): ?>
                                     <a href="?page=<?= $page - 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-gray-500/40 border border-gray-800 rounded-md px-2 py-1 text-gray-800 dark:text-gray-100 text-xs font-medium hover:bg-gray-600 hover:text-gray-100">Prev</a>
@@ -158,7 +242,7 @@ echo "</pre>";
                                     <a href="?page=<?= $page + 1 ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : date('M') ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>" class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-gray-800 dark:text-indigo-100 text-xs font-medium hover:bg-indigo-600 hover:text-white">Next</a>
                                 <?php endif; ?>
                             <?php endif; ?>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
