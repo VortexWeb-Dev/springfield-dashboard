@@ -137,9 +137,6 @@ echo "</pre>";
             <?php include('./includes/datepicker.php'); ?>
             <?php if ($selected_agent_id): ?>
                 <h1 class="text-xl text-center font-bold mb-4 dark:text-gray-200"><?= $current_agent_name ?>'s Rankings</h1>
-            <?php else: ?>
-                <h1 class="text-xl text-center font-bold mb-4 dark:text-gray-200">Select an Agent to view rank data</h1>
-
             <?php endif; ?>
             <div class="mx-auto">
                 <!-- agent searchbox -->
@@ -252,7 +249,7 @@ echo "</pre>";
                     </div>
                 <?php else: ?>
                     <div class="flex items-center justify-center h-96">
-                        <p class="text-xl text-gray-500 dark:text-gray-400 font-medium">No Data Available</p>
+                        <p class="text-xl text-gray-500 dark:text-gray-400 font-medium">Select an agent to view rank</p>
                     </div>
                 <?php endif; ?>
             </div>
