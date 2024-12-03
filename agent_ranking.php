@@ -37,9 +37,9 @@ function getFilteredRankings($monthwise_rank_data, $selected_month, $agent_name)
     //filter on the basis of search input
     return array_filter($ranking, function ($agent) use ($agent_name) {
         if (empty($agent_name)) {
-            return true; 
+            return true;
         }
-        
+
         // Get first month's data since name is same across all months
         $first_month_data = reset($agent);
         return stripos($first_month_data['name'], $agent_name) !== false;
@@ -181,6 +181,9 @@ echo "</pre>";
                                                             ?>
                                                         </button>
                                                     </div>
+                                                    <?php if (isset($_GET['agent_name'])): ?>
+                                                        <input type="hidden" name="agent_name" value="<?= $_GET['agent_name'] ?>">
+                                                    <?php endif; ?>
                                                 </form>
                                             </th>
                                         <?php endforeach; ?>
