@@ -48,7 +48,15 @@ function calculateAgentRank()
             ]
         ];
 
-        $deal_filters = [];
+        $agent_filter = ['UF_DEPARTMENT' => 5]; // get sales agent only
+        $agents = get_filtered_users($agent_filter);
+        // $agents = getUsers();
+
+        $agent_ids = array_column($agents, 'ID');
+
+        $deal_filters = [
+            '@ASSIGNED_BY_ID' => [...$agent_ids], // get the deals of the specific user type, i.e - sales
+        ];
         $deal_selects = ['BEGINDATE', 'ASSIGNED_BY_ID', 'UF_CRM_1727871887978'];
         $deal_orders = ['UF_CRM_1727871887978' => 'DESC', 'BEGINDATE' => 'DESC'];
 
@@ -61,61 +69,54 @@ function calculateAgentRank()
             foreach ($sorted_deals as $deal) {
                 $responsible_agent_id = $deal['ASSIGNED_BY_ID'];
 
-                $responsible_agent = getUser($responsible_agent_id); // get responsible agent
+                $year = date('Y', strtotime($deal['BEGINDATE']));
+                $month = date('M', strtotime($deal['BEGINDATE']));
+                $quarter = get_quarter($month); // get the quarter based on the month, Q1, Q2, Q3, Q4
 
-                // if ($responsible_agent['UF_DEPARTMENT'] == 5) {
-                if (true) {
+                $gross_comms = isset($deal['UF_CRM_1727871887978']) ? (int)explode('|', $deal['UF_CRM_1727871887978'])[0] : 0;
 
-                    $year = date('Y', strtotime($deal['BEGINDATE']));
-                    $month = date('M', strtotime($deal['BEGINDATE']));
-                    $quarter = get_quarter($month); // get the quarter based on the month, Q1, Q2, Q3, Q4
+                // get agent name
+                $agent = getUser($responsible_agent_id);
+                $agent_firstName = $agent['NAME'] ?? '';
+                $agent_secondName = $agent['SECOND_NAME'] ?? '';
+                $agent_lastName = $agent['LAST_NAME'] ?? '';
+                $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
 
-                    $gross_comms = isset($deal['UF_CRM_1727871887978']) ? (int)explode('|', $deal['UF_CRM_1727871887978'])[0] : 0;
+                $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['name'] = $agent_full_name ?? null;
 
-                    // get agent name
-                    $agent = getUser($responsible_agent_id);
-                    $agent_firstName = $agent['NAME'] ?? '';
-                    $agent_secondName = $agent['SECOND_NAME'] ?? '';
-                    $agent_lastName = $agent['LAST_NAME'] ?? '';
-                    $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
+                // initialise gross_comms for first time
+                if (!isset($global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['gross_comms'])) {
+                    $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['gross_comms'] = $gross_comms;
+                } else {
+                    $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['gross_comms'] += $gross_comms;
+                }
 
-                    $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['name'] = $agent_full_name ?? null;
+                // add to quarterly
+                if (!isset($global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['name'])) {
+                    $global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['name'] = $agent_full_name ?? null;
+                }
 
-                    // initialise gross_comms for first time
-                    if (!isset($global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['gross_comms'])) {
-                        $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['gross_comms'] = $gross_comms;
-                    } else {
-                        $global_ranking[$year]['monthwise_rank'][$month][$responsible_agent_id]['gross_comms'] += $gross_comms;
-                    }
+                if (!isset($global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['gross_comms'])) {
+                    $global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['gross_comms'] = $gross_comms;
+                } else {
+                    $global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['gross_comms'] += $gross_comms;
+                }
 
-                    // add to quarterly
-                    if (!isset($global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['name'])) {
-                        $global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['name'] = $agent_full_name ?? null;
-                    }
+                //add to yearly
+                if (!isset($global_ranking[$year]['yearly_rank'][$responsible_agent_id]['name'])) {
+                    $global_ranking[$year]['yearly_rank'][$responsible_agent_id]['name'] = $agent_full_name ?? null;
+                }
 
-                    if (!isset($global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['gross_comms'])) {
-                        $global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['gross_comms'] = $gross_comms;
-                    } else {
-                        $global_ranking[$year]['quarterly_rank'][$quarter][$responsible_agent_id]['gross_comms'] += $gross_comms;
-                    }
-
-                    //add to yearly
-                    if (!isset($global_ranking[$year]['yearly_rank'][$responsible_agent_id]['name'])) {
-                        $global_ranking[$year]['yearly_rank'][$responsible_agent_id]['name'] = $agent_full_name ?? null;
-                    }
-
-                    if (!isset($global_ranking[$year]['yearly_rank'][$responsible_agent_id]['gross_comms'])) {
-                        $global_ranking[$year]['yearly_rank'][$responsible_agent_id]['gross_comms'] = $gross_comms;
-                    } else {
-                        $global_ranking[$year]['yearly_rank'][$responsible_agent_id]['gross_comms'] += $gross_comms;
-                    }
+                if (!isset($global_ranking[$year]['yearly_rank'][$responsible_agent_id]['gross_comms'])) {
+                    $global_ranking[$year]['yearly_rank'][$responsible_agent_id]['gross_comms'] = $gross_comms;
+                } else {
+                    $global_ranking[$year]['yearly_rank'][$responsible_agent_id]['gross_comms'] += $gross_comms;
                 }
             }
         }
 
         store_agents($sorted_deals, $global_ranking);
 
-        $agents = getUsers();
 
         // store the remaining agents details from the users
         function store_remaining_agents($agents, &$global_ranking)
@@ -170,48 +171,48 @@ function calculateAgentRank()
         store_remaining_agents($agents, $global_ranking);
 
         // put id = 263 as it is missing in the agents list
-        foreach ($global_ranking as $year => &$months) {
-            foreach ($months as $rank_type => &$rank_data) {
-                if ($rank_type == 'monthwise_rank') {
-                    foreach ($rank_data as $month => &$agents_data) {
-                        $agent_id = 263;
-                        $agent = getUser($agent_id);
-                        $agent_firstName = $agent['NAME'] ?? '';
-                        $agent_secondName = $agent['SECOND_NAME'] ?? '';
-                        $agent_lastName = $agent['LAST_NAME'] ?? '';
-                        $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
-                        if (!isset($global_ranking[$year][$rank_type][$month][$agent_id])) {
-                            $global_ranking[$year][$rank_type][$month][$agent_id]['name'] = $agent_full_name ?? null;
-                            $global_ranking[$year][$rank_type][$month][$agent_id]['gross_comms'] = 0;
-                        }
-                    }
-                } else if ($rank_type == 'quarterly_rank') {
-                    foreach ($rank_data as $quarter => &$agents_data) {
-                        $agent_id = 263;
-                        $agent = getUser($agent_id);
-                        $agent_firstName = $agent['NAME'] ?? '';
-                        $agent_secondName = $agent['SECOND_NAME'] ?? '';
-                        $agent_lastName = $agent['LAST_NAME'] ?? '';
-                        $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
-                        if (!isset($global_ranking[$year][$rank_type][$quarter][$agent_id])) {
-                            $global_ranking[$year][$rank_type][$quarter][$agent_id]['name'] = $agent_full_name ?? null;
-                            $global_ranking[$year][$rank_type][$quarter][$agent_id]['gross_comms'] = 0;
-                        }
-                    }
-                } else if ($rank_type == 'yearly_rank') {
-                    $agent_id = 263;
-                    $agent = getUser($agent_id);
-                    $agent_firstName = $agent['NAME'] ?? '';
-                    $agent_secondName = $agent['SECOND_NAME'] ?? '';
-                    $agent_lastName = $agent['LAST_NAME'] ?? '';
-                    $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
-                    if (!isset($global_ranking[$year][$rank_type][$agent_id])) {
-                        $global_ranking[$year][$rank_type][$agent_id]['name'] = $agent_full_name ?? null;
-                        $global_ranking[$year][$rank_type][$agent_id]['gross_comms'] = 0;
-                    }
-                }
-            }
-        }
+        // foreach ($global_ranking as $year => &$months) {
+        //     foreach ($months as $rank_type => &$rank_data) {
+        //         if ($rank_type == 'monthwise_rank') {
+        //             foreach ($rank_data as $month => &$agents_data) {
+        //                 $agent_id = 263;
+        //                 $agent = getUser($agent_id);
+        //                 $agent_firstName = $agent['NAME'] ?? '';
+        //                 $agent_secondName = $agent['SECOND_NAME'] ?? '';
+        //                 $agent_lastName = $agent['LAST_NAME'] ?? '';
+        //                 $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
+        //                 if (!isset($global_ranking[$year][$rank_type][$month][$agent_id])) {
+        //                     $global_ranking[$year][$rank_type][$month][$agent_id]['name'] = $agent_full_name ?? null;
+        //                     $global_ranking[$year][$rank_type][$month][$agent_id]['gross_comms'] = 0;
+        //                 }
+        //             }
+        //         } else if ($rank_type == 'quarterly_rank') {
+        //             foreach ($rank_data as $quarter => &$agents_data) {
+        //                 $agent_id = 263;
+        //                 $agent = getUser($agent_id);
+        //                 $agent_firstName = $agent['NAME'] ?? '';
+        //                 $agent_secondName = $agent['SECOND_NAME'] ?? '';
+        //                 $agent_lastName = $agent['LAST_NAME'] ?? '';
+        //                 $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
+        //                 if (!isset($global_ranking[$year][$rank_type][$quarter][$agent_id])) {
+        //                     $global_ranking[$year][$rank_type][$quarter][$agent_id]['name'] = $agent_full_name ?? null;
+        //                     $global_ranking[$year][$rank_type][$quarter][$agent_id]['gross_comms'] = 0;
+        //                 }
+        //             }
+        //         } else if ($rank_type == 'yearly_rank') {
+        //             $agent_id = 263;
+        //             $agent = getUser($agent_id);
+        //             $agent_firstName = $agent['NAME'] ?? '';
+        //             $agent_secondName = $agent['SECOND_NAME'] ?? '';
+        //             $agent_lastName = $agent['LAST_NAME'] ?? '';
+        //             $agent_full_name = trim($agent_firstName . ' ' . $agent_secondName . ' ' . $agent_lastName);
+        //             if (!isset($global_ranking[$year][$rank_type][$agent_id])) {
+        //                 $global_ranking[$year][$rank_type][$agent_id]['name'] = $agent_full_name ?? null;
+        //                 $global_ranking[$year][$rank_type][$agent_id]['gross_comms'] = 0;
+        //             }
+        //         }
+        //     }
+        // }
 
         //assign rank to each agent in each month of each year
         function assign_monthly_rank(&$global_ranking)

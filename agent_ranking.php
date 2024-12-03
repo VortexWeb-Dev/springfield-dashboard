@@ -199,7 +199,7 @@ echo "</pre>";
                                     <?php else: ?>
                                         <?php
                                         $total_agents = count($filtered_ranked_agents);
-                                        $per_page = 6;
+                                        $per_page = 99;
                                         $total_pages = ceil($total_agents / $per_page);
                                         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                                         $start = ($page - 1) * $per_page;
