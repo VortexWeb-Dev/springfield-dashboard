@@ -212,14 +212,21 @@ if (!empty($deals)) {
 
 
     // monthly deals per developer with total monthly and yearly property value
-    function get_monthly_deals_per_developer($deals, &$developers)
+    function get_monthly_deals_per_developer($deals, &$developers) 
     {
         $monthlyDealsPerDeveloper = [];
+        $quarters = [
+            'Q1' => ['Jan', 'Feb', 'Mar'],
+            'Q2' => ['Apr', 'May', 'Jun'], 
+            'Q3' => ['Jul', 'Aug', 'Sep'],
+            'Q4' => ['Oct', 'Nov', 'Dec']
+        ];
 
         foreach ($developers as $developer) {
             $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Monthly calculations
             foreach ($months as $month) {
-                // get monthwise deals
                 $monthwiseDeals = array_filter($deals, function ($deal) use ($month) {
                     return date('M', strtotime($deal['BEGINDATE'])) == $month;
                 });
@@ -230,12 +237,28 @@ if (!empty($deals)) {
 
                 $monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['total_monthly_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['deals'], function ($total, $deal) {
                     return isset($deal['OPPORTUNITY']) ? $total + (int)$deal['OPPORTUNITY'] : $total;
-                });
+                }, 0);
             }
 
+            // Quarterly calculations
+            foreach ($quarters as $quarter => $quarterMonths) {
+                $quarterlyDeals = array_filter($deals, function ($deal) use ($quarterMonths) {
+                    return in_array(date('M', strtotime($deal['BEGINDATE'])), $quarterMonths);
+                });
+
+                $monthlyDealsPerDeveloper[$developer]['quarterly_deals'][$quarter]['deals'] = array_filter($quarterlyDeals, function ($deal) use ($developer) {
+                    return $deal['UF_CRM_1727625822094'] == $developer;
+                });
+
+                $monthlyDealsPerDeveloper[$developer]['quarterly_deals'][$quarter]['total_quarterly_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['quarterly_deals'][$quarter]['deals'], function ($total, $deal) {
+                    return isset($deal['OPPORTUNITY']) ? $total + (int)$deal['OPPORTUNITY'] : $total;
+                }, 0);
+            }
+
+            // Total property value calculation
             $monthlyDealsPerDeveloper[$developer]['total_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['monthly_deals'], function ($total, $prev) {
                 return isset($prev['total_monthly_property_value']) ? $total + (int)$prev['total_monthly_property_value'] : $total;
-            }, 0);
+            });
         }
 
         return $monthlyDealsPerDeveloper;
@@ -300,16 +323,16 @@ if (!empty($deals)) {
                             <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($deals) ?></p>
                         </a>
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Closed Deals</h5>
-                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($closed_deals) ?></p>
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Property Price</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= number_format($developerwise_total_deals['property_price'], 2) ?> AED</p>
                         </a>
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-blue-500 hover:shadow-lg dark:bg-gray-800 dark:border-blue-300/60 dark:hover:bg-blue-200/10">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Gross Commission</h5>
-                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['gross_commission'] ?> AED</p>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= number_format($total_deals['gross_commission'], 2) ?> AED</p>
                         </a>
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-orange-500 hover:shadow-lg dark:bg-gray-800 dark:border-orange-300/60 dark:hover:bg-orange-200/10">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Net Commission</h5>
-                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $total_deals['net_commission'] ?></p>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= number_format($total_deals['net_commission'], 2) ?> AED</p>
                         </a>
                     </div>
 
@@ -411,7 +434,7 @@ if (!empty($deals)) {
 
                         <!-- chart -->
                         <div class="flex flex-col justify-between gap-2 col-span-1 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-green-500 dark:border-green-300/60 rounded-xl">
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Property Type</h3>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Deal Type</h3>
                             <div id="property-type-chart" class="flex justify-center items-center">
 
                             </div>
@@ -468,13 +491,13 @@ if (!empty($deals)) {
                                         <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                                 <tr>
-                                                    <th scope="col" class="px-6 py-3">
+                                                    <th scope="col" class="px-4 py-3">
                                                         Developer
                                                     </th>
                                                     <!-- <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month) : ?>
                                                     <th scope="col" class="px-6 py-3"><?= $month ?></th>
                                                 <?php endforeach; ?> -->
-                                                    <th scope="col" class="px-6 py-3">
+                                                    <th scope="col" class="px-4 py-3">
                                                         <?php
                                                         $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
                                                         $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
@@ -507,6 +530,9 @@ if (!empty($deals)) {
                                                             </button>
                                                         </form>
                                                     </th>
+                                                    <th scope="col" class="px-4 py-3">
+                                                        Percentage
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody class="">
@@ -523,6 +549,15 @@ if (!empty($deals)) {
                                                         <td class="px-6 py-4">
                                                             <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
                                                         </td>
+                                                        <!-- get the total property value -->
+                                                        <?php
+                                                        $total_property_value = array_reduce(array_column($monthly_deals_per_developer, 'total_property_value'), function ($carry, $item) {
+                                                            return $carry + $item;
+                                                        }, 0);
+                                                        ?>
+                                                        <td class="px-6 py-4">
+                                                            <?= number_format(($monthly_deals_per_developer[$dev]['total_property_value'] / $total_property_value) * 100, 2) ?>%
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -537,6 +572,79 @@ if (!empty($deals)) {
                         </div>
                     </div>
 
+                    <!-- Quarter Wise Developer Quarterly Report  -->
+                    <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developer Quarterly Report</h3>
+                        <div id="" class="col-span-2 flex justify-center items-center">
+                            <div class="w-full h-[35rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+                                <div class="relative h-full overflow-auto sm:rounded-lg">
+                                    <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-4 py-3">
+                                                    Developer
+                                                </th>
+                                                <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $quarter) : ?>
+                                                    <th scope="col" class="px-6 py-3"><?= $quarter ?></th>
+                                                <?php endforeach; ?>
+                                                <th scope="col" class="px-4 py-3">
+                                                    <?php
+                                                    $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
+                                                    $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
+                                                    // decreasing order
+                                                    if ($selected_developer_sort_order == 'desc') {
+                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                            return $b['total_property_value'] <=> $a['total_property_value'];
+                                                        });
+                                                    }
+                                                    // increasing order
+                                                    else if ($selected_developer_sort_order == 'asc') {
+                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                            return $a['total_property_value'] <=> $b['total_property_value'];
+                                                        });
+                                                    }
+                                                    ?>
+                                                    <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get" class="flex items-center gap-2">
+                                                        <input type="hidden" name="developer_sort_order" value="<?= $selected_developer_sort_order == 'asc' ? 'desc' : 'asc' ?>">
+                                                        <input type="hidden" name="year" value="<?= $_GET['year'] ?? date('d/m/Y') ?>">
+                                                        <input type="hidden" name="developer_name" value="<?= $developer_name ?? '' ?>">
+                                                        <p>YTD Total Property value</p>
+                                                        <button type="submit" class="">
+                                                            <?php
+                                                            if ($selected_developer_sort_order == 'asc') {
+                                                                echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
+                                                            } else {
+                                                                echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                            }
+                                                            ?>
+                                                        </button>
+                                                    </form>
+                                                </th>    
+                                            </tr>
+                                        </thead>
+                                        <tbody class="">
+                                            <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
+                                                <tr id="developer-<?= $dev ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                        <?= $dev ?>
+                                                    </th>
+                                                    <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $quarter) : ?>
+                                                        <td class="px-6 py-4">
+                                                            <?= number_format($monthly_deals_per_developer[$dev]['quarterly_deals'][$quarter]['total_quarterly_property_value'], 2) ?>
+                                                        </td>
+                                                    <?php endforeach; ?>
+                                                    <td class="px-6 py-4">
+                                                        <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
+                                                    </td>                                                   
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Deals per lead source -->
                     <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
@@ -544,11 +652,6 @@ if (!empty($deals)) {
 
                         </div>
                     </div>
-
-                    <!-- Extras -->
-                    <!-- <div id="developer-property-value-chart" class="col-span-2 flex justify-center items-center">
-
-                </div> -->
                 </div>
 
             <?php endif; ?>
@@ -646,7 +749,7 @@ if (!empty($deals)) {
                 }
             },
             dataLabels: {
-                enabled: false
+                enabled: true
             },
             fill: {
                 type: 'gradient',

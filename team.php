@@ -3,40 +3,85 @@ include_once "./crest/crest.php";
 include_once "./crest/settings.php";
 include('includes/header.php');
 
-// include the fetch deals page
-include_once "./data/fetch_deals.php";
-include_once "./data/fetch_users.php";
 
-// utility functions
-include_once "./utils/index.php";
-
-$deal_fields = get_deal_fileds();
-
-$teams = [];
-
-$teamLeaders = $deal_fields['UF_CRM_1727854555607']['items'] ?? [];
-
-foreach ($teamLeaders as $leader) {
-    $id = $leader['ID'] ?? null;
-    $value = $leader['VALUE'] ?? null;
-
-    // add them in teams array
-    $teams[$id]['team_leader_id'] = $id;
-    $teams[$id]['team_leader'] = $value;
-}
-
-$deals = get_all_deals();
-
-foreach ($deals as $deal) {
-    $teamLeaderId = $deal['UF_CRM_1727854555607'] ?? null;
-    if ($teamLeaderId && isset($deal['ASSIGNED_BY_ID'])) {
-        $agent = getUser($deal['ASSIGNED_BY_ID']);
-        $agentId = $agent['ID'] ?? null;
-        $agentfullName = $agent['NAME'] ?? '' . ' ' . $agent['SECOND_NAME'] ?? '' . ' ' . $agent['LAST_NAME'] ?? '';
-        $member = ['member_id' => $agentId ?? null, 'name' => $agentfullName ?? null];
-        $teams[$teamLeaderId]['members'][] = $member;
-    }
-}
+$teams = [
+    'Adilet Chynystanov' => [
+        'Hatim Ayoub',
+        'Innocent Mary',
+        'Jad Abou'
+    ],
+    'Amir Abbasi' => [
+        'Ali Tanveer Mirza',
+        'Danish Arora',
+        'Idris Malik',
+        'Maria Wu',
+        'Priyanka Sherwani',
+        'Akbar Ali'
+    ],
+    'Amir Yousaf' => [
+        'Mandeep Kaur'
+    ],
+    'Anjal Singhvi' => [
+        'Ahmad Alkhatib',
+        'Ali Shahama',
+        'Daniela Pires',
+        'Kanwal Adnan',
+        'Lavina Nihalani',
+        'Mohammed Ansab',
+        'Hassan Azam'
+    ],
+    'Bipin Khana' => [
+        'Abdoli Golibjon',
+        'Ahana Ahanta',
+        'Sailaxmi Nair'
+    ],
+    'Hassan Bin Khalid' => [
+        'Aygun Aghakishiyeva',
+        'Mehroz Majeed',
+        'Mohamed Barahmeh',
+        'Murtuza Iqbal',
+        'Ranusha De Silva',
+        'Saad Afzal',
+        'Sahil Mendiratta',
+        'Shafan Cader',
+        'Sonia Harjani',
+        'Swati Agrawal',
+        'Basit Ali Aziz',
+        'Mutee Qureshi'
+    ],
+    'Irshad Ahmad' => [
+        'Imran Ashraf',
+        'Omar Ahmed Hasan'
+    ],
+    'Omar Ahmed Hasan Khan' => [
+        'Amani Zara',
+        'Ramin Kalantari',
+        'Sonia Baig',
+        'Waqas Mukhtar'
+    ],
+    'Sonia Gulistani' => [
+        'Adil Syed',
+        'Ahmed Godil',
+        'Aleena Sitwat Bhatti',
+        'Alina Sviridova',
+        'Basem Ghazi',
+        'Beatris Lastre',
+        'Ioana Pentecuta',
+        'Jason Yan',
+        'Priyanka Dev',
+        'Silviaceline Oparaocha',
+        'Tinuola Monique',
+        'Mubeen Iqbal'
+    ],
+    'Tauseef Ur Rehman' => [
+        'Bechir Bejoaui',
+        'Haroon Saleem',
+        'Nadeem Darvesh',
+        'Ola Hassan',
+        'Sarah Nafeh',
+        'Tina Elahi'
+    ]
+];
 
 // echo "<pre>";
 // print_r($teams);
@@ -68,24 +113,18 @@ foreach ($deals as $deal) {
                     </div>
                 </header>
                 <div id="teamStructure" class="space-y-8">
-                    <?php foreach ($teams as $team): ?>
-                        <div class="team-leader bg-white dark:bg-gray-800 rounded-lg shadow-md p-6" data-leader-id="<?php echo $team['team_leader_id']; ?>" data-leader-name="<?php echo $team['team_leader']; ?>">
+                    <?php foreach ($teams as $team_leader => $members): ?>
+                        <div class="team-leader bg-white dark:bg-gray-800 rounded-lg shadow-md p-6" data-leader-id="<?= $team_leader ?>" data-leader-name="<?= $team_leader ?>">
                             <div class="flex items-center justify-between">
-                                <h2 class="text-2xl font-semibold dark:text-white"><?php echo $team['team_leader']; ?></h2>
-                                <span class="text-gray-600 dark:text-gray-400">Team Leader ID: <?php echo $team['team_leader_id']; ?></span>
+                                <h2 class="text-2xl font-semibold dark:text-white"><?= $team_leader ?></h2>
                             </div>
-                            <?php if (isset($team['members']) && !empty($team['members'])): ?>
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                                    <?php foreach ($team['members'] as $member): ?>
-                                        <div class="team-member flex flex-col space-y-1  border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-600 p-4" data-member-name="<?php echo $member['name']; ?>">
-                                            <span class="font-medium dark:text-gray-300"><?php echo $member['name']; ?></span>
-                                            <span class="text-sm text-gray-600 dark:text-gray-400">Member ID: <?php echo $member['member_id']; ?></span>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php else: ?>
-                                <p class="text-gray-600 dark:text-gray-400 mt-4">No team members assigned.</p>
-                            <?php endif; ?>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                                <?php foreach ($members as $member): ?>
+                                    <div class="team-member flex flex-col space-y-1 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-600 p-4" data-member-name="<?= $member ?>">
+                                        <span class="font-medium dark:text-gray-300"><?= $member ?></span>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -100,7 +139,7 @@ foreach ($deals as $deal) {
         const teamLeaders = document.querySelectorAll('.team-leader');
 
         teamLeaders.forEach(leader => {
-            const leaderName = leader.dataset.leaderName.toLowerCase();
+            const leaderName = leader.getAttribute('data-leader-name').toLowerCase();
             const teamMembers = leader.querySelectorAll('.team-member');
             let leaderVisible = false;
 
@@ -111,8 +150,8 @@ foreach ($deals as $deal) {
                 });
             } else {
                 teamMembers.forEach(member => {
-                    const memberName = member.dataset.memberName.toLowerCase();
-                    if (memberName.includes(searchTerm)) {
+                    const memberName = member.getAttribute('data-member-name').toLowerCase();
+                    if (memberName && memberName.includes(searchTerm)) {
                         leaderVisible = true;
                         member.style.display = 'flex';
                     } else {

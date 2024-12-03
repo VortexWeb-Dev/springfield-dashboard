@@ -1,5 +1,5 @@
 <?php
-$all_agents = getUsers();
+$all_agents = get_filtered_users(['UF_DEPARTMENT' => 5]); // get sales department members only
 $current_agent = getUser($_GET['agent_id'] ?? 1);
 $fname = $current_agent['NAME'] ?? '';
 $lname = $current_agent['LAST_NAME'] ?? '';

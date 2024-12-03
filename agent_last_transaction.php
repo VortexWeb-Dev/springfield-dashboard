@@ -13,10 +13,17 @@ include_once "./utils/index.php";
 $selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : null;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-$userFilter = $selected_agent_id ? ['id' => $selected_agent_id] : [];
+$userFilter = $selected_agent_id ? ['id' => $selected_agent_id, 'UF_DEPARTMENT' => 5] : ['UF_DEPARTMENT' => 5]; // get sales department members only
 
 $userData = get_paginated_users($page, $userFilter);
 $users = $userData['users'] ?? [];
+
+$user_ids = array_column($users, 'ID');
+
+// echo "<pre>";
+// print_r($user_ids);
+// echo "</pre>";
+
 // pagination
 $total_agents = $userData['total'] ?? 0;
 $total_pages = ceil($total_agents / 50);
@@ -28,6 +35,7 @@ $filter = [
     'CATEGORY_ID' => 0,
     '>=BEGINDATE' => "$selected_year-01-01",
     '<=BEGINDATE' => "$selected_year-12-31",
+    '@ASSIGNED_BY_ID' => [...$user_ids], // get the deals of the specific user type, i.e - sales
 ];
 
 
