@@ -691,9 +691,14 @@ if (!empty($deals)) {
                 type: 'donut',
                 events: {
                     dataPointSelection: function(event, chartContext, config) {
-                        var selectedType = config.w.config.labels[config.dataPointIndex];
+                        const deal_types = {
+                            'offplan': '1171',
+                            'secondary': '1169'
+                        };
+                        var selectedType = config.w.config.labels[config.dataPointIndex].trim().toLowerCase();
+                        var selectedTypeId = deal_types[selectedType];
                         if (confirm(`Would you like to apply the filter to show only ${selectedType} deals?`)) {
-                            window.location.href = `overall_deals.php?deal_type=${selectedType}`;
+                            window.location.href = `overall_deals.php?deal_type=${selectedTypeId}`;
                         }
                     }
                 }

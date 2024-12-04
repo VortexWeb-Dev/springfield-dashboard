@@ -10,12 +10,13 @@ include_once "./data/fetch_users.php";
 
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-
+$deal_type = isset($_GET['deal_type']) ? $_GET['deal_type'] : null;
 
 $filter = [
     'CATEGORY_ID' => 0,
     '>=BEGINDATE' => "$selected_year-01-01",
     '<=BEGINDATE' => "$selected_year-12-31",
+    'UF_CRM_1727625752721' => $deal_type
 ];
 
 $dealsData = get_paginated_deals($page, $filter) ?? [];
@@ -158,6 +159,51 @@ if (!empty($deals)) {
                 </div>
             <?php else: ?>
                 <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <label class="text-gray-700 dark:text-gray-300" for="deal_type">Deal Type:</label>
+                        <select id="deal_type" class="bg-white dark:text-gray-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900">
+                            <option value="">All</option>
+                            <?php
+                            $deal_types = [
+                                '1171' => 'offplan',
+                                '1169' => 'secondary'
+                            ];
+                            if (isset($_GET['deal_type'])) {
+                                $selected_type = $_GET['deal_type'];
+                            } else {
+                                $selected_type = '';
+                            }
+                            ?>
+                            <?php foreach ($deal_types as $id => $deal_type): ?>
+                                <option value="<?= $id ?>" <?= $selected_type == $id ? 'selected' : '' ?>><?= $deal_type ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none" onclick="applyFilter()">Apply</button>
+                        <?php if (isset($_GET['deal_type'])): ?>
+                            <button onclick="clearFilter()" class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                <p class="ml-2">Clear</p>
+                            </button>
+                        <?php endif; ?>
+                    </div>
+
+                    <script>
+                        function applyFilter() {
+                            let deal_type = document.getElementById('deal_type').value;
+                            let url = new URL(window.location.href);
+                            url.searchParams.set('deal_type', deal_type);
+                            window.location.href = url.toString();
+                        }
+
+                        function clearFilter() {
+                            let url = new URL(window.location.href);
+                            url.searchParams.delete('deal_type');
+                            window.location.href = url.toString();
+                        }
+                    </script>
+
                     <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
                         <!-- Overall deals -->
                         <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
