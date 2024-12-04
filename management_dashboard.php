@@ -689,6 +689,14 @@ if (!empty($deals)) {
             chart: {
                 width: 380,
                 type: 'donut',
+                events: {
+                    dataPointSelection: function(event, chartContext, config) {
+                        var selectedType = config.w.config.labels[config.dataPointIndex];
+                        if (confirm(`Would you like to apply the filter to show only ${selectedType} deals?`)) {
+                            window.location.href = `overall_deals.php?deal_type=${selectedType}`;
+                        }
+                    }
+                }
             },
             dataLabels: {
                 enabled: true,
@@ -713,7 +721,6 @@ if (!empty($deals)) {
                 }
             }
         };
-
         var chart = new ApexCharts(document.querySelector("#property-type-chart"), options);
         chart.render();
     }

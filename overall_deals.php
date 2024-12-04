@@ -188,9 +188,9 @@ if (!empty($deals)) {
                                         <th scope="col" class="px-6 py-3">Referral Fee</th>
                                         <th scope="col" class="px-6 py-3">Lead Source</th>
                                         <th scope="col" class="px-6 py-3">Invoice Status</th>
-                                        <th scope="col" class="px-6 py-3">Notification</th>
+                                        <!-- <th scope="col" class="px-6 py-3">Notification</th> -->
                                         <th scope="col" class="px-6 py-3">Payment Received</th>
-                                        <th scope="col" class="px-6 py-3">Follow-up Notification</th>
+                                        <!-- <th scope="col" class="px-6 py-3">Follow-up Notification</th> -->
                                         <th scope="col" class="px-6 py-3">1st Payment Received</th>
                                         <th scope="col" class="px-6 py-3">2nd Payment Received</th>
                                         <th scope="col" class="px-6 py-3">3rd Payment Received</th>
@@ -298,17 +298,17 @@ if (!empty($deals)) {
                                                 <?php echo $deal['Invoice Status'] ?? "--"; ?>
                                             </td>
                                             <!-- notification -->
-                                            <td class="px-6 py-4">
+                                            <!-- <td class="px-6 py-4">
                                                 <?php echo $deal['Notification'] ?? "--"; ?>
-                                            </td>
+                                            </td> -->
                                             <!-- payment received -->
                                             <td class="px-6 py-4">
                                                 <?php echo $deal['Payment Received'] ?? "--"; ?>
                                             </td>
                                             <!-- follow-up notification -->
-                                            <td class="px-6 py-4">
+                                            <!-- <td class="px-6 py-4">
                                                 <?php echo $deal['Follow-up Notification'] ?? "--"; ?>
-                                            </td>
+                                            </td> -->
                                             <!-- 1st payment received -->
                                             <td class="px-6 py-4">
                                                 <?php echo $deal['1st Payment Received'] ?? "--"; ?>
