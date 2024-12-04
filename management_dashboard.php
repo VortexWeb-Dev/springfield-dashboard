@@ -18,7 +18,7 @@ $developer_name = isset($_GET['developer_name']) ? $_GET['developer_name'] : nul
 // echo "</pre>";
 
 $filter = [
-    'CATEGORY_ID' => 0,
+    // 'CATEGORY_ID' => 0,
     '>=BEGINDATE' => "$selected_year-01-01",
     '<=BEGINDATE' => "$selected_year-12-31",
 ];
@@ -185,7 +185,7 @@ if (!empty($deals)) {
         ];
 
         foreach ($deals as $deal) {
-            $final_deals['total']['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+            $final_deals['total']['count_of_closed_deals'] += $deal['CATEGORY_ID'] == 0 ? 1 : 0;
             $final_deals['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
             $final_deals['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
             $final_deals['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
@@ -193,7 +193,7 @@ if (!empty($deals)) {
             $final_deals['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
 
             $month = date('F', strtotime($deal['BEGINDATE']));
-            $final_deals[$month]['count_of_closed_deals'] += $deal['CLOSED'] == 'Y' ? 1 : 0;
+            $final_deals[$month]['count_of_closed_deals'] += $deal['CATEGORY_ID'] == 0 ? 1 : 0;
             $final_deals[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
             $final_deals[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727871887978'])[0] ?? 0;
             $final_deals[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1727871971926'])[0] ?? 0;
@@ -319,8 +319,8 @@ if (!empty($deals)) {
                     <!-- cards container -->
                     <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-green-500 hover:shadow-lg dark:bg-gray-800 dark:border-green-300/60 dark:hover:bg-green-200/10">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Deals</h5>
-                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= count($deals) ?></p>
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Closed Deals</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $developerwise_total_deals['count_of_closed_deals'] ?> / <?= count($deals) ?></p>
                         </a>
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Property Price</h5>
@@ -702,12 +702,11 @@ if (!empty($deals)) {
 
     let isdark = isDarkTheme();
 
-    // console.log(dealsPerDealType);
-
     function display_property_type_chart() {
         var dealsPerDealType = <?php echo json_encode($deals_per_deal_type); ?>;
+        console.log('dealsPerDealType', dealsPerDealType);
 
-        var offplanDeals = dealsPerDealType['Offplan'].length;
+        var offplanDeals = Object.keys(dealsPerDealType['Offplan']).length;
         var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
 
         // property type
