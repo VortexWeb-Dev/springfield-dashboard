@@ -212,19 +212,19 @@ if (!empty($deals)) {
 
 
     // monthly deals per developer with total monthly and yearly property value
-    function get_monthly_deals_per_developer($deals, &$developers) 
+    function get_monthly_deals_per_developer($deals, &$developers)
     {
         $monthlyDealsPerDeveloper = [];
         $quarters = [
             'Q1' => ['Jan', 'Feb', 'Mar'],
-            'Q2' => ['Apr', 'May', 'Jun'], 
+            'Q2' => ['Apr', 'May', 'Jun'],
             'Q3' => ['Jul', 'Aug', 'Sep'],
             'Q4' => ['Oct', 'Nov', 'Dec']
         ];
 
         foreach ($developers as $developer) {
             $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            
+
             // Monthly calculations
             foreach ($months as $month) {
                 $monthwiseDeals = array_filter($deals, function ($deal) use ($month) {
@@ -561,6 +561,16 @@ if (!empty($deals)) {
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
+                                            <tfoot>
+                                                <tr class="sticky bottom-0 bg-gray-50 dark:bg-gray-700">
+                                                    <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                        Total
+                                                    </th>
+                                                    <td colspan="2" class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                        <?= number_format($total_property_value, 2) ?>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -619,7 +629,7 @@ if (!empty($deals)) {
                                                             ?>
                                                         </button>
                                                     </form>
-                                                </th>    
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody class="">
@@ -635,10 +645,28 @@ if (!empty($deals)) {
                                                     <?php endforeach; ?>
                                                     <td class="px-6 py-4">
                                                         <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
-                                                    </td>                                                   
+                                                    </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
+                                        <tfoot>
+                                            <tr class="sticky bottom-0 bg-gray-50 dark:bg-gray-700">
+                                                <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                    Total
+                                                </th>
+                                                <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $q) : ?>
+                                                    <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                        <!-- get the quarterly total value -->
+                                                        <?= number_format(array_reduce($monthly_deals_per_developer, function ($total, $item) use ($q) {
+                                                            return $total + $item['quarterly_deals'][$q]['total_quarterly_property_value'];
+                                                        }, 0), 2) ?>
+                                                    </td>
+                                                <?php endforeach; ?>
+                                                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                    <?= number_format(array_sum(array_column($monthly_deals_per_developer, 'total_property_value')), 2) ?>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
