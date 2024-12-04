@@ -736,8 +736,8 @@ if (!empty($deals)) {
 
 
         let options = {
-            series: [...property_values.slice(0, 5)],
-            labels: [...developers.slice(0, 5)],
+            series: [...property_values.slice(0, 10)],
+            labels: [...developers.slice(0, 10)],
             chart: {
                 width: 500,
                 type: 'donut',
