@@ -148,7 +148,16 @@ echo "</pre>";
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Monthly Ranking -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
-                            <h2 class="text-xl font-semibold mb-6 dark:text-white">Monthly Ranking</h2>
+                            <div class="flex justify-between gap-2">
+                                <h2 class="text-xl font-semibold mb-6 dark:text-white">Monthly Ranking</h2>
+                                <div class="flex items-start justify-end gap-2">
+                                    <a href="#" onclick="download_table_as_csv('monthly_rankings');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                             <div class="mb-2">
                                 <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white"><?= $agent_name ?></label>
                                 <input type="text" id="monthly-agent" name="monthly-agent" class="mt-1 block w-full border-b border-gray-600 dark:bg-gray-800">
@@ -157,7 +166,7 @@ echo "</pre>";
                                 <p class="text-gray-600 dark:text-gray-400">No data available.</p>
                             <?php else: ?>
                                 <div class="overflow-auto">
-                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
+                                    <table id="monthly_rankings" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
                                         <thead class="bg-gray-50 dark:bg-gray-900">
                                             <tr>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Month</th>
@@ -181,7 +190,16 @@ echo "</pre>";
 
                         <!-- Quaterly Ranking -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
-                            <h2 class="text-xl font-semibold mb-6 dark:text-white">Quaterly Ranking</h2>
+                            <div class="flex justify-between gap-2">
+                                <h2 class="text-xl font-semibold mb-6 dark:text-white">Quaterly Ranking</h2>
+                                <div class="flex items-start justify-end gap-2">
+                                    <a href="#" onclick="download_table_as_csv('quarterly_rankings');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                             <div class="mb-2">
                                 <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white"><?= $agent_name ?></label>
                                 <input type="text" id="quaterly-agent" name="quaterly-agent" class="mt-1 block w-full border-b border-gray-600 dark:bg-gray-800">
@@ -191,7 +209,7 @@ echo "</pre>";
                                 <p class="text-gray-600 dark:text-gray-400">No data available.</p>
                             <?php else: ?>
                                 <div class="overflow-auto">
-                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
+                                    <table id="quarterly_rankings" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
                                         <thead class="bg-gray-50 dark:bg-gray-900">
                                             <tr>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quarter</th>
@@ -215,7 +233,16 @@ echo "</pre>";
 
                         <!-- Yearly Ranking -->
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm h-[400px] flex flex-col gap-1">
-                            <h2 class="text-xl font-semibold mb-6 dark:text-white">Yearly Ranking</h2>
+                            <div class="flex justify-between gap-2">
+                                <h2 class="text-xl font-semibold mb-6 dark:text-white">Yearly Ranking</h2>
+                                <div class="flex items-start justify-end gap-2">
+                                    <a href="#" onclick="download_table_as_csv('yearly_rankings');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                             <div class="mb-2">
                                 <label for="monthly-agent" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white"><?= $agent_name ?></label>
                                 <input type="text" id="yearly-agent" name="yearly-agent" class="mt-1 block w-full border-b border-gray-600 dark:bg-gray-800">
@@ -225,7 +252,7 @@ echo "</pre>";
                                 <p class="text-gray-600 dark:text-gray-400">No data available.</p>
                             <?php else: ?>
                                 <div class="overflow-auto">
-                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
+                                    <table id="yearly_rankings" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
                                         <thead class="bg-gray-50 dark:bg-gray-900">
                                             <tr>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Year</th>

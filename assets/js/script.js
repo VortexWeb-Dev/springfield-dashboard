@@ -1,5 +1,7 @@
 // download table data as csv ---------------------------------
 function download_table_as_csv(table_id, separator = ',') {
+    console.log(table_id);
+    
     // Select rows from table_id
     var rows = document.querySelectorAll('table#' + table_id + ' tr');
     // Construct csv
