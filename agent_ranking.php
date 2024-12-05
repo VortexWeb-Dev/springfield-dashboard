@@ -86,81 +86,91 @@ echo "</pre>";
                 </div>
             </form> -->
                 <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <!-- search box -->
-                    <div class="flex items-center justify-start space-x-4 mb-4 w-full">
-                        <form action="" method="get" id="searchForm">
-                            <div class="relative">
-                                <input
-                                    type="text"
-                                    id="searchInput"
-                                    name="agent_name"
-                                    value="<?= isset($_GET['agent_name']) ? $_GET['agent_name'] : '' ?>"
-                                    placeholder="Search agents..."
-                                    class="pl-10 pr-8 py-2 rounded-lg border border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                                <?php if (isset($_GET['agent_name']) && $_GET['agent_name'] !== ''): ?>
-                                    <button type="button" onclick="clearSearch()" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                        </svg>
-                                    </button>
-                                <?php endif; ?>
-                                <?php if (isset($_GET['year'])): ?>
-                                    <input type="hidden" name="year" value="<?= $_GET['year'] ?>">
-                                <?php endif; ?>
-                                <?php if (isset($_GET['month'])): ?>
-                                    <input type="hidden" name="month" value="<?= $_GET['month'] ?>">
-                                <?php endif; ?>
-                            </div>
-                        </form>
+                    <div class="flex items-center justify-between">
+                        <!-- search box -->
+                        <div class="flex items-center justify-start space-x-4 mb-4 w-full">
+                            <form action="" method="get" id="searchForm">
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="searchInput"
+                                        name="agent_name"
+                                        value="<?= isset($_GET['agent_name']) ? $_GET['agent_name'] : '' ?>"
+                                        placeholder="Search agents..."
+                                        class="pl-10 pr-8 py-2 rounded-lg border border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    <?php if (isset($_GET['agent_name']) && $_GET['agent_name'] !== ''): ?>
+                                        <button type="button" onclick="clearSearch()" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    <?php endif; ?>
+                                    <?php if (isset($_GET['year'])): ?>
+                                        <input type="hidden" name="year" value="<?= $_GET['year'] ?>">
+                                    <?php endif; ?>
+                                    <?php if (isset($_GET['month'])): ?>
+                                        <input type="hidden" name="month" value="<?= $_GET['month'] ?>">
+                                    <?php endif; ?>
+                                </div>
+                            </form>
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                let searchBox = document.getElementById('searchInput');
-                                let timeout;
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    let searchBox = document.getElementById('searchInput');
+                                    let timeout;
 
-                                if (!searchBox) {
-                                    console.error('Search input element not found');
-                                    return;
-                                }
+                                    if (!searchBox) {
+                                        console.error('Search input element not found');
+                                        return;
+                                    }
 
-                                console.log('Search input initialized');
+                                    console.log('Search input initialized');
 
-                                searchBox.addEventListener('input', function(e) {
-                                    let inputValue = e.target.value.trim();
-                                    console.log('Input value:', inputValue);
+                                    searchBox.addEventListener('input', function(e) {
+                                        let inputValue = e.target.value.trim();
+                                        console.log('Input value:', inputValue);
 
-                                    // Clear any existing timeout
-                                    clearTimeout(timeout);
+                                        // Clear any existing timeout
+                                        clearTimeout(timeout);
 
-                                    // Set a new timeout
-                                    timeout = setTimeout(() => {
-                                        // if (inputValue) {
-                                        console.log('Submitting form with value:', inputValue);
-                                        // Submit the form when input value exists
-                                        e.target.closest('form').submit();
-                                        // }
-                                    }, 1000); // Wait 500ms after user stops typing
+                                        // Set a new timeout
+                                        timeout = setTimeout(() => {
+                                            // if (inputValue) {
+                                            console.log('Submitting form with value:', inputValue);
+                                            // Submit the form when input value exists
+                                            e.target.closest('form').submit();
+                                            // }
+                                        }, 1000); // Wait 500ms after user stops typing
+                                    });
                                 });
-                            });
 
-                            function clearSearch() {
-                                document.getElementById('searchInput').value = '';
-                                // Preserve other GET parameters
-                                let currentUrl = new URL(window.location.href);
-                                currentUrl.searchParams.delete('agent_name');
-                                window.location.href = currentUrl.toString();
-                            }
-                        </script>
+                                function clearSearch() {
+                                    document.getElementById('searchInput').value = '';
+                                    // Preserve other GET parameters
+                                    let currentUrl = new URL(window.location.href);
+                                    currentUrl.searchParams.delete('agent_name');
+                                    window.location.href = currentUrl.toString();
+                                }
+                            </script>
+                        </div>
+                        <!-- csv download button -->
+                        <div class="flex items-center justify-end gap-2 p-2">
+                            <a href="#" onclick="download_table_as_csv('agent_ranking');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                     <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
                         <!-- table container -->
                         <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <table id="agent_ranking" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">Agent Name</th>
