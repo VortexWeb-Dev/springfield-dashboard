@@ -342,15 +342,22 @@ if (!empty($deals)) {
                         <div class="h-[30rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
                             <!-- select developer filter -->
                             <div class="flex p-2 justify-between items-center">
+                                <?php include './includes/select_developers.php'; ?>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Developer: </span>
+                                    <!-- <span class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Developer: </span> -->
                                     <p class="text-gray-600 dark:text-gray-400 font-semibold text-lg bg-gray-200 dark:bg-gray-700 rounded px-2"><?= isset($_GET['developer_name']) ? ($_GET['developer_name'] == '' ? 'All Developers' : $_GET['developer_name']) : 'All Developers' ?></p>
                                 </div>
-                                <?php include './includes/select_developers.php'; ?>
+                                <div class="flex items-center justify-end gap-2 p-2">
+                                    <a href="#" onclick="download_table_as_csv('monthly_deals_table');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="relative h-[85%] overflow-auto sm:rounded-lg">
-                                <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <table id="monthly_deals_table" class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                     <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
                                             <th scope="col" class="px-6 py-3">
@@ -443,8 +450,19 @@ if (!empty($deals)) {
 
                     <!-- developer/property value -->
                     <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-red-500 dark:border-red-300/60 rounded-xl">
-                        <div class="flex flex-col lg:flex-row lg:justify-between px-2 py-4">
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
+                        <div class="flex flex-col lg:flex-row lg:justify-between px-2">
+                            <div class="flex gap-2">
+                                <div class="flex items-center justify-center">
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developers vs Property Value</h3>
+                                </div>
+                                <div class="flex items-center justify-end gap-2 p-2">
+                                    <a href="#" onclick="download_table_as_csv('developer_vs_propertyValue');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                             <!-- developer search box -->
                             <div id="developer-search-box" class="max-w-lg w-full lg:w-[20rem]">
                                 <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -488,7 +506,7 @@ if (!empty($deals)) {
                             <div id="" class="col-span-2 flex justify-center items-center">
                                 <div class="w-full h-[35rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
                                     <div class="relative h-full overflow-auto sm:rounded-lg">
-                                        <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <table id="developer_vs_propertyValue" class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                                 <tr>
                                                     <th scope="col" class="px-4 py-3">
@@ -584,107 +602,117 @@ if (!empty($deals)) {
 
                     <!-- Quarter Wise Developer Quarterly Report  -->
                     <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developer Quarterly Report</h3>
-                        <div id="" class="col-span-2 flex justify-center items-center">
-                            <div class="w-full h-[35rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
-                                <div class="relative h-full overflow-auto sm:rounded-lg">
-                                    <table class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                        <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th scope="col" class="px-4 py-3">
-                                                    Developer
+                        <duv class="flex gap-2 min-h-[3rem] mb-4">
+                            <div class="py-4 flex items-center justify-center">
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Developer Quarterly Report</h3>
+                            </div>
+                            <div class="flex items-center justify-end gap-2 p-2">
+                                <a href="#" onclick="download_table_as_csv('developers_quarterly_report');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </duv>
+                        <div class="w-full h-[35rem] col-span-2 bg-white dark:bg-gray-800 border shadow-xl border-gray-200 dark:border-gray-700 rounded-xl">
+                            <div class="relative h-full overflow-auto sm:rounded-lg">
+                                <table id="developers_quarterly_report" class="w-full h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    <thead class="sticky top-0 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3">
+                                                Developer
+                                            </th>
+                                            <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $quarter) : ?>
+                                                <th scope="col" class="px-6 py-3"><?= $quarter ?></th>
+                                            <?php endforeach; ?>
+                                            <th scope="col" class="px-4 py-3">
+                                                <?php
+                                                $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
+                                                $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
+                                                // decreasing order
+                                                if ($selected_developer_sort_order == 'desc') {
+                                                    uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                        return $b['total_property_value'] <=> $a['total_property_value'];
+                                                    });
+                                                }
+                                                // increasing order
+                                                else if ($selected_developer_sort_order == 'asc') {
+                                                    uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
+                                                        return $a['total_property_value'] <=> $b['total_property_value'];
+                                                    });
+                                                }
+                                                ?>
+                                                <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get" class="flex items-center gap-2">
+                                                    <input type="hidden" name="developer_sort_order" value="<?= $selected_developer_sort_order == 'asc' ? 'desc' : 'asc' ?>">
+                                                    <input type="hidden" name="year" value="<?= $_GET['year'] ?? date('d/m/Y') ?>">
+                                                    <input type="hidden" name="developer_name" value="<?= $developer_name ?? '' ?>">
+                                                    <p>YTD Total Property value</p>
+                                                    <button type="submit" class="">
+                                                        <?php
+                                                        if ($selected_developer_sort_order == 'asc') {
+                                                            echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
+                                                        } else {
+                                                            echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                        }
+                                                        ?>
+                                                    </button>
+                                                </form>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="">
+                                        <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
+                                            <tr id="developer-<?= $dev ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    <?= $dev ?>
                                                 </th>
                                                 <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $quarter) : ?>
-                                                    <th scope="col" class="px-6 py-3"><?= $quarter ?></th>
-                                                <?php endforeach; ?>
-                                                <th scope="col" class="px-4 py-3">
-                                                    <?php
-                                                    $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
-                                                    $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
-                                                    // decreasing order
-                                                    if ($selected_developer_sort_order == 'desc') {
-                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
-                                                            return $b['total_property_value'] <=> $a['total_property_value'];
-                                                        });
-                                                    }
-                                                    // increasing order
-                                                    else if ($selected_developer_sort_order == 'asc') {
-                                                        uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
-                                                            return $a['total_property_value'] <=> $b['total_property_value'];
-                                                        });
-                                                    }
-                                                    ?>
-                                                    <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get" class="flex items-center gap-2">
-                                                        <input type="hidden" name="developer_sort_order" value="<?= $selected_developer_sort_order == 'asc' ? 'desc' : 'asc' ?>">
-                                                        <input type="hidden" name="year" value="<?= $_GET['year'] ?? date('d/m/Y') ?>">
-                                                        <input type="hidden" name="developer_name" value="<?= $developer_name ?? '' ?>">
-                                                        <p>YTD Total Property value</p>
-                                                        <button type="submit" class="">
-                                                            <?php
-                                                            if ($selected_developer_sort_order == 'asc') {
-                                                                echo '<i class="fa-solid fa-sort text-indigo-600"></i>';
-                                                            } else {
-                                                                echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
-                                                            }
-                                                            ?>
-                                                        </button>
-                                                    </form>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="">
-                                            <?php foreach ($sorted_monthly_deals_per_developer as $dev => $data) : ?>
-                                                <tr id="developer-<?= $dev ?>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                        <?= $dev ?>
-                                                    </th>
-                                                    <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $quarter) : ?>
-                                                        <td class="px-6 py-4">
-                                                            <?= number_format($monthly_deals_per_developer[$dev]['quarterly_deals'][$quarter]['total_quarterly_property_value'], 2) ?>
-                                                        </td>
-                                                    <?php endforeach; ?>
                                                     <td class="px-6 py-4">
-                                                        <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="sticky bottom-0 bg-gray-50 dark:bg-gray-700">
-                                                <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white">
-                                                    Total
-                                                </th>
-                                                <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $q) : ?>
-                                                    <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
-                                                        <!-- get the quarterly total value -->
-                                                        <?= number_format(array_reduce($monthly_deals_per_developer, function ($total, $item) use ($q) {
-                                                            return $total + $item['quarterly_deals'][$q]['total_quarterly_property_value'];
-                                                        }, 0), 2) ?>
+                                                        <?= number_format($monthly_deals_per_developer[$dev]['quarterly_deals'][$quarter]['total_quarterly_property_value'], 2) ?>
                                                     </td>
                                                 <?php endforeach; ?>
-                                                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
-                                                    <?= number_format(array_sum(array_column($monthly_deals_per_developer, 'total_property_value')), 2) ?>
+                                                <td class="px-6 py-4">
+                                                    <?= number_format($monthly_deals_per_developer[$dev]['total_property_value'], 2) ?>
                                                 </td>
                                             </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="sticky bottom-0 bg-gray-50 dark:bg-gray-700">
+                                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                Total
+                                            </th>
+                                            <?php foreach (['Q1', 'Q2', 'Q3', 'Q4'] as $q) : ?>
+                                                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                    <!-- get the quarterly total value -->
+                                                    <?= number_format(array_reduce($monthly_deals_per_developer, function ($total, $item) use ($q) {
+                                                        return $total + $item['quarterly_deals'][$q]['total_quarterly_property_value'];
+                                                    }, 0), 2) ?>
+                                                </td>
+                                            <?php endforeach; ?>
+                                            <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                                                <?= number_format(array_sum(array_column($monthly_deals_per_developer, 'total_property_value')), 2) ?>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Deals per lead source -->
-                    <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
-                        <div id="lead-source-chart" class="flex justify-center items-center">
-
                         </div>
                     </div>
                 </div>
 
-            <?php endif; ?>
+                <!-- Deals per lead source -->
+                <div class="my-4 flex flex-col justify-between gap-2 p-6 bg-white dark:bg-gray-800 border-t-8 shadow hover:shadow-xl border-blue-500 dark:border-blue-300/60 rounded-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Transaction Breakdown Per Lead Source</h3>
+                    <div id="lead-source-chart" class="flex justify-center items-center">
+
+                    </div>
+                </div>
         </div>
+
+    <?php endif; ?>
     </div>
+</div>
 </div>
 
 <script>
@@ -952,6 +980,38 @@ if (!empty($deals)) {
     }
 
     display_lead_source_chart();
+
+    // download table data as csv ---------------------------------
+    function download_table_as_csv(table_id, separator = ',') {
+        // Select rows from table_id
+        var rows = document.querySelectorAll('table#' + table_id + ' tr');
+        // Construct csv
+        var csv = [];
+        for (var i = 0; i < rows.length; i++) {
+            var row = [],
+                cols = rows[i].querySelectorAll('td, th');
+            for (var j = 0; j < cols.length; j++) {
+                // Clean innertext to remove multiple spaces and jumpline (break csv)
+                var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
+                // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
+                data = data.replace(/"/g, '""');
+                // Push escaped string
+                row.push('"' + data + '"');
+            }
+            csv.push(row.join(separator));
+        }
+        var csv_string = csv.join('\n');
+        // Download it
+        var filename = 'export_' + table_id + '_' + new Date().toLocaleDateString() + '.csv';
+        var link = document.createElement('a');
+        link.style.display = 'none';
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 </script>
 
 <?php include('includes/footer.php'); ?>
