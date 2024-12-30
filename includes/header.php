@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SpringField Dashboard</title>
     <!-- Custom css -->
-    <link rel="stylesheet" href="../assets//css//style.css">
-    <link rel="stylesheet" href="../assets//css//navbarSide.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/navbarSide.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Tailwind -->
@@ -20,6 +20,8 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- jquery cdn -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- custom js -->
+    <script src="assets/js/script.js" async></script>
 
     <!-- tailwind config -->
     <script>

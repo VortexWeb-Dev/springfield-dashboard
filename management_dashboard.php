@@ -319,8 +319,8 @@ if (!empty($deals)) {
                     <!-- cards container -->
                     <div class="mb-6 max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-between gap-4">
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-green-500 hover:shadow-lg dark:bg-gray-800 dark:border-green-300/60 dark:hover:bg-green-200/10">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Closed Deals</h5>
-                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $developerwise_total_deals['count_of_closed_deals'] ?> / <?= count($deals) ?></p>
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Deals</h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400"><?= $developerwise_total_deals['count_of_closed_deals'] ?></p>
                         </a>
                         <a href="#" class="block max-w-sm p-6 bg-white border-l-8 rounded-lg shadow border-red-500 hover:shadow-lg dark:bg-gray-800 dark:border-red-300/60 dark:hover:bg-red-200/10">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Property Price</h5>

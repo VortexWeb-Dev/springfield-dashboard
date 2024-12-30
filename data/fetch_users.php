@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../crest/crest.php';
 require_once __DIR__ . '/../crest/settings.php';
+require_once __DIR__ . '/../crest/crestcurrent.php';
 
 function getUsers()
 {
@@ -140,7 +141,7 @@ function getUser($user_id)
 
 function getCurrentUser()
 {
-    $result = CRest::call('user.current');
+    $result = CRestCurrent::call('user.current');
     $user = $result['result'];
 
     return $user;

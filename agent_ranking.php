@@ -16,9 +16,11 @@ $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y
 
 $selected_month = isset($_GET['month']) ? $_GET['month'] : date('M');
 
+$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'agent';
+
 $agent_name = isset($_GET['agent_name']) ? $_GET['agent_name'] : '';
 
-function getFilteredRankings($monthwise_rank_data, $selected_month, $agent_name)
+function getFilteredRankings($monthwise_rank_data, $sort_by, $selected_month, $agent_name)
 {
     $ranking = [];
 
@@ -30,9 +32,17 @@ function getFilteredRankings($monthwise_rank_data, $selected_month, $agent_name)
         }
     }
 
-    uasort($ranking, function ($a, $b) use ($selected_month) {
-        return $a[$selected_month]['rank'] <=> $b[$selected_month]['rank'];
-    });
+    if ($sort_by === 'agent') {
+        // sort according to agent name alphabetical order
+        uasort($ranking, function ($a, $b) {
+            return strnatcasecmp(reset($a)['name'], reset($b)['name']);
+        });
+    } else {
+        // sort according to month
+        uasort($ranking, function ($a, $b) use ($selected_month) {
+            return $a[$selected_month]['rank'] <=> $b[$selected_month]['rank'];
+        });
+    }
 
     //filter on the basis of search input
     return array_filter($ranking, function ($agent) use ($agent_name) {
@@ -50,7 +60,7 @@ function getFilteredRankings($monthwise_rank_data, $selected_month, $agent_name)
 
 if (isset($global_ranking[$selected_year]['monthwise_rank'])) {
     // get the sorted agents for the selected year and month
-    $filtered_ranked_agents = getFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $selected_month, $agent_name);
+    $filtered_ranked_agents = getFilteredRankings($global_ranking[$selected_year]['monthwise_rank'], $sort_by, $selected_month, $agent_name);
 } else {
     $filtered_ranked_agents = [];
 }
@@ -173,11 +183,29 @@ echo "</pre>";
                             <table id="agent_ranking" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">Agent Name</th>
+                                        <th scope="col" class="px-6 py-3">
+                                            <div class="w-full flex gap-1 justify-between items-center">
+                                                <span class="">Agent Name</span>
+                                                <form action="" method="get" class="">
+                                                    <input type="hidden" name="sort_by" value="agent">
+                                                    <input type="hidden" name="year" value="<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>">
+                                                    <button type="submit" class="" <?= $sort_by == 'agent' ? 'disabled' : '' ?>>
+                                                        <?php
+                                                        if (isset($sort_by) && $sort_by == 'agent') {
+                                                            echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                        } else {
+                                                            echo '<i class="fa-solid fa-sort"></i>';
+                                                        }
+                                                        ?>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </th>
                                         <?php foreach (['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month): ?>
                                             <th scope="col" class="px-4 py-3 w-[150px] <?= $month == $selected_month ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
                                                 <form action="" method="get" class="">
                                                     <input type="hidden" name="month" value="<?= $month ?>">
+                                                    <input type="hidden" name="sort_by" value="month">
                                                     <input type="hidden" name="year" value="<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>">
                                                     <div class="w-full flex gap-1 justify-between items-center">
                                                         <p class=""><?= $month ?></p>
